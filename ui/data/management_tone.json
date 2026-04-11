@@ -1,0 +1,6 @@
+[
+  { "company_id": "IHCL", "quarter": "Q1 FY24", "overall_sentiment": "bullish", "confidence_score": 82, "key_phrases": ["strong demand", "pricing power", "aggressive expansion", "confident"], "hedging_count": 2, "commitment_count": 11, "source": "Q1 FY24 Earnings Call Transcript" },
+  { "company_id": "IHCL", "quarter": "Q2 FY24", "overall_sentiment": "bullish", "confidence_score": 78, "key_phrases": ["expect growth", "luxury positioning", "on track", "will deliver"], "hedging_count": 4, "commitment_count": 9, "source": "Q2 FY24 Earnings Call Transcript" },
+  { "company_id": "IHCL", "quarter": "Q3 FY24", "overall_sentiment": "cautious", "confidence_score": 64, "key_phrases": ["some headwinds", "taking pricing", "medium-term outlook", "working towards"], "hedging_count": 8, "commitment_count": 5, "source": "Q3 FY24 Earnings Call Transcript" },
+  { "company_id": "IHCL", "quarter": "Q4 FY24", "overall_sentiment": "defensive", "confidence_score": 55, "key_phrases": ["challenging environment", "cautiously optimistic", "recalibrating", "subject to"], "hedging_count": 12, "commitment_count": 3, "source": "Q4 FY24 Earnings Call Transcript" }
+]

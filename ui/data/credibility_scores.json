@@ -1,0 +1,42 @@
+[
+  {
+    "id": "7949dd92-1eb7-409d-86d5-82a867df6926",
+    "company_id": "IHCL",
+    "period": "FY22",
+    "overall_score": 74,
+    "hit_rate": 75,
+    "total_guidance_count": 4,
+    "consecutive_misses": 0,
+    "trend": "stable"
+  },
+  {
+    "id": "ae0a0c60-63d0-4310-8333-3e328bdbe996",
+    "company_id": "IHCL",
+    "period": "FY23",
+    "overall_score": 65,
+    "hit_rate": 60,
+    "total_guidance_count": 6,
+    "consecutive_misses": 2,
+    "trend": "declining"
+  },
+  {
+    "id": "81c435e7-6f9b-49c4-a02c-9f92fa33ef10",
+    "company_id": "IHCL",
+    "period": "FY24",
+    "overall_score": 58,
+    "hit_rate": 50,
+    "total_guidance_count": 8,
+    "consecutive_misses": 3,
+    "trend": "declining"
+  },
+  {
+    "id": "7e7089c2-5581-4af9-8561-2026229f09ae",
+    "company_id": "IHCL",
+    "period": "FY25",
+    "overall_score": 58,
+    "hit_rate": 50,
+    "total_guidance_count": 8,
+    "consecutive_misses": 3,
+    "trend": "declining"
+  }
+]

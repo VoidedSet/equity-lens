@@ -27,7 +27,7 @@ COMPANIES: Dict[str, List[str]] = {
     "CHALET": ["chalet hotels", "chalet hotels ltd", "chalet"],
     "LEMONTREE": ["lemon tree hotels", "lemontree", "red fox hotels", "keys select", "lemon tree"],
     "EIH": ["eih", "eih ltd", "eihotel", "oberoi hotels", "trident hotels", "oberoi"],
-    "JUNIPERHOTELS": ["juniper hotels", "juniper", "juniper hotels ltd", "juniperhotels"],
+    "JUNIPER": ["juniper hotels", "juniper", "juniper hotels ltd", "juniperhotels"],
 }
 
 SECTOR_KEYWORDS = [
@@ -154,7 +154,7 @@ GOOGLE_ALERT_RSS_URLS = {
     "CHALET": ["https://www.google.com/alerts/feeds/04191294896868538319/13259870219700882078"],
     "LEMONTREE": ["https://www.google.com/alerts/feeds/04191294896868538319/6548937527860729422"],
     "EIH": ["https://www.google.com/alerts/feeds/04191294896868538319/17349074703165784150"],
-    "JUNIPERHOTELS": ["https://www.google.co.in/alerts/feeds/04191294896868538319/6548937527860729577"],
+    "JUNIPER": ["https://www.google.co.in/alerts/feeds/04191294896868538319/6548937527860729577"],
     "SECTOR": ["https://www.google.com/alerts/feeds/04191294896868538319/6548937527860731455"],
     "GLOBAL": ["https://www.google.co.in/alerts/feeds/04191294896868538319/9092356338574221853"],
 
@@ -219,7 +219,7 @@ IR_MONITOR_URLS: Dict[str, List[str]] = {
     "EIH": [
         "https://www.eihltd.com/investors",
     ],
-    "JUNIPERHOTELS": [
+    "JUNIPER": [
         "https://www.juniperhotels.com/investor-relations",
     ],
 }

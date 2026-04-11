@@ -1,0 +1,153 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EquityLens AI — Hotel Sector Intelligence API",
+    "description": "Source-cited equity research intelligence for Indian hotel companies. Every answer references its document, page, and period. If data is not available, the system refuses to guess.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_DEPLOYED_URL"
+    }
+  ],
+  "paths": {
+    "/api/gpt/query": {
+      "post": {
+        "operationId": "askEquityLens",
+        "summary": "Ask a question about hotel sector companies",
+        "description": "Submit a natural language question and receive a source-cited answer about management credibility, financial metrics, risk flags, or peer comparisons for Indian hotel companies.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "description": "The question to ask about hotel sector companies"
+                  }
+                },
+                "required": ["question"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Source-cited answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "question": { "type": "string" },
+                    "answer": { "type": "string" },
+                    "citations": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "company": { "type": "string" },
+                    "disclaimer": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gpt/company/{id}": {
+      "get": {
+        "operationId": "getCompanyProfile",
+        "summary": "Get company profile, scorecard, metrics, risks, and tone analysis",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Company ID: IHCL, CHALET, LEMONTREE, EIH, or JUNIPER"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company profile with cited data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "company": { "type": "object" },
+                    "key_metrics": { "type": "array" },
+                    "scorecard": { "type": "object" },
+                    "risk_flags": { "type": "array" },
+                    "management_tone": { "type": "array" },
+                    "credibility_trend": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gpt/guidance/{id}": {
+      "get": {
+        "operationId": "getGuidanceTracker",
+        "summary": "Get said-vs-delivered guidance tracking for a company",
+        "description": "Returns every management guidance claim matched against actual results, with verbatim quotes, confidence language analysis, and full source citations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Company ID: IHCL, CHALET, LEMONTREE, EIH, or JUNIPER"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guidance claims with outcomes and citations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "company": { "type": "string" },
+                    "summary": { "type": "object" },
+                    "claims": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gpt/compare": {
+      "get": {
+        "operationId": "getCompanyComparison",
+        "summary": "Get cross-company comparison with rankings",
+        "description": "Returns peer comparison table across all 5 hotel companies with metrics, composite rankings, and analytical insight.",
+        "responses": {
+          "200": {
+            "description": "Comparison data with rankings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "comparison_table": { "type": "array" },
+                    "rankings": { "type": "array" },
+                    "insight": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

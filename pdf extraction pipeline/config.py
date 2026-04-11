@@ -3,24 +3,24 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── LLM Provider (Groq — fast + free) ──────────────────────────
-FEATHERLESS_API_KEY = os.getenv("GROQ_API_KEY") or os.getenv("FEATHERLESS_API_KEY")
-FEATHERLESS_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
-GEMMA_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+# ── LLM Provider (Featherless AI — Gemma 3 27B-IT) ──────────────
+FEATHERLESS_API_KEY = os.getenv("FEATHERLESS_API_KEY")
+FEATHERLESS_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.featherless.ai/v1")
+GEMMA_MODEL = os.getenv("LLM_MODEL", "google/gemma-3-27b-it")
 
 # ── Supabase ────────────────────────────────────────────────────
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
 # ── Companies ───────────────────────────────────────────────────
-COMPANIES = ["IHCL", "CHALET", "LEMONTREE", "EIH", "ITCHOTELS"]
+COMPANIES = ["IHCL", "CHALET", "LEMONTREE", "EIH", "JUNIPER"]
 
 COMPANY_NAMES = {
     "IHCL":      "Indian Hotels Company Ltd",
     "CHALET":    "Chalet Hotels Ltd",
     "LEMONTREE": "Lemon Tree Hotels Ltd",
     "EIH":       "EIH Ltd (Oberoi Group)",
-    "ITCHOTELS": "ITC Hotels Ltd",
+    "JUNIPER":   "Juniper Hotels Ltd",
 }
 
 # ── Chunking ────────────────────────────────────────────────────

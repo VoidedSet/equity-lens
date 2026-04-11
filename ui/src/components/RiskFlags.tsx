@@ -1,57 +1,81 @@
 "use client";
 
-import { RiskFlag } from "@/lib/data";
 import { Citation } from "./Citation";
 
-export function RiskFlags({ risks }: { risks: RiskFlag[] }) {
+type UIRiskFlag = {
+  id: string; category: string; severity: string; description: string;
+  verbatimQuote?: string; source: string; period: string;
+};
+
+const SEV: Record<string, string> = { critical: "CRITICAL", high: "HIGH", medium: "MEDIUM" };
+
+export function RiskFlags({ risks }: { risks: UIRiskFlag[] }) {
+  const critical = risks.filter((r) => r.severity === "critical").length;
+  const high = risks.filter((r) => r.severity === "high").length;
+
   return (
-    <section className="max-w-2xl mx-auto px-6 py-12" id="risk-flags">
-      <div className="border-t border-[#e2e8f0] mb-10" />
+    <div className="ed-section-ruled" id="risk-flags">
+      <div className="ed-container">
+        <div className="ed-grid">
+          <div>
+            <p className="kicker mb-2">Editor&apos;s Notes</p>
+            <h2 className="font-serif text-3xl lg:text-4xl text-[#222] mb-6 leading-tight">Risk Flags</h2>
 
-      <h2 className="text-xs tracking-[0.2em] uppercase text-[#94a3b8] font-medium mb-4">
-        Risk Flags
-      </h2>
-
-      <p className="text-[15px] text-[#334155] leading-[1.85] mb-8">
-        {risks.length} flags identified from annual reports, earnings transcripts, and competitive filings. 
-        Sorted by severity.
-      </p>
-
-      {risks.map((risk, i) => {
-        const severityStyle =
-          risk.severity === "critical" ? "border-l-red-500" :
-          risk.severity === "high" ? "border-l-orange-400" : "border-l-amber-400";
-
-        const severityLabel =
-          risk.severity === "critical" ? "text-red-700 bg-red-50" :
-          risk.severity === "high" ? "text-orange-700 bg-orange-50" : "text-amber-700 bg-amber-50";
-
-        return (
-          <div key={risk.id} className={`border-l-[3px] ${severityStyle} pl-6 mb-8`}>
-            <div className="flex items-baseline gap-3 mb-2">
-              <h4 className="text-[15px] font-semibold text-[#0f172a]">{risk.category}</h4>
-              <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${severityLabel}`}>
-                {risk.severity}
-              </span>
-            </div>
-
-            <p className="text-[15px] text-[#334155] leading-[1.85] mb-2">
-              {risk.description}
+            <p className="text-[15px] text-[#333] leading-[1.9] mb-8">
+              {risks.length} flags identified from annual reports, transcripts, and filings.
+              {critical > 0 && <> <span className="highlight-red">{critical} critical</span>.</>}
+              {high > 0 && <> {high} high severity.</>}
             </p>
 
-            {risk.verbatimQuote && (
-              <blockquote className="text-sm text-[#64748b] italic leading-relaxed mb-2 pl-0 border-none">
-                &ldquo;{risk.verbatimQuote}&rdquo;
-              </blockquote>
-            )}
-
-            <p className="text-xs text-[#94a3b8]">
-              <Citation source={risk.source} />
-              <span className="ml-2">{risk.period}</span>
-            </p>
+            {risks.map((risk) => (
+              <div key={risk.id} className="border-t border-[#e0e0e0] py-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#888]">
+                    {SEV[risk.severity] || "MEDIUM"}
+                  </span>
+                  <h4 className="text-[15px] font-bold text-[#222]">{risk.category}</h4>
+                </div>
+                <p className="text-[14px] text-[#333] leading-[1.85] mb-2">{risk.description}</p>
+                {risk.verbatimQuote && (
+                  <blockquote className="pull-quote text-[14px] text-left">
+                    &ldquo;{risk.verbatimQuote}&rdquo;
+                  </blockquote>
+                )}
+                <div className="flex items-center gap-2 text-[11px] text-[#999]">
+                  <Citation source={risk.source} company={risk.id.split("-")[0]} quote={risk.verbatimQuote} />
+                  <span>&middot;</span>
+                  <span>{risk.period}</span>
+                </div>
+              </div>
+            ))}
           </div>
-        );
-      })}
-    </section>
+
+          <aside>
+            <div className="sidebar-card" style={{ position: "sticky", top: "4rem" }}>
+              <p className="kicker mb-3">Risk Summary</p>
+              <div className="stat-big">{risks.length}</div>
+              <p className="stat-label">Total Flags</p>
+              <hr className="my-4 border-[#e0e0e0]" />
+              {critical > 0 && (
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-[12px] text-[#888]">Critical</span>
+                  <span className="font-serif text-xl font-bold text-red-600">{critical}</span>
+                </div>
+              )}
+              {high > 0 && (
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-[12px] text-[#888]">High</span>
+                  <span className="font-serif text-xl font-bold text-[#222]">{high}</span>
+                </div>
+              )}
+              <div className="flex items-center justify-between py-2">
+                <span className="text-[12px] text-[#888]">Medium</span>
+                <span className="font-serif text-xl font-bold text-[#222]">{risks.length - critical - high}</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
   );
 }

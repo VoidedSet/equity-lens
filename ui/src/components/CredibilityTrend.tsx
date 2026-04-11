@@ -1,91 +1,74 @@
 "use client";
 
-import { credibilityTrend, fnbShareTrend } from "@/lib/data";
+type CredPoint = { period: string; score: number };
+type OpmPoint = { period: string; opm: number };
 
-export function CredibilityTrend() {
+export function CredibilityTrend({ credibilityTrend, opmTrend }: { credibilityTrend: CredPoint[]; opmTrend: OpmPoint[] }) {
+  const first = credibilityTrend[0];
+  const last = credibilityTrend[credibilityTrend.length - 1];
+  const delta = last ? last.score - first.score : 0;
+
   return (
-    <section className="max-w-2xl mx-auto px-6 py-12" id="trends">
-      <div className="border-t border-[#e2e8f0] mb-10" />
+    <div className="ed-section-ruled" id="trends">
+      <div className="ed-container">
+        <p className="kicker mb-2">Patterns</p>
+        <h2 className="font-serif text-3xl lg:text-4xl text-[#222] mb-6 leading-tight">Credibility &amp; Margin Trends</h2>
 
-      <h2 className="text-xs tracking-[0.2em] uppercase text-[#94a3b8] font-medium mb-4">
-        Patterns
-      </h2>
+        <div className="ed-grid">
+          <div>
+            <p className="text-[15px] text-[#333] leading-[1.9] mb-8">
+              Management&apos;s guidance accuracy has eroded steadily. The credibility
+              score fell from <span className="highlight">{first?.score ?? "—"}</span> in {first?.period ?? "—"} to{" "}
+              <span className="highlight-red">{last?.score ?? "—"}</span> in {last?.period ?? "—"} — a{" "}
+              <span className="highlight-red">{Math.abs(delta)}-point decline</span> driven by
+              repeated over-guidance on RevPAR and room additions.
+            </p>
 
-      {/* Credibility decline — written as narrative */}
-      <div className="mb-10">
-        <h3 className="text-[15px] font-semibold text-[#0f172a] mb-3">Credibility is declining</h3>
-        <p className="text-[15px] text-[#334155] leading-[1.85] mb-4">
-          Management&apos;s guidance accuracy has eroded steadily over four years. The credibility
-          score fell from <strong className="text-[#0f172a]">74</strong> in FY21 to{" "}
-          <strong className="text-red-600">58</strong> in FY24 — a 16-point decline driven by
-          repeated over-guidance on RevPAR and room additions.
-        </p>
-
-        {/* Simple inline data table — not a chart */}
-        <div className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#f1f5f9]">
-                <th className="text-left py-2.5 px-4 text-xs text-[#94a3b8] font-medium uppercase tracking-wider">Period</th>
-                {credibilityTrend.map((r) => (
-                  <th key={r.period} className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">{r.period}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="py-2.5 px-4 text-[#334155]">Credibility Score</td>
+            {/* Credibility inline table */}
+            <div className="border-t-2 border-[#222] mb-10">
+              <div className="grid grid-cols-4">
                 {credibilityTrend.map((r, i) => (
-                  <td key={r.period} className={`text-right py-2.5 px-4 font-mono font-semibold ${
-                    i === credibilityTrend.length - 1 ? "text-red-600" : "text-[#0f172a]"
-                  }`}>
-                    {r.score}
-                  </td>
+                  <div key={r.period} className="border-r border-[#e0e0e0] last:border-r-0 py-4 pr-4">
+                    <p className="text-[10px] text-[#999] uppercase tracking-wider mb-1">{r.period}</p>
+                    <p className={`font-serif text-2xl font-bold ${i === credibilityTrend.length - 1 ? "text-red-600" : "text-[#222]"}`}>{r.score}</p>
+                  </div>
                 ))}
-              </tr>
-            </tbody>
-          </table>
+              </div>
+            </div>
+
+            {opmTrend.length > 0 && (
+              <>
+                <h3 className="font-serif text-xl text-[#222] mb-3">Operating Margin Trend</h3>
+                <p className="text-[14px] text-[#888] leading-[1.85] mb-4">
+                  Watch for margin compression from mix shifts or cost inflation.
+                </p>
+                <div className="border-t border-[#e0e0e0]">
+                  <div className="grid grid-cols-4">
+                    {opmTrend.slice(-4).map((r) => (
+                      <div key={r.period} className="border-r border-[#e0e0e0] last:border-r-0 py-4 pr-4">
+                        <p className="text-[10px] text-[#999] uppercase tracking-wider mb-1">{r.period}</p>
+                        <p className="font-serif text-2xl font-bold text-[#222]">{r.opm}%</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          <aside>
+            <div className="sidebar-card" style={{ position: "sticky", top: "4rem" }}>
+              <p className="kicker mb-3">Credibility Delta</p>
+              <div className="stat-big text-red-600">{delta > 0 ? "+" : ""}{delta}</div>
+              <p className="stat-label">Point Change</p>
+              <hr className="my-4 border-[#e0e0e0]" />
+              <p className="text-[13px] text-[#888] leading-relaxed italic">
+                &ldquo;When credibility declines quarter-over-quarter, future guidance should be discounted accordingly.&rdquo;
+              </p>
+            </div>
+          </aside>
         </div>
       </div>
-
-      {/* F&B margin compression — written as narrative */}
-      <div>
-        <h3 className="text-[15px] font-semibold text-[#0f172a] mb-3">F&B mix is compressing margins</h3>
-        <p className="text-[15px] text-[#334155] leading-[1.85] mb-4">
-          Food &amp; beverage revenue share has risen from{" "}
-          <strong className="text-[#0f172a]">28%</strong> (FY21) to{" "}
-          <strong className="text-[#0f172a]">36%</strong> (FY24). F&B earns lower margins than
-          rooms — so even when RevPAR grows, this compositional shift quietly compresses EBITDA.
-          Management guided 35%+ margins but delivered 33.2%.
-        </p>
-
-        <div className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#f1f5f9]">
-                <th className="text-left py-2.5 px-4 text-xs text-[#94a3b8] font-medium uppercase tracking-wider">Metric</th>
-                {fnbShareTrend.map((r) => (
-                  <th key={r.period} className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">{r.period}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-[#f1f5f9]">
-                <td className="py-2.5 px-4 text-[#334155]">F&B Revenue Share</td>
-                {fnbShareTrend.map((r) => (
-                  <td key={r.period} className="text-right py-2.5 px-4 font-mono font-medium text-[#0f172a]">{r.fnbShare}%</td>
-                ))}
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 text-[#334155]">EBITDA Margin</td>
-                {fnbShareTrend.map((r) => (
-                  <td key={r.period} className="text-right py-2.5 px-4 font-mono font-medium text-[#0f172a]">{r.ebitdaMargin}%</td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

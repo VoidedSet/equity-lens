@@ -1,49 +1,66 @@
 "use client";
 
-import { companies } from "@/lib/data";
+const COMPANIES: Record<string, { short: string; tagline: string }> = {
+  IHCL: { short: "Indian Hotels (Taj)", tagline: "Premium & luxury hybrid" },
+  CHALET: { short: "Chalet Hotels", tagline: "Asset-heavy upper midscale" },
+  LEMONTREE: { short: "Lemon Tree Hotels", tagline: "Economy & midscale disruptor" },
+  EIH: { short: "EIH (Oberoi)", tagline: "Ultra-luxury, selective growth" },
+  JUNIPER: { short: "Juniper (Hyatt)", tagline: "New entrant, brand-powered" },
+};
 
-export function Hero({ onSelectCompany }: { onSelectCompany: (id: string) => void }) {
+export function Hero({ onSelectCompany, companies }: { onSelectCompany: (id: string) => void; companies: { id: string; name: string }[] }) {
+  const today = new Date();
+  const issue = `Vol. 1 — ${today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}`;
+
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6">
-      <div className="max-w-2xl mx-auto text-center">
-        {/* Masthead — like a publication */}
-        <p className="text-[11px] tracking-[0.35em] uppercase text-[#94a3b8] mb-12 font-medium">
-          EquityLens AI &mdash; Hotel Sector Intelligence
-        </p>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div className="ed-container">
+        {/* Masthead line */}
+        <div className="flex items-center justify-between pb-4 mb-12 border-b-2 border-[#222]">
+          <span className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#888]">{issue}</span>
+          <span className="text-[11px] tracking-[0.2em] uppercase font-medium text-[#888]">Indian Hospitality Sector</span>
+        </div>
 
-        <h1 className="text-4xl sm:text-5xl font-serif font-normal text-[#0f172a] leading-tight mb-8">
-          Did management keep<br />their promises?
+        {/* Title */}
+        <h1 className="font-serif text-7xl sm:text-8xl lg:text-[7.5rem] font-bold leading-[0.9] tracking-tight mb-6 text-[#222]">
+          Equity Lens
         </h1>
-
-        <p className="text-base text-[#64748b] max-w-lg mx-auto mb-16 leading-relaxed">
-          We extract every forward-looking claim from earnings calls, match it
-          against actual results, and cite every source. No opinions. No
-          predictions. Just evidence.
+        <hr className="section-rule-thick w-20 mb-8" />
+        <p className="font-serif text-2xl sm:text-3xl leading-snug mb-4 text-[#222] max-w-xl">
+          Did management keep their promises?
+        </p>
+        <p className="text-[15px] max-w-md leading-[1.85] text-[#888] mb-16">
+          Every forward-looking claim extracted from earnings calls, matched against actual results, cited to the source. No opinions. Just evidence.
         </p>
 
-        {/* Company pills — minimal */}
-        <div className="space-y-3">
-          <p className="text-[11px] tracking-[0.2em] uppercase text-[#b0b8c4]">Read the report for</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {companies.map((c) => {
-              const label =
-                c.id === "IHCL" ? "IHCL (Taj)" :
-                c.id === "CHALET" ? "Chalet Hotels" :
-                c.id === "LEMONTREE" ? "Lemon Tree" :
-                c.id === "EIH" ? "EIH (Oberoi)" : "ITC Hotels";
+        {/* Company grid — table of contents */}
+        <div className="border-t-2 border-[#222]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+            {companies.map((c, i) => {
+              const info = COMPANIES[c.id] || { short: c.name, tagline: "" };
               return (
                 <button
                   key={c.id}
                   onClick={() => onSelectCompany(c.id)}
-                  className="px-4 py-2 text-sm font-medium text-[#334155] border border-[#e2e8f0] rounded-full hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] transition-all duration-200 cursor-pointer"
+                  className="text-left py-5 pr-5 border-b lg:border-b-0 lg:border-r border-[#e0e0e0] last:border-r-0 hover:bg-[#f9f9f9] transition-colors cursor-pointer group"
                 >
-                  {label}
+                  <span className="text-[10px] font-mono text-[#bbb] block mb-1">0{i + 1}</span>
+                  <span className="font-serif text-[17px] font-semibold block mb-1 text-[#222] group-hover:underline underline-offset-4 decoration-1">
+                    {info.short}
+                  </span>
+                  <span className="text-[12px] text-[#999]">{info.tagline}</span>
                 </button>
               );
             })}
           </div>
         </div>
+
+        {/* Footer line */}
+        <div className="mt-12 pt-4 border-t border-[#e0e0e0] flex items-center justify-between text-[10px] text-[#bbb] tracking-wider uppercase">
+          <span>Gemma 3 27B &bull; Supabase &bull; RAG Pipeline</span>
+          <span>Zero hallucination</span>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

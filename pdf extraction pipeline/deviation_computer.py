@@ -41,17 +41,25 @@ METRIC_ALIASES = {
 
 # Map guidance metric_type → financials metric names
 GUIDANCE_TO_FINANCIAL_METRIC = {
-    "revpar":         "revpar",
-    "adr":            "adr",
-    "occupancy":      "occupancy",
-    "revenue":        "revenue",
-    "ebitda_margin":  "ebitda_margin",
-    "rooms_keys":     "room_count",
-    "capex":          "capex",
-    "debt":           "debt",
-    "interest_coverage": "interest_coverage",
-    "fnb_revenue":    "fnb_share",
-    "properties":     "room_count",
+    "revpar":              "revpar",
+    "RevPAR Growth":       "revpar",
+    "adr":                 "adr",
+    "occupancy":           "occupancy",
+    "revenue":             "revenue",
+    "Revenue Growth":      "revenue",
+    "ebitda_margin":       "ebitda_margin",
+    "EBITDA Margin":       "opm",
+    "OPM":                 "opm",
+    "rooms_keys":          "room_count",
+    "New Room Additions":  "room_count",
+    "Room Additions":      "room_count",
+    "capex":               "capex",
+    "debt":                "debt",
+    "Debt Reduction":      "debt",
+    "interest_coverage":   "interest_coverage",
+    "fnb_revenue":         "fnb_share",
+    "properties":          "room_count",
+    "International Expansion": None,  # no matching financial metric
 }
 
 # In-line threshold: within ±5% of guided value = IN-LINE

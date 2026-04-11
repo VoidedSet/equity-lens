@@ -1,74 +1,60 @@
 "use client";
 
-import { companyCompare, revparTrend, allScorecards, companies } from "@/lib/data";
+type Ranking = { companyId: string; name: string; composite: number; segment: string };
+type CompareRow = Record<string, string>;
+type CompanyName = { id: string; name: string };
 
-export function CompanyCompare() {
-  const sorted = [...allScorecards].sort((a, b) => b.composite - a.composite);
+export function CompanyCompare({
+  rankings, rows, companyIds, companyNames,
+}: {
+  rankings: Ranking[]; rows: CompareRow[]; companyIds: string[]; companyNames: CompanyName[];
+}) {
+  const sorted = [...rankings].sort((a, b) => b.composite - a.composite);
+  const nameOf = (id: string) => companyNames.find((c) => c.id === id)?.name || id;
 
   return (
-    <section className="max-w-2xl mx-auto px-6 py-12" id="compare">
-      <div className="border-t border-[#e2e8f0] mb-10" />
+    <div className="ed-section-ruled" id="compare">
+      <div className="ed-container">
+        <p className="kicker mb-2">Peer Comparison</p>
+        <h2 className="font-serif text-3xl lg:text-4xl text-[#222] mb-6 leading-tight">Industry Benchmarks</h2>
 
-      <h2 className="text-xs tracking-[0.2em] uppercase text-[#94a3b8] font-medium mb-4">
-        Peer Comparison
-      </h2>
-
-      {/* Narrative intro */}
-      <p className="text-[15px] text-[#334155] leading-[1.85] mb-8">
-        Five Indian hotel companies rode the same post-COVID upcycle. But the same RevPAR
-        tailwind produced very different credibility outcomes. EIH (Oberoi) leads with a composite
-        score of <strong className="text-[#0f172a]">76</strong> — they guide conservatively and
-        deliver. IHCL&apos;s superior market position (<strong className="text-[#0f172a]">88</strong>)
-        is offset by weak credibility (<strong className="text-red-600">58</strong>).
-      </p>
-
-      {/* Ranking — editorial list */}
-      <div className="mb-10">
-        <h3 className="text-[15px] font-semibold text-[#0f172a] mb-4">Composite Ranking</h3>
-        <div className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden">
-          {sorted.map((sc, i) => {
-            const c = companies.find((x) => x.id === sc.companyId);
-            return (
-              <div
-                key={sc.companyId}
-                className="flex items-baseline justify-between px-5 py-3 border-b border-[#f1f5f9] last:border-b-0"
-              >
-                <div className="flex items-baseline gap-3">
-                  <span className="text-sm text-[#b0b8c4] font-mono w-4">{i + 1}</span>
-                  <span className="text-[15px] text-[#0f172a] font-medium">{c?.name ?? sc.companyId}</span>
-                  <span className="text-xs text-[#94a3b8]">{c?.segment}</span>
-                </div>
-                <span className="text-lg font-semibold font-mono text-[#0f172a]">{sc.composite}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* RevPAR trajectory — clean table */}
-      <div className="mb-10">
-        <h3 className="text-[15px] font-semibold text-[#0f172a] mb-2">RevPAR Trajectory</h3>
-        <p className="text-sm text-[#64748b] mb-4">
-          Same upcycle, different unit economics. Luxury (EIH, IHCL) vs Economy (Lemon Tree).
+        <p className="text-[15px] text-[#333] leading-[1.9] mb-10 max-w-3xl">
+          Five Indian hotel companies in focus. Financial metrics sourced from Screener.in,
+          scorecards computed from guidance accuracy. Rankings based on composite scores.
         </p>
-        <div className="bg-white rounded-lg border border-[#e2e8f0] overflow-x-auto">
-          <table className="w-full text-sm">
+
+        {/* Ranking strip */}
+        <div className="grid grid-cols-5 gap-0 border-t-2 border-[#222] mb-12">
+          {sorted.map((sc, i) => (
+            <div key={sc.companyId} className="border-r border-[#e0e0e0] last:border-r-0 py-4 pr-4">
+              <span className="text-[10px] font-mono text-[#bbb] block mb-1">#{i + 1}</span>
+              <span className="font-serif text-2xl font-bold text-[#222] block mb-1">{sc.composite}</span>
+              <span className="text-[12px] font-medium text-[#888]">{sc.name}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Full comparison table */}
+        <h3 className="font-serif text-xl text-[#222] mb-2">Key Metrics (Latest FY)</h3>
+        <p className="text-[12px] text-[#999] mb-4">Source: Screener.in financials</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-t-2 border-b border-[#222]">
             <thead>
-              <tr className="border-b border-[#f1f5f9]">
-                <th className="text-left py-2.5 px-4 text-xs text-[#94a3b8] font-medium uppercase tracking-wider">Company</th>
-                {revparTrend.map((r) => (
-                  <th key={r.period} className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">{r.period}</th>
+              <tr className="border-b border-[#e0e0e0]">
+                <th className="text-left py-3 pr-4 text-[10px] text-[#999] font-semibold uppercase tracking-[0.15em]">Metric</th>
+                {companyIds.map((id) => (
+                  <th key={id} className="text-right py-3 px-3 text-[10px] text-[#999] font-semibold uppercase tracking-wider">{nameOf(id).split(" ")[0]}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {(["IHCL", "EIH", "ITCHOTELS", "CHALET", "LEMONTREE"] as const).map((id) => (
-                <tr key={id} className="border-b border-[#f1f5f9] last:border-b-0">
-                  <td className="py-2.5 px-4 text-[#334155] font-medium">{id}</td>
-                  {revparTrend.map((r) => (
-                    <td key={r.period} className="text-right py-2.5 px-4 font-mono text-[#0f172a]">
-                      ₹{(r[id] as number).toLocaleString()}
-                    </td>
+              {rows.map((row) => (
+                <tr key={row.metric} className="border-b border-[#eee] last:border-b-0">
+                  <td className="py-2.5 pr-4 text-[#333] font-medium">
+                    {row.metric} <span className="text-[#bbb] text-xs ml-1">({row.unit})</span>
+                  </td>
+                  {companyIds.map((id) => (
+                    <td key={id} className="text-right py-2.5 px-3 font-mono text-[#222]">{row[id] || "—"}</td>
                   ))}
                 </tr>
               ))}
@@ -76,39 +62,6 @@ export function CompanyCompare() {
           </table>
         </div>
       </div>
-
-      {/* Full comparison table */}
-      <div>
-        <h3 className="text-[15px] font-semibold text-[#0f172a] mb-2">Key Metrics (FY24)</h3>
-        <div className="bg-white rounded-lg border border-[#e2e8f0] overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#f1f5f9]">
-                <th className="text-left py-2.5 px-4 text-xs text-[#94a3b8] font-medium uppercase tracking-wider">Metric</th>
-                <th className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">IHCL</th>
-                <th className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">Chalet</th>
-                <th className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">Lemon Tree</th>
-                <th className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">EIH</th>
-                <th className="text-right py-2.5 px-4 text-xs text-[#94a3b8] font-medium">ITC</th>
-              </tr>
-            </thead>
-            <tbody>
-              {companyCompare.map((row) => (
-                <tr key={row.metric} className="border-b border-[#f1f5f9] last:border-b-0">
-                  <td className="py-2.5 px-4 text-[#334155]">
-                    {row.metric} <span className="text-[#b0b8c4] text-xs">({row.unit})</span>
-                  </td>
-                  <td className="text-right py-2.5 px-4 font-mono text-[#0f172a] font-medium">{row.ihcl}</td>
-                  <td className="text-right py-2.5 px-4 font-mono text-[#0f172a]">{row.chalet}</td>
-                  <td className="text-right py-2.5 px-4 font-mono text-[#0f172a]">{row.lemonTree}</td>
-                  <td className="text-right py-2.5 px-4 font-mono text-[#0f172a]">{row.eih}</td>
-                  <td className="text-right py-2.5 px-4 font-mono text-[#0f172a]">{row.itcHotels}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

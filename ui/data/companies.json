@@ -1,0 +1,96 @@
+[
+  {
+    "id": "IHCL",
+    "name": "Indian Hotels Company Ltd",
+    "ticker_nse": "INDHOTEL",
+    "segment": "premium_luxury",
+    "strategy": "hybrid",
+    "brands": [
+      "Taj",
+      "Vivanta",
+      "SeleQtions",
+      "Ginger"
+    ],
+    "key_markets": [
+      "Mumbai",
+      "Delhi",
+      "Bengaluru",
+      "Goa"
+    ]
+  },
+  {
+    "id": "CHALET",
+    "name": "Chalet Hotels Ltd",
+    "ticker_nse": "CHALET",
+    "segment": "upper_midscale",
+    "strategy": "asset_heavy",
+    "brands": [
+      "Marriott",
+      "Westin",
+      "Four Points",
+      "Novotel"
+    ],
+    "key_markets": [
+      "Mumbai",
+      "Bengaluru",
+      "Hyderabad",
+      "Pune"
+    ]
+  },
+  {
+    "id": "LEMONTREE",
+    "name": "Lemon Tree Hotels Ltd",
+    "ticker_nse": "LEMONTREE",
+    "segment": "economy_midscale",
+    "strategy": "hybrid",
+    "brands": [
+      "Aurika",
+      "Lemon Tree Premier",
+      "Lemon Tree",
+      "Red Fox",
+      "Keys"
+    ],
+    "key_markets": [
+      "Delhi-NCR",
+      "Hyderabad",
+      "Mumbai",
+      "Bengaluru"
+    ]
+  },
+  {
+    "id": "EIH",
+    "name": "EIH Ltd (Oberoi Group)",
+    "ticker_nse": "EIHOTEL",
+    "segment": "premium_luxury",
+    "strategy": "asset_heavy",
+    "brands": [
+      "Oberoi",
+      "Trident"
+    ],
+    "key_markets": [
+      "Delhi",
+      "Mumbai",
+      "Udaipur",
+      "Agra"
+    ]
+  },
+  {
+    "id": "JUNIPER",
+    "name": "Juniper Hotels Ltd",
+    "ticker_nse": "JUNIPER",
+    "segment": "luxury_upper_upscale",
+    "strategy": "asset_heavy",
+    "brands": [
+      "Grand Hyatt",
+      "Andaz",
+      "Hyatt Regency",
+      "Hyatt Place"
+    ],
+    "key_markets": [
+      "Mumbai",
+      "Delhi",
+      "Ahmedabad",
+      "Lucknow"
+    ]
+  }
+]

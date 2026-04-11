@@ -72,7 +72,7 @@ def update_document_status(supabase, company_id: str, doc_name: str,
         print(f"  [Registry] Could not update document status: {e}")
 
 
-VALID_COMPANIES = ["IHCL", "CHALET", "LEMONTREE", "EIH", "ITCHOTELS"]
+VALID_COMPANIES = ["IHCL", "CHALET", "LEMONTREE", "EIH", "JUNIPER"]
 VALID_DOC_TYPES = ["annual_report", "transcript", "quarterly_results", "investor_presentation"]
 
 

@@ -19,7 +19,7 @@ from config import (
     SUPABASE_URL, SUPABASE_SERVICE_KEY
 )
 
-MAX_WORKERS = 2  # parallel API calls (Featherless free tier limit)
+MAX_WORKERS = 1  # sequential to avoid Featherless rate limits
 CHUNKS_PER_BATCH = 5  # chunks per single LLM call
 
 # ─────────────────────────────────────────────────────────────────
@@ -260,7 +260,6 @@ def build_row(item: Dict, table: str) -> Optional[Dict]:
         "company_id": item.get("company_id"),
         "source_document": item.get("source_document"),
         "source_page": item.get("source_page"),
-        "period": item.get("period"),
     }
     if not base["company_id"] or not base["source_document"]:
         return None
@@ -275,6 +274,7 @@ def build_row(item: Dict, table: str) -> Optional[Dict]:
             return None
         return {
             **base,
+            "period": item.get("period"),
             "metric": item.get("metric", "unknown"),
             "value": val,
             "unit": item.get("unit"),
@@ -309,6 +309,7 @@ def build_row(item: Dict, table: str) -> Optional[Dict]:
             return None
         return {
             **base,
+            "period": item.get("period"),
             "category": item.get("category", "operational"),
             "subcategory": item.get("subcategory"),
             "description": desc,
@@ -323,6 +324,7 @@ def build_row(item: Dict, table: str) -> Optional[Dict]:
             return None
         return {
             **base,
+            "period": item.get("period"),
             "rating_agency":         agency,
             "rating_scale":          item.get("rating_scale"),
             "rating_outlook":        item.get("rating_outlook"),
@@ -340,6 +342,7 @@ def build_row(item: Dict, table: str) -> Optional[Dict]:
             return None
         return {
             **base,
+            "period": item.get("period"),
             "data_type": item.get("data_type", "qualitative"),
             "category": item.get("category", "other"),
             "key_name": item.get("key_name"),

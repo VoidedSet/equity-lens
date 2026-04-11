@@ -1,32 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --accent: #1e3a5f;
-  --accent-light: #e8f0fe;
+  --bg: #ffffff;
+  --fg: #222222;
+  --muted: #888888;
+  --border: #e0e0e0;
+  --rule: #222222;
+  --accent: #222222;
   --beat: #16a34a;
   --miss: #dc2626;
-  --inline: #2563eb;
-  --severity-critical: #dc2626;
-  --severity-high: #ea580c;
-  --severity-medium: #ca8a04;
-  --card: #ffffff;
-  --card-hover: #f8fafc;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--fg);
   font-family:
     var(--font-sans),
     system-ui,
@@ -36,33 +35,163 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #ccc;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #999;
 }
 
-/* Citation tag style */
+/* ===== EDITORIAL FOUNDATION ===== */
+
+.font-serif {
+  font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+/* Full-width section */
+.ed-section {
+  width: 100%;
+  padding: 3rem 0;
+}
+.ed-section-ruled {
+  width: 100%;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Inner container */
+.ed-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+
+/* Two-column text layout like print magazine */
+.ed-two-col {
+  column-count: 2;
+  column-gap: 2.5rem;
+  column-rule: 1px solid var(--border);
+}
+@media (max-width: 768px) {
+  .ed-two-col {
+    column-count: 1;
+  }
+}
+
+/* Two-column grid (content + sidebar) */
+.ed-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .ed-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Drop cap */
+.drop-cap::first-letter {
+  font-family: var(--font-playfair), Georgia, serif;
+  float: left;
+  font-size: 4.2rem;
+  line-height: 0.8;
+  padding-right: 0.12em;
+  padding-top: 0.05em;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+/* Pull quote — centered, big italic serif */
+.pull-quote {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--fg);
+  border-top: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
+  padding: 1.25rem 0;
+  margin: 2rem 0;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Bold highlight — like magazine bold inline */
+.highlight {
+  font-weight: 700;
+}
+.highlight-red {
+  font-weight: 700;
+  color: #dc2626;
+}
+.highlight-green {
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* Thin rules */
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+.section-rule-thick {
+  border: none;
+  border-top: 2px solid var(--fg);
+  margin: 2rem 0;
+}
+
+/* Kicker label */
+.kicker {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Big stat */
+.stat-big {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--fg);
+}
+.stat-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 0.35rem;
+}
+
+/* Sidebar card — minimal */
+.sidebar-card {
+  border-top: 2px solid var(--fg);
+  padding: 1.25rem 0;
+  margin-bottom: 1.5rem;
+}
+
+/* Citation tag */
 .citation {
   font-family: var(--font-mono), monospace;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--muted);
-  background: #f1f5f9;
-  padding: 2px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
+  border-bottom: 1px dotted var(--muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.citation:hover {
+  color: var(--fg);
 }

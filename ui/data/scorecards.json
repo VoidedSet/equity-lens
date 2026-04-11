@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ba639368-04d0-4d51-b7e1-45bf03368dc1",
+    "company_id": "IHCL",
+    "period": "FY25",
+    "dim_credibility": 58,
+    "dim_financial_quality": 79,
+    "dim_industry_position": 88,
+    "dim_risk": 65,
+    "composite_score": 71,
+    "confidence_level": "medium",
+    "evidence_summary": null
+  },
+  {
+    "id": "6cffa847-916c-43de-91cf-85cc731d1206",
+    "company_id": "CHALET",
+    "period": "FY25",
+    "dim_credibility": 72,
+    "dim_financial_quality": 68,
+    "dim_industry_position": 62,
+    "dim_risk": 55,
+    "composite_score": 65,
+    "confidence_level": "medium",
+    "evidence_summary": null
+  },
+  {
+    "id": "0d57eb2b-18d3-44d4-8014-ddb4b8d45739",
+    "company_id": "LEMONTREE",
+    "period": "FY25",
+    "dim_credibility": 65,
+    "dim_financial_quality": 61,
+    "dim_industry_position": 54,
+    "dim_risk": 70,
+    "composite_score": 62,
+    "confidence_level": "medium",
+    "evidence_summary": null
+  },
+  {
+    "id": "9590dc96-c28a-4c51-a0bb-093fa2fb4f38",
+    "company_id": "EIH",
+    "period": "FY25",
+    "dim_credibility": 81,
+    "dim_financial_quality": 74,
+    "dim_industry_position": 71,
+    "dim_risk": 78,
+    "composite_score": 76,
+    "confidence_level": "high",
+    "evidence_summary": null
+  },
+  {
+    "id": "4cbf7221-3da0-47df-bef2-c99cfc6a1f09",
+    "company_id": "JUNIPER",
+    "period": "FY25",
+    "dim_credibility": 69,
+    "dim_financial_quality": 66,
+    "dim_industry_position": 58,
+    "dim_risk": 73,
+    "composite_score": 66,
+    "confidence_level": "medium",
+    "evidence_summary": null
+  }
+]

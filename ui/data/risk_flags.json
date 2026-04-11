@@ -1,0 +1,86 @@
+[
+  {
+    "id": "0c61726c-ea15-4a83-8c40-90ac534add84",
+    "company_id": "IHCL",
+    "category": "supply_overhang",
+    "check_type": "check_6_supply",
+    "description": "1,800 new 5-star keys under construction in Mumbai — IHCL derives 32% of revenue from Mumbai. Significant supply risk in core market.",
+    "severity": "high",
+    "verbatim_quote": "Mumbai accounts for approximately 32% of our consolidated room revenue.",
+    "source_document": "AR FY24 | Page 45 + Competitor DRHP | Page 88",
+    "source_page": 45,
+    "period": "FY24-FY26"
+  },
+  {
+    "id": "c9216f63-0377-4211-a50a-62a4b9fe36f3",
+    "company_id": "IHCL",
+    "category": "margin_compression",
+    "check_type": "check_4_fnb",
+    "description": "F&B revenue share rising steadily (28% → 36% over 4 years). F&B has lower margins than rooms, silently compressing EBITDA despite healthy RevPAR.",
+    "severity": "high",
+    "verbatim_quote": null,
+    "source_document": "AR FY21-FY24 | Revenue Notes",
+    "source_page": null,
+    "period": "FY21-FY24"
+  },
+  {
+    "id": "65d95af0-6738-4559-bed0-fd1568f72cf1",
+    "company_id": "IHCL",
+    "category": "management_mismatch",
+    "check_type": "check_3_driver",
+    "description": "3 consecutive quarters of RevPAR guidance miss. Management consistently over-projects pricing power. Claims ADR-led growth but actual data shows occupancy-driven.",
+    "severity": "medium",
+    "verbatim_quote": null,
+    "source_document": "Earnings Calls Q1-Q3 FY24 vs AR FY24",
+    "source_page": null,
+    "period": "FY24"
+  },
+  {
+    "id": "dd49b04e-0637-451a-9b2c-20823ab1e895",
+    "company_id": "IHCL",
+    "category": "operational",
+    "check_type": "check_2_keys",
+    "description": "Room addition pipeline consistently under-delivers. Guided 2,000 keys by FY26, tracking at 1,340. Execution risk on expansion strategy.",
+    "severity": "medium",
+    "verbatim_quote": null,
+    "source_document": "Q1 FY24 Call | 08:15 vs AR FY26 | Page 34",
+    "source_page": null,
+    "period": "FY24-FY26"
+  },
+  {
+    "id": "b22ac761-d962-46bb-8dba-3d1d8db8e3e0",
+    "company_id": "CHALET",
+    "category": "supply_overhang",
+    "check_type": "check_6_supply",
+    "description": "53% revenue from MMR (Mumbai Metropolitan Region). Supply pipeline in Mumbai with 1,800 new luxury keys threatens RevPAR.",
+    "severity": "high",
+    "verbatim_quote": null,
+    "source_document": "Chalet AR FY25 | Revenue Segment",
+    "source_page": null,
+    "period": "FY25"
+  },
+  {
+    "id": "709b70f8-f55d-4be6-b76b-db87ac5296f3",
+    "company_id": "CHALET",
+    "category": "debt",
+    "check_type": "check_5_debt",
+    "description": "Net debt of ₹2,600 Cr with 8.4% interest rate. High leverage relative to peers for a single-operator hotel company.",
+    "severity": "medium",
+    "verbatim_quote": null,
+    "source_document": "Chalet AR FY25 | Balance Sheet",
+    "source_page": null,
+    "period": "FY25"
+  },
+  {
+    "id": "34a6d9d4-e2aa-497e-ba11-e70b8df4b8e4",
+    "company_id": "JUNIPER",
+    "category": "operational",
+    "check_type": null,
+    "description": "Revenue heavily concentrated in Mumbai and Delhi. Grand Hyatt Mumbai and Andaz Delhi account for majority of revenue.",
+    "severity": "medium",
+    "verbatim_quote": null,
+    "source_document": "Juniper info | Revenue Concentration",
+    "source_page": null,
+    "period": "FY25"
+  }
+]
