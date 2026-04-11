@@ -9,7 +9,7 @@ import { Scorecard } from "@/components/Scorecard";
 import { ManagementTone } from "@/components/ManagementTone";
 import { CredibilityTrend } from "@/components/CredibilityTrend";
 import { RiskFlags } from "@/components/RiskFlags";
-import { IndustryGraph } from "@/components/IndustryGraph";
+import { KnowledgeGraph } from "@/components/KnowledgeGraph";
 import { CompanyCompare } from "@/components/CompanyCompare";
 import { AskSection } from "@/components/AskSection";
 import { NewsFeed } from "@/components/NewsFeed";
@@ -120,7 +120,7 @@ export default function Home() {
             <CredibilityTrend credibilityTrend={uiCredibility} opmTrend={opmTrend} />
           )}
           {uiRiskFlags.length > 0 && <RiskFlags risks={uiRiskFlags} />}
-          {graphNodes.length > 0 && <IndustryGraph graphNodes={graphNodes} graphEdges={graphEdges} />}
+          <KnowledgeGraph companyCode={selectedCompany || undefined} />
           {uiCompare && (
             <CompanyCompare
               rankings={uiCompare.rankings}
