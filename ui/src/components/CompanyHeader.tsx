@@ -52,36 +52,32 @@ export function CompanyHeader({ company, metrics }: { company: UICompany; metric
           ))}
         </div>
 
-        {/* Executive summary — two-column text */}
-        <p className="kicker mb-4">Executive Summary</p>
-        <div className="ed-two-col text-[15px] text-[#333] leading-[1.9]">
-          <p className="drop-cap" style={{ marginBottom: "1rem" }}>
-            {company.name} reported revenue of{" "}
-            <span className="highlight">₹{rev?.value ?? "—"} Cr</span>{" "}
-            in {rev?.period ?? "latest period"}
-            {rev?.change != null
-              ? `, ${rev.change > 0 ? "up" : "down"} ${Math.abs(rev.change)}% year-on-year`
+        {/* Visual pull quote */}
+        <div className="max-w-3xl mx-auto my-12 py-8 border-t border-b border-[#e0e0e0]">
+          <p className="text-center text-2xl font-serif leading-relaxed text-[#222]">
+            {rev?.change != null && rev.change > 0
+              ? `Revenue up ${rev.change}% YoY. `
+              : rev?.change != null && rev.change < 0
+              ? `Revenue down ${Math.abs(rev.change)}% YoY. `
               : ""}
-            . The company operates across its {company.brands.join(", ")} brands, with
-            primary revenue concentration in {company.keyMarkets.join(", ")}.
-          </p>
-
-          <p style={{ marginBottom: "1rem" }}>
-            Operating profit was{" "}
-            <span className="highlight">₹{op?.value ?? "—"} Cr</span>{" "}
-            with an operating margin of{" "}
-            <span className={Number(opm?.value) >= 20 ? "highlight-green" : "highlight"}>
-              {opm?.value ?? "—"}%
-            </span>.
-            Net profit stood at{" "}
-            <strong>₹{np?.value ?? "—"} Cr</strong>
-            {np?.change != null && ` (${np.change > 0 ? "+" : ""}${np.change}% YoY)`}.
-            Earnings per share: <strong>₹{eps?.value ?? "—"}</strong>.
-            {" "}
             {opm && Number(opm.value) >= 20
-              ? "The operating margin signals pricing power and operational leverage across the brand portfolio."
-              : "There remains room for margin expansion as the portfolio matures and occupancy improves."}
+              ? `Operating margin at ${opm.value}% signals pricing power.`
+              : opm && Number(opm.value) >= 15
+              ? `Operating margin at ${opm.value}% — room for expansion.`
+              : "Margin compression requires attention."}
           </p>
+        </div>
+
+        {/* Brand portfolio */}
+        <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-medium mb-2">Brand Portfolio</p>
+            <p className="text-[14px] text-[#333] leading-relaxed">{company.brands.join(" • ")}</p>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-medium mb-2">Key Markets</p>
+            <p className="text-[14px] text-[#333] leading-relaxed">{company.keyMarkets.join(" • ")}</p>
+          </div>
         </div>
 
         <p className="mt-4 text-[12px] text-[#aaa]">

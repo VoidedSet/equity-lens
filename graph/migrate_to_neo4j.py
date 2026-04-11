@@ -8,16 +8,20 @@ import os
 import sys
 import json
 from neo4j import GraphDatabase
+from dotenv import load_dotenv
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
+
+# Load graph/.env
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 GRAPH_JSON_PATH = os.path.join(os.path.dirname(__file__), "graph_data.json")
 
 NEO4J_URI = os.getenv("GRAPH_NEO4J_URI", "neo4j://127.0.0.1:7687")
 NEO4J_USER = os.getenv("GRAPH_NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("GRAPH_NEO4J_PASSWORD", "kshayik1")
-NEO4J_DATABASE = os.getenv("GRAPH_NEO4J_DATABASE", "datahack-graphdb")
+NEO4J_DATABASE = os.getenv("GRAPH_NEO4J_DATABASE", "neo4j")
 
 
 def load_graph_json():

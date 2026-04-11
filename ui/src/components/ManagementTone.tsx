@@ -30,22 +30,38 @@ export function ManagementTone({ tones }: { tones: ToneItem[] }) {
         <p className="kicker mb-2">Tone Analysis</p>
         <h2 className="font-serif text-3xl lg:text-4xl text-[#222] mb-6 leading-tight">Management Language Shift</h2>
 
-        <div className="ed-two-col text-[15px] text-[#333] leading-[1.9] mb-10">
-          <p style={{ marginBottom: "1rem" }}>
-            Management language shifted from{" "}
-            <span className="highlight-green">{tones[0].overall_sentiment}</span> in {tones[0].quarter} to{" "}
-            <span className="highlight-red">{tones[tones.length - 1].overall_sentiment}</span> by {tones[tones.length - 1].quarter}. Confidence
-            dropped <span className="highlight">{Math.abs(confDelta)} points</span>,
-            hedging phrases increased {lastHedge - firstHedge}&times; from
-            {" "}{firstHedge} to {lastHedge} instances per call, while hard commitments fell from{" "}
-            <strong>{tones[0].commitment_count}</strong> to{" "}
-            <span className="highlight-red">{tones[tones.length - 1].commitment_count}</span>.
-            This is a leading indicator — tone deterioration preceded the guidance misses.
-          </p>
+        {/* Trend summary */}
+        <div className="max-w-3xl mx-auto mb-12">
+          <div className="grid grid-cols-3 gap-6 text-center">
+            <div>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-medium mb-1">Sentiment Shift</p>
+              <p className="text-[15px] text-[#333]">
+                <span className="font-semibold text-emerald-600">{tones[0].overall_sentiment}</span>
+                {" → "}
+                <span className="font-semibold text-red-600">{tones[tones.length - 1].overall_sentiment}</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-medium mb-1">Confidence</p>
+              <p className="text-[15px] text-[#333]">
+                <span className={confDelta < 0 ? "text-red-600 font-semibold" : "text-[#333]"}>
+                  {confDelta > 0 ? "+" : ""}{confDelta} pts
+                </span>
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-medium mb-1">Hedging</p>
+              <p className="text-[15px] text-[#333]">
+                <span className="font-semibold">{firstHedge}</span>
+                {" → "}
+                <span className={lastHedge > firstHedge ? "text-amber-600 font-semibold" : "text-[#333]"}>{lastHedge}</span>
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Quarter timeline */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t-2 border-[#222]">
+        {/* Quarter breakdown */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-[#e0e0e0]">
           {tones.map((t) => {
             const s = sentimentColors[t.overall_sentiment] || sentimentColors.neutral;
             const hedgeRatio = t.hedging_count / (t.hedging_count + t.commitment_count);

@@ -11,6 +11,49 @@ type SourceInfo = {
   csvUrl: string | null;
 };
 
+type TranscriptEntry = { speaker?: string; text?: string; timestamp?: string; [key: string]: unknown };
+
+function JSONTranscriptViewer({ url }: { url: string }) {
+  const [entries, setEntries] = useState<TranscriptEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : (data.transcript || data.entries || data.chunks || [data]);
+        setEntries(arr);
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [url]);
+
+  if (loading) return <p className="text-sm text-[#999] p-8">Loading transcript...</p>;
+  if (error) return <p className="text-sm text-[#dc2626] p-8">Failed to load transcript.</p>;
+
+  return (
+    <div className="overflow-auto max-h-[calc(100vh-120px)] p-4 space-y-3">
+      {entries.map((entry, i) => {
+        const speaker = entry.speaker || entry.Speaker || "";
+        const text = entry.text || entry.chunk_text || entry.content || entry.body || JSON.stringify(entry);
+        const ts = entry.timestamp || entry.time || "";
+        return (
+          <div key={i} className={`flex gap-3 ${speaker ? "" : "pl-0"}`}>
+            {speaker && (
+              <div className="shrink-0 w-28 text-right">
+                <span className="text-[11px] font-semibold text-[#555] leading-relaxed">{speaker}</span>
+                {ts && <p className="text-[10px] text-[#bbb] font-mono">{String(ts)}</p>}
+              </div>
+            )}
+            <p className="text-[13px] text-[#333] leading-relaxed flex-1 border-l-2 border-[#e0e0e0] pl-3">{String(text)}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function CSVViewer({ url }: { url: string }) {
   const [rows, setRows] = useState<string[][]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +69,7 @@ function CSVViewer({ url }: { url: string }) {
       .finally(() => setLoading(false));
   }, [url]);
 
-  if (loading) return <p className="text-sm text-[#999] p-8">Loading CSV...</p>;
+  if (loading) return <p className="text-sm text-[#999] p-8">Loading...</p>;
 
   return (
     <div className="overflow-auto max-h-[calc(100vh-120px)]">
@@ -204,7 +247,9 @@ export function SourceModal() {
               )}
               {source?.type === "csv" && source.csvUrl && (
                 <div className="p-4">
-                  <CSVViewer url={source.csvUrl} />
+                  {source.csvUrl.endsWith(".json")
+                    ? <JSONTranscriptViewer url={source.csvUrl} />
+                    : <CSVViewer url={source.csvUrl} />}
                   <p className="text-[10px] text-[#999] mt-3">Source: {sourceRef}</p>
                 </div>
               )}

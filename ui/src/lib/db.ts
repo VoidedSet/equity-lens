@@ -324,30 +324,28 @@ function quarterToCallDate(quarter: string): { minYear: number; minMonth: number
   }
 }
 
-function findClosestCallTranscript(callDir: string, quarter: string): string | null {
-  if (!fs.existsSync(callDir)) return null;
+function findClosestTranscript(dir: string, quarter: string): string | null {
+  if (!fs.existsSync(dir)) return null;
   const range = quarterToCallDate(quarter);
-  const files = fs.readdirSync(callDir).filter((f: string) => f.endsWith(".pdf"));
+  // Accept both .json and .pdf transcripts
+  const files = fs.readdirSync(dir).filter((f: string) => f.endsWith(".json") || f.endsWith(".pdf"));
 
-  // Parse filenames like "2023_Nov.pdf" → { year: 2023, month: 11 }
   const parsed = files.map((f: string) => {
-    const fm = f.match(/(\d{4})_(\w+)\.pdf/);
+    const fm = f.match(/(\d{4})_(\w+)\.(json|pdf)/);
     if (!fm) return null;
     const month = MONTH_MAP[fm[2]];
     if (!month) return null;
     return { file: f, year: parseInt(fm[1]), month };
   }).filter(Boolean) as { file: string; year: number; month: number }[];
 
-  // Find files within the expected range (with some tolerance)
   const minDate = range.minYear * 12 + range.minMonth;
   const maxDate = range.maxYear * 12 + range.maxMonth;
   const candidates = parsed.filter((p) => {
     const d = p.year * 12 + p.month;
-    return d >= minDate - 1 && d <= maxDate + 1; // ±1 month tolerance
+    return d >= minDate - 1 && d <= maxDate + 1;
   });
 
   if (candidates.length > 0) {
-    // Pick the one closest to the middle of the range
     const mid = (minDate + maxDate) / 2;
     candidates.sort((a, b) => Math.abs(a.year * 12 + a.month - mid) - Math.abs(b.year * 12 + b.month - mid));
     return candidates[0].file;
@@ -366,115 +364,165 @@ export type SourceResolution = {
 
 export function resolveSource(sourceRef: string, companyId?: string): SourceResolution | null {
   const RAW_DIR = path.resolve(DATA_DIR, "../../Raw Data Extraction");
-  const ref = sourceRef.trim();
-
-  // Try to detect company from ref or use provided companyId
   const cid = companyId?.toUpperCase() || "IHCL";
   const companyDir = COMPANY_DIRS[cid];
   if (!companyDir) return null;
   const companyPath = path.join(RAW_DIR, companyDir);
 
-  // --- Screener CSV sources ---
-  if (ref.toLowerCase().includes("screener") || ref.toLowerCase().includes("profit_loss") || ref.toLowerCase().includes("balance_sheet")) {
-    const csvName = ref.includes("balance_sheet") ? "balance_sheet.csv" : "profit_loss.csv";
+  // --- Step 1: Pre-parse bracket format "[filename | page | period]" ---
+  // Pipeline stores citations as "[2024.pdf | p.87 | FY24]" or "[2023_Aug.json | 12:41 | Q1 FY24]"
+  let ref = sourceRef.trim();
+  let extractedPage: number | null = null;
+
+  const bracketMatch = ref.match(/^\[(.+?)(?:\s*\|\s*(.+?))?(?:\s*\|\s*(.+?))?\]$/);
+  if (bracketMatch) {
+    ref = bracketMatch[1].trim();
+    const pageStr = bracketMatch[2]?.trim() || "";
+    const pageNum = pageStr.match(/p\.(\d+)/i);
+    if (pageNum) extractedPage = parseInt(pageNum[1]);
+  }
+
+  // --- Step 2: Route by filename pattern ---
+
+  // CSV: profit_loss.csv, balance_sheet.csv, or screener keywords
+  const refLower = ref.toLowerCase();
+  if (refLower.includes("screener") || refLower.includes("profit_loss") || refLower.includes("balance_sheet")) {
+    const csvName = refLower.includes("balance_sheet") ? "balance_sheet.csv" : "profit_loss.csv";
     const csvPath = path.join(companyPath, csvName);
     if (fs.existsSync(csvPath)) {
-      return { type: "csv", filePath: csvPath, relativePath: `${companyDir}/${csvName}`, page: null, searchText: null, label: ref };
+      return { type: "csv", filePath: csvPath, relativePath: `${companyDir}/${csvName}`, page: null, searchText: null, label: csvName === "balance_sheet.csv" ? "Balance Sheet" : "Profit & Loss" };
     }
     return null;
   }
 
-  // --- Annual Report: "AR FY24 | Page 45" ---
+  // Annual Report: "2024.pdf"
+  if (ref.match(/^\d{4}\.pdf$/i)) {
+    const year = ref.replace(/\.pdf$/i, "");
+    const pdfPath = path.join(companyPath, "Annual_Reports", ref);
+    if (fs.existsSync(pdfPath)) {
+      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Annual_Reports/${ref}`, page: extractedPage, searchText: null, label: `Annual Report ${year}` };
+    }
+    return null;
+  }
+
+  // Call Transcript JSON: "2023_Aug.json"
+  if (ref.match(/^\d{4}_\w+\.json$/i)) {
+    const jsonPath = path.join(companyPath, "Call_Transcripts_JSON", ref);
+    if (fs.existsSync(jsonPath)) {
+      const label = ref.replace(/\.json$/i, "").replace(/_/, " ");
+      return { type: "csv", filePath: jsonPath, relativePath: `${companyDir}/Call_Transcripts_JSON/${ref}`, page: null, searchText: null, label: `Earnings Call — ${label}` };
+    }
+    return null;
+  }
+
+  // Quarterly Report: "Sep_2024.pdf" or "Dec_2024.pdf"
+  if (ref.match(/^[A-Za-z]{3}_\d{4}\.pdf$/i)) {
+    const pdfPath = path.join(companyPath, "Quarterly_Report", ref);
+    if (fs.existsSync(pdfPath)) {
+      const label = ref.replace(/\.pdf$/i, "").replace(/_/, " ");
+      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Quarterly_Report/${ref}`, page: extractedPage, searchText: null, label: `Quarterly Report — ${label}` };
+    }
+    return null;
+  }
+
+  // Credit Rating or Announcement: "2024_Sep_25.pdf"
+  if (ref.match(/^\d{4}_\w+_\d{2}\.pdf$/i)) {
+    for (const sub of ["Credit_Ratings", "Announcements"]) {
+      const pdfPath = path.join(companyPath, sub, ref);
+      if (fs.existsSync(pdfPath)) {
+        const label = ref.replace(/\.pdf$/i, "").replace(/_/g, " ");
+        return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/${sub}/${ref}`, page: extractedPage, searchText: null, label: `${sub === "Credit_Ratings" ? "Credit Rating" : "Announcement"} — ${label}` };
+      }
+    }
+    return null;
+  }
+
+  // --- Step 3: Legacy human-readable formats (AI-generated citations) ---
+
+  // "AR FY24 | Page 45"
   const arMatch = ref.match(/AR\s+FY(\d{2})/i);
   if (arMatch) {
     const fy = parseInt(arMatch[1]);
     const year = fy < 50 ? 2000 + fy : 1900 + fy;
     const pdfPath = path.join(companyPath, "Annual_Reports", `${year}.pdf`);
     const pageMatch = ref.match(/Page\s+(\d+)/i);
-    const page = pageMatch ? parseInt(pageMatch[1]) : null;
+    const pg = pageMatch ? parseInt(pageMatch[1]) : extractedPage;
     if (fs.existsSync(pdfPath)) {
-      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Annual_Reports/${year}.pdf`, page, searchText: null, label: `Annual Report FY${arMatch[1]}` };
+      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Annual_Reports/${year}.pdf`, page: pg, searchText: null, label: `Annual Report FY${arMatch[1]}` };
     }
     return null;
   }
 
-  // --- Earnings Call: "Q2 FY24 Earnings Call | 12:41" ---
+  // "Q2 FY24 Earnings Call"
   const ecMatch = ref.match(/(Q[1-4])\s+FY(\d{2})\s+Earnings\s+Call/i);
   if (ecMatch) {
     const quarter = `${ecMatch[1].toUpperCase()} FY${ecMatch[2]}`;
-    const callDir = path.join(companyPath, "Call_Transcripts");
-    const found = findClosestCallTranscript(callDir, quarter);
+    const jsonDir = path.join(companyPath, "Call_Transcripts_JSON");
+    const found = findClosestTranscript(jsonDir, quarter);
     if (found) {
-      const pdfPath = path.join(callDir, found);
-      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Call_Transcripts/${found}`, page: null, searchText: null, label: `${quarter} Earnings Call` };
+      const fp = path.join(jsonDir, found);
+      return { type: "csv", filePath: fp, relativePath: `${companyDir}/Call_Transcripts_JSON/${found}`, page: null, searchText: null, label: `${quarter} Earnings Call` };
     }
     return null;
   }
 
-  // --- Quarterly Report ---
+  // "Q2 FY24 Quarterly"
   const qrMatch = ref.match(/Quarterly.*?(Q[1-4])\s*FY(\d{2})/i) || ref.match(/(Q[1-4])\s*FY(\d{2}).*?Quarterly/i);
   if (qrMatch) {
-    // Map Q to month: Q1(Jun), Q2(Sep), Q3(Dec), Q4(Mar)
     const qMonths: Record<string, string> = { Q1: "Jun", Q2: "Sep", Q3: "Dec", Q4: "Mar" };
     const q = qrMatch[1].toUpperCase();
     const fy = parseInt(qrMatch[2]);
     const calYear = q === "Q4" ? (fy < 50 ? 2000 + fy : 1900 + fy) : (fy < 50 ? 2000 + fy - 1 : 1900 + fy - 1);
-    const month = qMonths[q];
-    const pdfPath = path.join(companyPath, "Quarterly_Report", `${month}_${calYear}.pdf`);
+    const pdfPath = path.join(companyPath, "Quarterly_Report", `${qMonths[q]}_${calYear}.pdf`);
     if (fs.existsSync(pdfPath)) {
-      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Quarterly_Report/${month}_${calYear}.pdf`, page: null, searchText: null, label: ref };
+      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Quarterly_Report/${qMonths[q]}_${calYear}.pdf`, page: null, searchText: null, label: ref };
     }
     return null;
   }
 
-  // --- Bare PDF filename: "2024.pdf" → Annual Report ---
-  if (ref.match(/^\d{4}\.pdf$/)) {
-    const year = ref.replace(".pdf", "");
-    const arPaths = [
-      path.join(companyPath, "Annual_Reports", ref),
-      path.join(RAW_DIR, "Annual_Reports", ref),
-    ];
-    for (const ap of arPaths) {
-      if (fs.existsSync(ap)) {
-        const rel = path.relative(RAW_DIR, ap).replace(/\\/g, "/");
-        return { type: "pdf" as const, filePath: ap, relativePath: rel, page: null, searchText: null, label: `Annual Report ${year}` };
-      }
-    }
-    return null;
-  }
-
-  // --- JSON Call Transcripts: "2023_Aug.json" ---
+  // Bare .json / .txt fallback
   if (ref.endsWith(".json")) {
-    // Try company-specific Call_Transcripts_JSON first, then top-level
-    const jsonPaths = [
-      path.join(companyPath, "Call_Transcripts_JSON", ref),
-      path.join(RAW_DIR, "Call_Transcripts_JSON", ref),
-    ];
-    for (const jp of jsonPaths) {
+    for (const jp of [path.join(companyPath, "Call_Transcripts_JSON", ref), path.join(RAW_DIR, "Call_Transcripts_JSON", ref)]) {
       if (fs.existsSync(jp)) {
-        const rel = path.relative(RAW_DIR, jp).replace(/\\/g, "/");
-        const label = ref.replace(".json", "").replace("_", " ");
-        return { type: "csv" as const, filePath: jp, relativePath: rel, page: null, searchText: null, label: `Earnings Call Transcript — ${label}` };
+        return { type: "csv", filePath: jp, relativePath: path.relative(RAW_DIR, jp).replace(/\\/g, "/"), page: null, searchText: null, label: `Earnings Call — ${ref.replace(".json", "").replace("_", " ")}` };
       }
     }
     return null;
   }
-
-  // --- TXT info files: "info_eih.txt", "info_juniper.txt" ---
   if (ref.endsWith(".txt")) {
-    const txtPaths = [
-      path.join(companyPath, ref),
-      path.join(RAW_DIR, ref),
-    ];
-    for (const tp of txtPaths) {
+    for (const tp of [path.join(companyPath, ref), path.join(RAW_DIR, ref)]) {
       if (fs.existsSync(tp)) {
-        const rel = path.relative(RAW_DIR, tp).replace(/\\/g, "/");
-        return { type: "csv" as const, filePath: tp, relativePath: rel, page: null, searchText: null, label: ref };
+        return { type: "csv", filePath: tp, relativePath: path.relative(RAW_DIR, tp).replace(/\\/g, "/"), page: null, searchText: null, label: ref };
       }
     }
     return null;
   }
 
-  // --- Generic fallback: try to find any matching file ---
+  // --- Step 4: Filesystem scan fallback ---
+  // Try to find any file in the company directory whose name matches
+  const scanDirs = ["Annual_Reports", "Quarterly_Report", "Call_Transcripts_JSON", "Credit_Ratings", "Announcements"];
+  for (const sub of scanDirs) {
+    const dir = path.join(companyPath, sub);
+    if (!fs.existsSync(dir)) continue;
+    const files = fs.readdirSync(dir);
+    const hit = files.find((f) => {
+      const fLower = f.toLowerCase();
+      const rLower = ref.toLowerCase();
+      return fLower === rLower || fLower.replace(/\.[^.]+$/, "") === rLower.replace(/\.[^.]+$/, "");
+    });
+    if (hit) {
+      const fp = path.join(dir, hit);
+      const ext = path.extname(hit).toLowerCase();
+      return {
+        type: ext === ".pdf" ? "pdf" : "csv",
+        filePath: fp,
+        relativePath: path.relative(RAW_DIR, fp).replace(/\\/g, "/"),
+        page: extractedPage,
+        searchText: null,
+        label: hit.replace(/\.[^.]+$/, "").replace(/_/g, " "),
+      };
+    }
+  }
+
   return null;
 }
