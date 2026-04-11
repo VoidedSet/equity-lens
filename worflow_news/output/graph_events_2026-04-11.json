@@ -1,0 +1,152 @@
+[
+  {
+    "event_id": "0ae0de65a32265b6bcdaee69ab7988528870a930",
+    "title": "Is <b>IHCL's</b> 628 Hotel Portfolio Expansion Signalling Strong Future Growth? - Trade Brains",
+    "summary": "Synopsis: <b>IHCL's</b> expansion to a 628-hotel portfolio highlights strong growth momentum, supported by aggressive signings, acquisitions,&nbsp;...",
+    "url": "https://tradebrains.in/is-ihcls-628-hotel-portfolio-expansion-signalling-strong-future-growth",
+    "published_date": "2026-04-11",
+    "as_of_date": "2026-04-11",
+    "source": "Google Alerts RSS",
+    "source_bucket": "IHCL",
+    "event_type": "sector_signal",
+    "dimension_primary": "check_2_room_additions",
+    "dimensions": [
+      "check_2_room_additions"
+    ],
+    "sentiment": "Positive",
+    "market_scope": "company",
+    "citation": "[Google Alerts RSS | https://tradebrains.in/is-ihcls-628-hotel-portfolio-expansion-signalling-strong-future-growth | 2026-04-11]",
+    "relevance_score": 7,
+    "stage2_confidence": 0.6,
+    "graph_confidence": 0.652,
+    "quality": "high_confidence",
+    "companies": [
+      "IHCL"
+    ],
+    "metrics": [
+      "RoomAdditions",
+      "PipelineKeys"
+    ]
+  },
+  {
+    "event_id": "67be68313013baee1f0cd77c9fe2b08c7fe639cd",
+    "title": "strategic acquisitions <b>IHCL</b> 2026 - Travel And Tour World",
+    "summary": "<b>IHCL</b> expands to 628 hotels with 255 in the pipeline, driving future growth in India's hospitality sector through strategic acquisitions and brand&nbsp;...",
+    "url": "https://www.travelandtourworld.com/news/article/tag/strategic-acquisitions-ihcl-2026",
+    "published_date": "2026-04-11",
+    "as_of_date": "2026-04-11",
+    "source": "Google Alerts RSS",
+    "source_bucket": "IHCL",
+    "event_type": "supply",
+    "dimension_primary": "check_2_room_additions",
+    "dimensions": [
+      "check_2_room_additions",
+      "check_6_supply_overhang"
+    ],
+    "sentiment": "Watch",
+    "market_scope": "company",
+    "citation": "[Google Alerts RSS | https://www.travelandtourworld.com/news/article/tag/strategic-acquisitions-ihcl-2026 | 2026-04-11]",
+    "relevance_score": 9,
+    "stage2_confidence": 0.7,
+    "graph_confidence": 0.751,
+    "quality": "high_confidence",
+    "companies": [
+      "IHCL"
+    ],
+    "metrics": [
+      "RoomAdditions",
+      "PipelineKeys"
+    ]
+  },
+  {
+    "event_id": "6d030d71747cd4c864df65b1637c63150f0bd931",
+    "title": "Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon</b> ...",
+    "summary": "... <b>Lemon Tree Hotels</b>. Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>. April 11, 2026 Neel Achary&nbsp;...",
+    "url": "https://businessnewsthisweek.com/business/urban-square-mall-udaipur-announces-opening-of-the-banquet-at-keys-lite-by-lemon-tree-hotels",
+    "published_date": "2026-04-11",
+    "as_of_date": "2026-04-11",
+    "source": "Google Alerts RSS",
+    "source_bucket": "LEMONTREE",
+    "event_type": "sector_signal",
+    "dimension_primary": "check_4_fnb_mix_margin",
+    "dimensions": [
+      "check_4_fnb_mix_margin",
+      "check_2_room_additions"
+    ],
+    "sentiment": "Neutral",
+    "market_scope": "company",
+    "citation": "[Google Alerts RSS | https://businessnewsthisweek.com/business/urban-square-mall-udaipur-announces-opening-of-the-banquet-at-keys-lite-by-lemon-tree-hotels | 2026-04-11]",
+    "relevance_score": 8,
+    "stage2_confidence": 0.6,
+    "graph_confidence": 0.702,
+    "quality": "high_confidence",
+    "companies": [
+      "LEMONTREE"
+    ],
+    "metrics": [
+      "F&BMix",
+      "EBITDA_Margin"
+    ]
+  },
+  {
+    "event_id": "b1fe0f53514878ec8e609a7e7c2e552483ddf5bf",
+    "title": "Urban Square Mall Unveils 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>",
+    "summary": "With this launch, Urban Square Mall continues to cater as a multi-dimensional destination, addressing not only shopping and entertainment needs&nbsp;...",
+    "url": "https://www.entrepreneurindia.com/blog/en/news/urban-square-mall-unveils-the-banquet-at-keys-lite-by-lemon-tree-hotels.59842",
+    "published_date": "2026-04-11",
+    "as_of_date": "2026-04-11",
+    "source": "Google Alerts RSS",
+    "source_bucket": "LEMONTREE",
+    "event_type": "sector_signal",
+    "dimension_primary": "check_4_fnb_mix_margin",
+    "dimensions": [
+      "check_4_fnb_mix_margin",
+      "check_2_room_additions"
+    ],
+    "sentiment": "Neutral",
+    "market_scope": "company",
+    "citation": "[Google Alerts RSS | https://www.entrepreneurindia.com/blog/en/news/urban-square-mall-unveils-the-banquet-at-keys-lite-by-lemon-tree-hotels.59842 | 2026-04-11]",
+    "relevance_score": 8,
+    "stage2_confidence": 0.6,
+    "graph_confidence": 0.702,
+    "quality": "high_confidence",
+    "companies": [
+      "LEMONTREE"
+    ],
+    "metrics": [
+      "F&BMix",
+      "EBITDA_Margin"
+    ]
+  },
+  {
+    "event_id": "0d5f1a8d7dd46148da401f7d3b98757f98b69aee",
+    "title": "Eco <b>Hotels</b> Delays FY26 Results to April 17, Extends Insider Window - Whalesbook",
+    "summary": "In the Indian hospitality sector, Eco Hotels competes with larger players like Indian Hotels Company Ltd, ITC Hotels, <b>Lemon Tree Hotels</b>, and Chalet&nbsp;...",
+    "url": "https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e",
+    "published_date": "2026-04-10",
+    "as_of_date": "2026-04-11",
+    "source": "Google Alerts RSS",
+    "source_bucket": "LEMONTREE",
+    "event_type": "earnings",
+    "dimension_primary": "check_1_revpar_guidance",
+    "dimensions": [
+      "check_1_revpar_guidance"
+    ],
+    "sentiment": "Neutral",
+    "market_scope": "sector",
+    "citation": "[Google Alerts RSS | https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e | 2026-04-10]",
+    "relevance_score": 5,
+    "stage2_confidence": 0.7,
+    "graph_confidence": 0.651,
+    "quality": "high_confidence",
+    "companies": [
+      "IHCL",
+      "CHALET",
+      "LEMONTREE"
+    ],
+    "metrics": [
+      "RevPAR",
+      "Guidance"
+    ]
+  }
+]

@@ -1,51 +1,51 @@
 {
   "as_of_date": "2026-04-11",
-  "generated_at_utc": "2026-04-11T14:35:26.005418+00:00",
+  "generated_at_utc": "2026-04-11T18:28:01.334223+00:00",
   "source_stats": {
     "google_alerts": {
       "status": "ok",
-      "items": 43,
-      "duration_sec": 5.777
+      "items": 57,
+      "duration_sec": 5.637
     },
     "publisher_rss": {
       "status": "ok",
       "items": 50,
-      "duration_sec": 0.601
+      "duration_sec": 1.053
     },
     "exchange_disclosure": {
       "status": "ok",
       "items": 30,
-      "duration_sec": 0.181
+      "duration_sec": 0.113
     },
     "rating_credit": {
       "status": "ok",
       "items": 50,
-      "duration_sec": 0.16
+      "duration_sec": 0.102
     },
     "policy_regulation": {
       "status": "ok",
       "items": 50,
-      "duration_sec": 0.312
+      "duration_sec": 0.621
     },
     "tourism_demand": {
       "status": "ok",
       "items": 4,
-      "duration_sec": 0.505
+      "duration_sec": 0.199
     },
     "supply_intel": {
       "status": "ok",
       "items": 0,
-      "duration_sec": 0.141
+      "duration_sec": 0.428
     },
     "global_hospitality": {
       "status": "ok",
       "items": 10,
-      "duration_sec": 2.964
+      "duration_sec": 3.755
     },
     "ir_change_monitor": {
       "status": "ok",
       "items": 0,
-      "duration_sec": 4.659
+      "duration_sec": 8.219
     },
     "newsapi": {
       "status": "ok",
@@ -55,19 +55,22 @@
     "bing": {
       "status": "ok",
       "items": 0,
-      "duration_sec": 0.001
+      "duration_sec": 0.0
     },
     "fallback_scrape": {
       "status": "ok",
       "items": 7,
-      "duration_sec": 0.838
+      "duration_sec": 0.417
     }
   },
   "bucket_counts_raw": {
+    "IHCL": 5,
     "CHALET": 1,
     "LEMONTREE": 17,
     "EIH": 5,
-    "SECTOR": 20,
+    "JUNIPERHOTELS": 2,
+    "SECTOR": 16,
+    "GLOBAL": 11,
     "PUBLISHER_RSS": 50,
     "EXCHANGE_DISCLOSURE": 30,
     "RATING_CREDIT": 50,
@@ -77,32 +80,45 @@
     "SCRAPE": 7
   },
   "bucket_counts_final": {
-    "LEMONTREE": 3,
-    "PUBLISHER_RSS": 2,
-    "RATING_CREDIT": 10,
-    "POLICY_REGULATION": 2
+    "IHCL": 2,
+    "LEMONTREE": 3
   },
   "filter_stats": {
-    "input_items": 244,
+    "input_items": 258,
     "dropped_missing_title_or_url": 0,
     "dropped_press_release": 0,
-    "dropped_no_dimension": 138,
-    "dropped_low_relevance": 48,
-    "dropped_stage2": 40,
-    "accepted": 18
+    "dropped_no_hospitality_anchor": 192,
+    "dropped_broad_market_noise": 0,
+    "dropped_no_dimension": 42,
+    "dropped_low_relevance": 15,
+    "dropped_stage2": 4,
+    "accepted": 5
   },
   "dedupe_stats": {
-    "input_items": 18,
-    "exact_duplicates_removed": 1,
+    "input_items": 5,
+    "exact_duplicates_removed": 0,
     "signature_duplicates_removed": 0,
     "fuzzy_duplicates_removed": 0,
-    "output_items": 17
+    "output_items": 5
   },
   "evidence_gate_drops": {},
+  "graph_event_stats": {
+    "input_items": 5,
+    "accepted_events": 5,
+    "skipped_low_confidence": 0,
+    "review_events": 0,
+    "high_confidence_events": 5
+  },
+  "graph_write_status": {
+    "status": "ok",
+    "reason": "upsert_complete",
+    "nodes_or_edges": 5
+  },
   "counts": {
-    "raw": 244,
-    "filtered": 18,
-    "deduped": 17,
-    "evidence_safe": 17
+    "raw": 258,
+    "filtered": 5,
+    "deduped": 5,
+    "evidence_safe": 5,
+    "graph_events": 5
   }
 }

@@ -1,24 +1,80 @@
 {
   "market_context": {
     "as_of": "2026-04-11",
-    "total_items": 17,
+    "total_items": 5,
     "sentiment_distribution": {
-      "Neutral": 13,
-      "Positive": 2,
+      "Positive": 1,
       "Watch": 1,
-      "Negative": 1
+      "Neutral": 3
     },
     "top_dimensions": {
-      "check_1_revpar_guidance": 8,
-      "check_5_debt_coverage": 7,
-      "check_6_supply_overhang": 5,
-      "check_4_fnb_mix_margin": 5,
       "check_2_room_additions": 4,
-      "check_3_occupancy_vs_adr": 3
+      "check_4_fnb_mix_margin": 2,
+      "check_6_supply_overhang": 1,
+      "check_1_revpar_guidance": 1
     }
   },
   "companies": {
     "IHCL": [
+      {
+        "title": "strategic acquisitions <b>IHCL</b> 2026 - Travel And Tour World",
+        "url": "https://www.travelandtourworld.com/news/article/tag/strategic-acquisitions-ihcl-2026",
+        "source": "Google Alerts RSS",
+        "published_date": "2026-04-11",
+        "summary": "<b>IHCL</b> expands to 628 hotels with 255 in the pipeline, driving future growth in India's hospitality sector through strategic acquisitions and brand&nbsp;...",
+        "content": "<b>IHCL</b> expands to 628 hotels with 255 in the pipeline, driving future growth in India's hospitality sector through strategic acquisitions and brand&nbsp;...",
+        "bucket": "IHCL",
+        "company_tags": [
+          "IHCL"
+        ],
+        "dimensions": [
+          "check_2_room_additions",
+          "check_6_supply_overhang"
+        ],
+        "dimension_primary": "check_2_room_additions",
+        "relevance_score": 9,
+        "stage2_confidence": 0.7,
+        "stage2_reason": "accepted",
+        "linguistic_sentiment": "Neutral",
+        "investment_impact_sentiment": "Watch",
+        "sentiment": "Watch",
+        "market_scope": "company",
+        "summary_2line": "<b>IHCL</b> expands to 628 hotels with 255 in the pipeline, driving future growth in India's hospitality sector through strategic acquisitions and brand&nbsp;...",
+        "citation": "[Google Alerts RSS | https://www.travelandtourworld.com/news/article/tag/strategic-acquisitions-ihcl-2026 | 2026-04-11]",
+        "uid": "9bd1acab1549b5dfb32517d8d1950699e74c0c23",
+        "content_signature": "b1d5cabe0608e9f3543035d63968e35a4c0434d4",
+        "event_type": "supply",
+        "graph_confidence": 0.751
+      },
+      {
+        "title": "Is <b>IHCL's</b> 628 Hotel Portfolio Expansion Signalling Strong Future Growth? - Trade Brains",
+        "url": "https://tradebrains.in/is-ihcls-628-hotel-portfolio-expansion-signalling-strong-future-growth",
+        "source": "Google Alerts RSS",
+        "published_date": "2026-04-11",
+        "summary": "Synopsis: <b>IHCL's</b> expansion to a 628-hotel portfolio highlights strong growth momentum, supported by aggressive signings, acquisitions,&nbsp;...",
+        "content": "Synopsis: <b>IHCL's</b> expansion to a 628-hotel portfolio highlights strong growth momentum, supported by aggressive signings, acquisitions,&nbsp;...",
+        "bucket": "IHCL",
+        "company_tags": [
+          "IHCL"
+        ],
+        "dimensions": [
+          "check_2_room_additions"
+        ],
+        "dimension_primary": "check_2_room_additions",
+        "relevance_score": 7,
+        "stage2_confidence": 0.6,
+        "stage2_reason": "accepted",
+        "linguistic_sentiment": "Positive",
+        "investment_impact_sentiment": "Positive",
+        "sentiment": "Positive",
+        "market_scope": "company",
+        "summary_2line": "Synopsis: <b>IHCL's</b> expansion to a 628-hotel portfolio highlights strong growth momentum, supported by aggressive signings, acquisitions,&nbsp;...",
+        "citation": "[Google Alerts RSS | https://tradebrains.in/is-ihcls-628-hotel-portfolio-expansion-signalling-strong-future-growth | 2026-04-11]",
+        "uid": "42749e930d8fa376802381ff329f3482bb06ac0f",
+        "content_signature": "e5df596ff1520fd4021d10036554061be21d072d",
+        "event_type": "sector_signal",
+        "graph_confidence": 0.652
+      },
       {
         "title": "Eco <b>Hotels</b> Delays FY26 Results to April 17, Extends Insider Window - Whalesbook",
         "url": "https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e",
@@ -37,7 +93,7 @@
         ],
         "dimension_primary": "check_1_revpar_guidance",
         "relevance_score": 5,
-        "stage2_confidence": 0.5,
+        "stage2_confidence": 0.7,
         "stage2_reason": "accepted",
         "linguistic_sentiment": "Neutral",
         "investment_impact_sentiment": "Neutral",
@@ -46,7 +102,9 @@
         "summary_2line": "In the Indian hospitality sector, Eco Hotels competes with larger players like Indian Hotels Company Ltd, ITC Hotels, <b>Lemon Tree Hotels</b>, and Chalet&nbsp;...",
         "citation": "[Google Alerts RSS | https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e | 2026-04-10]",
         "uid": "ae2e958f694ed3e9e47b6beb4b85d9b1f997f68a",
-        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19"
+        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19",
+        "event_type": "earnings",
+        "graph_confidence": 0.651
       }
     ],
     "CHALET": [
@@ -68,7 +126,7 @@
         ],
         "dimension_primary": "check_1_revpar_guidance",
         "relevance_score": 5,
-        "stage2_confidence": 0.5,
+        "stage2_confidence": 0.7,
         "stage2_reason": "accepted",
         "linguistic_sentiment": "Neutral",
         "investment_impact_sentiment": "Neutral",
@@ -77,45 +135,19 @@
         "summary_2line": "In the Indian hospitality sector, Eco Hotels competes with larger players like Indian Hotels Company Ltd, ITC Hotels, <b>Lemon Tree Hotels</b>, and Chalet&nbsp;...",
         "citation": "[Google Alerts RSS | https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e | 2026-04-10]",
         "uid": "ae2e958f694ed3e9e47b6beb4b85d9b1f997f68a",
-        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19"
+        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19",
+        "event_type": "earnings",
+        "graph_confidence": 0.651
       }
     ],
     "LEMONTREE": [
       {
-        "title": "SEBI Fines Trdez ₹1 Cr for ₹2,950 Cr Ponzi Scheme | Whalesbook",
-        "url": "https://www.whalesbook.com/news/english/sebiexchange/sebi-fines-trdez-indian-rupee1-cr-for-indian-rupee2950-cr-ponzi-scheme/69d91b34e0ea10058db832c0",
-        "source": "Google Alerts RSS",
-        "published_date": "2026-04-10",
-        "summary": "<b>Lemon Tree Hotels</b> Splits: CCI Approves Warburg Deal, Two Firms Launch. Leela Hotels' Post-IPO Expansion Faces Valuation Questions. 8th April 2026&nbsp;...",
-        "content": "<b>Lemon Tree Hotels</b> Splits: CCI Approves Warburg Deal, Two Firms Launch. Leela Hotels' Post-IPO Expansion Faces Valuation Questions. 8th April 2026&nbsp;...",
-        "bucket": "LEMONTREE",
-        "company_tags": [
-          "LEMONTREE"
-        ],
-        "dimensions": [
-          "check_2_room_additions",
-          "check_6_supply_overhang"
-        ],
-        "dimension_primary": "check_2_room_additions",
-        "relevance_score": 11,
-        "stage2_confidence": 0.6,
-        "stage2_reason": "accepted",
-        "linguistic_sentiment": "Neutral",
-        "investment_impact_sentiment": "Neutral",
-        "sentiment": "Neutral",
-        "market_scope": "company",
-        "summary_2line": "<b>Lemon Tree Hotels</b> Splits: CCI Approves Warburg Deal, Two Firms Launch. Leela Hotels' Post-IPO Expansion Faces Valuation Questions. 8th April 2026&nbsp;...",
-        "citation": "[Google Alerts RSS | https://www.whalesbook.com/news/english/sebiexchange/sebi-fines-trdez-indian-rupee1-cr-for-indian-rupee2950-cr-ponzi-scheme/69d91b34e0ea10058db832c0 | 2026-04-10]",
-        "uid": "f7b921b4202caf448d94408ca79dfd298849951c",
-        "content_signature": "bf99b79797b07aaef69662a6b8d13b00af17bcb5"
-      },
-      {
         "title": "Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon</b> ...",
-        "url": "https://www.equitybulls.com/category.php?id=368945",
+        "url": "https://businessnewsthisweek.com/business/urban-square-mall-udaipur-announces-opening-of-the-banquet-at-keys-lite-by-lemon-tree-hotels",
         "source": "Google Alerts RSS",
-        "published_date": "2026-04-10",
-        "summary": "Udaipur's largest retail destination, Urban Square Mall, has announced the opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>,&nbsp;...",
-        "content": "Udaipur's largest retail destination, Urban Square Mall, has announced the opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>,&nbsp;...",
+        "published_date": "2026-04-11",
+        "summary": "... <b>Lemon Tree Hotels</b>. Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>. April 11, 2026 Neel Achary&nbsp;...",
+        "content": "... <b>Lemon Tree Hotels</b>. Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>. April 11, 2026 Neel Achary&nbsp;...",
         "bucket": "LEMONTREE",
         "company_tags": [
           "LEMONTREE"
@@ -126,16 +158,48 @@
         ],
         "dimension_primary": "check_4_fnb_mix_margin",
         "relevance_score": 8,
-        "stage2_confidence": 0.4,
+        "stage2_confidence": 0.6,
         "stage2_reason": "accepted",
         "linguistic_sentiment": "Neutral",
         "investment_impact_sentiment": "Neutral",
         "sentiment": "Neutral",
         "market_scope": "company",
-        "summary_2line": "Udaipur's largest retail destination, Urban Square Mall, has announced the opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>,&nbsp;...",
-        "citation": "[Google Alerts RSS | https://www.equitybulls.com/category.php?id=368945 | 2026-04-10]",
-        "uid": "d83a3b6a11e78784481e3118b688efd8eb1d93da",
-        "content_signature": "f76a72141814ac11a01caca06547ba2848b50546"
+        "summary_2line": "... <b>Lemon Tree Hotels</b>. Urban Square Mall, Udaipur, Announces Opening of 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>. April 11, 2026 Neel Achary&nbsp;...",
+        "citation": "[Google Alerts RSS | https://businessnewsthisweek.com/business/urban-square-mall-udaipur-announces-opening-of-the-banquet-at-keys-lite-by-lemon-tree-hotels | 2026-04-11]",
+        "uid": "95cc2c99577e3e83d7fdf97c341062515ecbfeb7",
+        "content_signature": "26d1b7782a41e2e0a9ad56e7465a1294568a8316",
+        "event_type": "sector_signal",
+        "graph_confidence": 0.702
+      },
+      {
+        "title": "Urban Square Mall Unveils 'The Banquet' at Keys Lite by <b>Lemon Tree Hotels</b>",
+        "url": "https://www.entrepreneurindia.com/blog/en/news/urban-square-mall-unveils-the-banquet-at-keys-lite-by-lemon-tree-hotels.59842",
+        "source": "Google Alerts RSS",
+        "published_date": "2026-04-11",
+        "summary": "With this launch, Urban Square Mall continues to cater as a multi-dimensional destination, addressing not only shopping and entertainment needs&nbsp;...",
+        "content": "With this launch, Urban Square Mall continues to cater as a multi-dimensional destination, addressing not only shopping and entertainment needs&nbsp;...",
+        "bucket": "LEMONTREE",
+        "company_tags": [
+          "LEMONTREE"
+        ],
+        "dimensions": [
+          "check_4_fnb_mix_margin",
+          "check_2_room_additions"
+        ],
+        "dimension_primary": "check_4_fnb_mix_margin",
+        "relevance_score": 8,
+        "stage2_confidence": 0.6,
+        "stage2_reason": "accepted",
+        "linguistic_sentiment": "Neutral",
+        "investment_impact_sentiment": "Neutral",
+        "sentiment": "Neutral",
+        "market_scope": "company",
+        "summary_2line": "With this launch, Urban Square Mall continues to cater as a multi-dimensional destination, addressing not only shopping and entertainment needs&nbsp;...",
+        "citation": "[Google Alerts RSS | https://www.entrepreneurindia.com/blog/en/news/urban-square-mall-unveils-the-banquet-at-keys-lite-by-lemon-tree-hotels.59842 | 2026-04-11]",
+        "uid": "016af189d0b98879637f367b88b428526a4fb1ee",
+        "content_signature": "fc51dff82c23f5effa641df117e02b9aec0352ec",
+        "event_type": "sector_signal",
+        "graph_confidence": 0.702
       },
       {
         "title": "Eco <b>Hotels</b> Delays FY26 Results to April 17, Extends Insider Window - Whalesbook",
@@ -155,7 +219,7 @@
         ],
         "dimension_primary": "check_1_revpar_guidance",
         "relevance_score": 5,
-        "stage2_confidence": 0.5,
+        "stage2_confidence": 0.7,
         "stage2_reason": "accepted",
         "linguistic_sentiment": "Neutral",
         "investment_impact_sentiment": "Neutral",
@@ -164,384 +228,18 @@
         "summary_2line": "In the Indian hospitality sector, Eco Hotels competes with larger players like Indian Hotels Company Ltd, ITC Hotels, <b>Lemon Tree Hotels</b>, and Chalet&nbsp;...",
         "citation": "[Google Alerts RSS | https://www.whalesbook.com/corporate-news/english/tourism/eco-hotels-delays-fy26-results-to-april-17-extends-insider-window/69d900d6e0ea10058db72a3e | 2026-04-10]",
         "uid": "ae2e958f694ed3e9e47b6beb4b85d9b1f997f68a",
-        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19"
+        "content_signature": "19d478b6d1e748c4b72f081944ebb2d7e1608e19",
+        "event_type": "earnings",
+        "graph_confidence": 0.651
       }
     ],
-    "EIH": [
-      {
-        "title": "Nifty holds 24,000; 23,700 key support as Akshay Bhagwat bets on Power Grid, Adani Ports",
-        "url": "https://economictimes.indiatimes.com/markets/expert-view/nifty-holds-24000-23700-key-support-as-akshay-bhagwat-bets-on-power-grid-adani-ports/articleshow/130186908.cms",
-        "source": "Rating/Credit",
-        "published_date": "2026-04-11",
-        "summary": "Nifty holds above 24,000, with key support at 23,700 and resistance at 24,300-24,500. Easing volatility fuels a positive outlook. Top stock picks include Power Grid for a breakout, Jubilant FoodWorks on dips, and Adani Ports for momentum. Realty's surge is seen as a rebound, with Oberoi Realty showing medium-term promise.",
-        "content": "Nifty holds above 24,000, with key support at 23,700 and resistance at 24,300-24,500. Easing volatility fuels a positive outlook. Top stock picks include Power Grid for a breakout, Jubilant FoodWorks on dips, and Adani Ports for momentum. Realty's surge is seen as a rebound, with Oberoi Realty showing medium-term promise.",
-        "bucket": "RATING_CREDIT",
-        "company_tags": [
-          "EIH"
-        ],
-        "dimensions": [
-          "check_1_revpar_guidance"
-        ],
-        "dimension_primary": "check_1_revpar_guidance",
-        "relevance_score": 7,
-        "stage2_confidence": 0.4,
-        "stage2_reason": "accepted",
-        "linguistic_sentiment": "Neutral",
-        "investment_impact_sentiment": "Neutral",
-        "sentiment": "Neutral",
-        "market_scope": "company",
-        "summary_2line": "Nifty holds above 24,000, with key support at 23,700 and resistance at 24,300-24,500. Easing volatility fuels a positive outlook. Top stock picks include Power Grid for a breakout, Jubilant FoodWorks on dips, and Adani Ports for momentum. Realty's surge is seen as a rebound, w...",
-        "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/expert-view/nifty-holds-24000-23700-key-support-as-akshay-bhagwat-bets-on-power-grid-adani-ports/articleshow/130186908.cms | 2026-04-11]",
-        "uid": "1b9e3c0b98309f946f7fc87c2b8ab9c7bb7474f1",
-        "content_signature": "892cbe8afb767e3c16d216b61c6d126f7a72dbf1"
-      }
-    ],
+    "EIH": [],
     "JUNIPERHOTELS": []
   },
-  "sector_news": [
-    {
-      "title": "Execution, order inflows to drive L&amp;T growth; BEL rides defence push: Siddhartha Khemka",
-      "url": "https://economictimes.indiatimes.com/markets/stocks/news/execution-order-inflows-to-drive-lt-growth-bel-rides-defence-push-siddhartha-khemka/articleshow/130186637.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-11",
-      "summary": "India's capital goods sector is experiencing robust growth, fueled by strong order backlogs and increasing project execution across infrastructure, power, and industrial segments. Government focus on development and manufacturing, alongside new-age tech investments, is driving demand. Companies are poised for steady revenue expansion and stable profitability, with key players like L&amp;T and BEL showing strong prospects.",
-      "content": "India's capital goods sector is experiencing robust growth, fueled by strong order backlogs and increasing project execution across infrastructure, power, and industrial segments. Government focus on development and manufacturing, alongside new-age tech investments, is driving demand. Companies are poised for steady revenue expansion and stable profitability, with key players like L&amp;T and BEL showing strong prospects.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_2_room_additions",
-        "check_3_occupancy_vs_adr",
-        "check_4_fnb_mix_margin"
-      ],
-      "dimension_primary": "check_2_room_additions",
-      "relevance_score": 9,
-      "stage2_confidence": 0.5,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Positive",
-      "investment_impact_sentiment": "Positive",
-      "sentiment": "Positive",
-      "market_scope": "sector",
-      "summary_2line": "India's capital goods sector is experiencing robust growth, fueled by strong order backlogs and increasing project execution across infrastructure, power, and industrial segments. Government focus on development and manufacturing, alongside new-age tech investments, is driving...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/stocks/news/execution-order-inflows-to-drive-lt-growth-bel-rides-defence-push-siddhartha-khemka/articleshow/130186637.cms | 2026-04-11]",
-      "uid": "f309dba84bdcde0ca9e43ca423504dd548a073a6",
-      "content_signature": "1c299912abe13cd339db2737e2d6067f04febfa2"
-    },
-    {
-      "title": "Defence stocks set for mixed Q4; Nuvama bets on BEL, Solar Industries, and a smallcap pick",
-      "url": "https://economictimes.indiatimes.com/markets/stocks/news/defence-stocks-set-for-mixed-q4-nuvama-bets-on-bel-solar-industries-and-a-smallcap-pick/articleshow/130186050.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-11",
-      "summary": "Defence sector companies anticipate mixed Q4FY26 results despite strong order books. Nuvama Institutional Equities highlights BEL, Data Patterns, and Solar Industries as top picks. While order inflows remain robust, growth momentum is expected to moderate. Defence stocks have seen a strong rebound in April, with further action anticipated following earnings announcements and geopolitical developments.",
-      "content": "Defence sector companies anticipate mixed Q4FY26 results despite strong order books. Nuvama Institutional Equities highlights BEL, Data Patterns, and Solar Industries as top picks. While order inflows remain robust, growth momentum is expected to moderate. Defence stocks have seen a strong rebound in April, with further action anticipated following earnings announcements and geopolitical developments.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_1_revpar_guidance",
-        "check_4_fnb_mix_margin"
-      ],
-      "dimension_primary": "check_1_revpar_guidance",
-      "relevance_score": 9,
-      "stage2_confidence": 0.6,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Positive",
-      "investment_impact_sentiment": "Positive",
-      "sentiment": "Positive",
-      "market_scope": "sector",
-      "summary_2line": "Defence sector companies anticipate mixed Q4FY26 results despite strong order books. Nuvama Institutional Equities highlights BEL, Data Patterns, and Solar Industries as top picks. While order inflows remain robust, growth momentum is expected to moderate. Defence stocks have...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/stocks/news/defence-stocks-set-for-mixed-q4-nuvama-bets-on-bel-solar-industries-and-a-smallcap-pick/articleshow/130186050.cms | 2026-04-11]",
-      "uid": "85da140634c4e5fd56af3c1a5efbde29e8bd9f3b",
-      "content_signature": "5429c9e9528792e387be77719440d584af13b4d3"
-    },
-    {
-      "title": "F&amp;O Talk: Nifty's 6% gains are strongest since February 2021. Is it pullback or trend-reversal?",
-      "url": "https://economictimes.indiatimes.com/markets/options/fo-talk-niftys-6-gains-are-strongest-since-february-2021-is-it-pullback-or-trend-reversal/articleshow/130188466.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-11",
-      "summary": "Indian markets concluded the week on a strong note, continuing their upward trend. Buying interest in banking, auto, and consumer stocks fueled the gains. The Nifty50 and BSE Sensex saw significant advances. Volatility eased considerably. Experts provided outlooks for Nifty and Bank Nifty, along with sector-specific strategies for the upcoming week.",
-      "content": "Indian markets concluded the week on a strong note, continuing their upward trend. Buying interest in banking, auto, and consumer stocks fueled the gains. The Nifty50 and BSE Sensex saw significant advances. Volatility eased considerably. Experts provided outlooks for Nifty and Bank Nifty, along with sector-specific strategies for the upcoming week.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_1_revpar_guidance",
-        "check_5_debt_coverage"
-      ],
-      "dimension_primary": "check_1_revpar_guidance",
-      "relevance_score": 7,
-      "stage2_confidence": 0.4,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "Indian markets concluded the week on a strong note, continuing their upward trend. Buying interest in banking, auto, and consumer stocks fueled the gains. The Nifty50 and BSE Sensex saw significant advances. Volatility eased considerably. Experts provided outlooks for Nifty an...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/options/fo-talk-niftys-6-gains-are-strongest-since-february-2021-is-it-pullback-or-trend-reversal/articleshow/130188466.cms | 2026-04-11]",
-      "uid": "8ff8ab52f06db55331bacac315264f2a47e712ab",
-      "content_signature": "146654555c32bae7f62bbca181438a37ace97904"
-    },
-    {
-      "title": "IOI Properties plans Malaysia REIT with assets worth $1.9 billion",
-      "url": "https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ioi-properties-plans-malaysia-reit-with-assets-worth-1-9-billion/articleshow/130185295.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-11",
-      "summary": "IOI Properties Group is set to launch a Malaysian real estate investment trust valued at approximately $1.9 billion. This REIT will encompass a diverse portfolio of retail, office, and hotel assets. The company plans to offer a significant portion of units, aiming to raise substantial funds for debt repayment and future investments.",
-      "content": "IOI Properties Group is set to launch a Malaysian real estate investment trust valued at approximately $1.9 billion. This REIT will encompass a diverse portfolio of retail, office, and hotel assets. The company plans to offer a significant portion of units, aiming to raise substantial funds for debt repayment and future investments.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_5_debt_coverage",
-        "check_2_room_additions"
-      ],
-      "dimension_primary": "check_5_debt_coverage",
-      "relevance_score": 7,
-      "stage2_confidence": 0.6,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "IOI Properties Group is set to launch a Malaysian real estate investment trust valued at approximately $1.9 billion. This REIT will encompass a diverse portfolio of retail, office, and hotel assets. The company plans to offer a significant portion of units, aiming to raise sub...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/digital-real-estate/realty-news/ioi-properties-plans-malaysia-reit-with-assets-worth-1-9-billion/articleshow/130185295.cms | 2026-04-11]",
-      "uid": "c20be6c1297d51e3dd903cac6df7befc559fa128",
-      "content_signature": "d5f426459d357e5cb8b9c01ca384f74881427cae"
-    },
-    {
-      "title": "Papa, aise pakdo jaise aapki picture ki heroine ho.: At 84, Ranjeet goes viral for fitness video with daughter’s guidance",
-      "url": "https://economictimes.indiatimes.com/news/new-updates/papa-aise-pakdo-jaise-aapki-picture-ki-heroine-ho-at-84-ranjeet-goes-viral-for-fitness-video-with-daughters-guidance/articleshow/130190241.cms",
-      "source": "Policy/Regulation",
-      "published_date": "2026-04-11",
-      "summary": "Veteran actor Ranjeet, 84, has gone viral with a workout video featuring a cable chest fly, garnering over 5.6 million views. His daughter, Divyanka Bedi, guided him through the exercise, adding a light-hearted touch. Celebrities and fans praised his fitness and energy, calling it one of the 'cutest things on the internet'.",
-      "content": "Veteran actor Ranjeet, 84, has gone viral with a workout video featuring a cable chest fly, garnering over 5.6 million views. His daughter, Divyanka Bedi, guided him through the exercise, adding a light-hearted touch. Celebrities and fans praised his fitness and energy, calling it one of the 'cutest things on the internet'.",
-      "bucket": "POLICY_REGULATION",
-      "company_tags": [],
-      "dimensions": [
-        "check_1_revpar_guidance",
-        "check_6_supply_overhang"
-      ],
-      "dimension_primary": "check_1_revpar_guidance",
-      "relevance_score": 7,
-      "stage2_confidence": 0.6,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "Veteran actor Ranjeet, 84, has gone viral with a workout video featuring a cable chest fly, garnering over 5.6 million views. His daughter, Divyanka Bedi, guided him through the exercise, adding a light-hearted touch. Celebrities and fans praised his fitness and energy, callin...",
-      "citation": "[Policy/Regulation | https://economictimes.indiatimes.com/news/new-updates/papa-aise-pakdo-jaise-aapki-picture-ki-heroine-ho-at-84-ranjeet-goes-viral-for-fitness-video-with-daughters-guidance/articleshow/130190241.cms | 2026-04-11]",
-      "uid": "622febb88c7abda8bb7efee787b86d67bc461183",
-      "content_signature": "0c1abc8caf76ca9ec37e197e96d20227f47cf184"
-    },
-    {
-      "title": "US stocks today: US stocks end mixed, notches weekly gains as investors parse Middle East negotiations",
-      "url": "https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-today-us-stocks-end-mixed-notches-weekly-gains-as-investors-parse-middle-east-negotiations/articleshow/130179665.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-11",
-      "summary": "US stocks closed mixed as investors weighed Middle East tensions and Iran peace talks. Inflation rose due to energy shocks, while Dow and S&amp;P slipped but Nasdaq gained on tech strength. Despite volatility, all major indexes posted weekly gains as traders stayed cautious ahead of major earnings and macro risks.",
-      "content": "US stocks closed mixed as investors weighed Middle East tensions and Iran peace talks. Inflation rose due to energy shocks, while Dow and S&amp;P slipped but Nasdaq gained on tech strength. Despite volatility, all major indexes posted weekly gains as traders stayed cautious ahead of major earnings and macro risks.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_4_fnb_mix_margin",
-        "check_1_revpar_guidance"
-      ],
-      "dimension_primary": "check_4_fnb_mix_margin",
-      "relevance_score": 6,
-      "stage2_confidence": 0.4,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "US stocks closed mixed as investors weighed Middle East tensions and Iran peace talks. Inflation rose due to energy shocks, while Dow and S&amp;P slipped but Nasdaq gained on tech strength. Despite volatility, all major indexes posted weekly gains as traders stayed cautious ah...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/us-stocks/news/us-stocks-today-us-stocks-end-mixed-notches-weekly-gains-as-investors-parse-middle-east-negotiations/articleshow/130179665.cms | 2026-04-11]",
-      "uid": "5fc5ff03b1d8bce0cc9486b7d30cac1ca368bc25",
-      "content_signature": "33d6bdd05666626da1cda0c3729984dbc862341e"
-    },
-    {
-      "title": "The rupee’s swing: When currency becomes the deal maker or breaker",
-      "url": "https://economictimes.indiatimes.com/markets/forex/forex-news/the-rupees-swing-when-currency-becomes-the-deal-maker-or-breaker/articleshow/130171014.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-10",
-      "summary": "Rupee volatility has become central to India’s distressed deals, driving stress for firms with dollar debt despite stable operations. Elevated hedging costs and FX uncertainty are reshaping pricing, deal structures, and timelines, with investors favouring export-linked assets and natural hedges.",
-      "content": "Rupee volatility has become central to India’s distressed deals, driving stress for firms with dollar debt despite stable operations. Elevated hedging costs and FX uncertainty are reshaping pricing, deal structures, and timelines, with investors favouring export-linked assets and natural hedges.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_3_occupancy_vs_adr",
-        "check_5_debt_coverage"
-      ],
-      "dimension_primary": "check_3_occupancy_vs_adr",
-      "relevance_score": 9,
-      "stage2_confidence": 0.7,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "Rupee volatility has become central to India’s distressed deals, driving stress for firms with dollar debt despite stable operations. Elevated hedging costs and FX uncertainty are reshaping pricing, deal structures, and timelines, with investors favouring export-linked assets...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/forex/forex-news/the-rupees-swing-when-currency-becomes-the-deal-maker-or-breaker/articleshow/130171014.cms | 2026-04-10]",
-      "uid": "a817ab7b6a4c1ed5bc06fa2c5ece6e254709a635",
-      "content_signature": "c47005e0c1b4ffd45d736c19553e54053739d8b3"
-    },
-    {
-      "title": "Railway infra company Vishal Nirmiti gets Sebi nod for IPO",
-      "url": "https://economictimes.indiatimes.com/markets/ipos/fpos/railway-infra-company-vishal-nirmiti-gets-sebi-nod-for-ipo/articleshow/130172891.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-10",
-      "summary": "Vishal Nirmiti has secured Securities and Exchange Board of India approval for its IPO, comprising a fresh issue and offer for sale, with proceeds aimed at working capital, debt reduction and supporting growth across railway and EPC infrastructure segments",
-      "content": "Vishal Nirmiti has secured Securities and Exchange Board of India approval for its IPO, comprising a fresh issue and offer for sale, with proceeds aimed at working capital, debt reduction and supporting growth across railway and EPC infrastructure segments",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_5_debt_coverage",
-        "check_6_supply_overhang"
-      ],
-      "dimension_primary": "check_5_debt_coverage",
-      "relevance_score": 8,
-      "stage2_confidence": 0.7,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "Vishal Nirmiti has secured Securities and Exchange Board of India approval for its IPO, comprising a fresh issue and offer for sale, with proceeds aimed at working capital, debt reduction and supporting growth across railway and EPC infrastructure segments",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/ipos/fpos/railway-infra-company-vishal-nirmiti-gets-sebi-nod-for-ipo/articleshow/130172891.cms | 2026-04-10]",
-      "uid": "697ddb70fb999aae51a3c0295866e73d7771c96a",
-      "content_signature": "6a55e1812c18953cb596157796bde58bc1487645"
-    },
-    {
-      "title": "TCS CEO calls Street \"wrong\" on AI threat; posts $40-bn order book and $2.3 billion in AI revenue for FY26",
-      "url": "https://economictimes.indiatimes.com/markets/companies/tcs-ceo-calls-street-wrong-on-ai-threat-posts-40-bn-order-book-and-2-3-billion-in-ai-revenue-for-fy26/articleshow/130166020.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-10",
-      "summary": "TCS CEO K Krithivasan dismisses fears of IT giants faltering in an AI-first era, asserting the company is actively leading the AI transition. He argues system integrators remain crucial for integrating new tech, driving transformative projects, and redesigning business processes. Enterprise AI spending is now focused on operational efficiency, modernization, and AI transformation itself, with a bullish outlook for FY27.",
-      "content": "TCS CEO K Krithivasan dismisses fears of IT giants faltering in an AI-first era, asserting the company is actively leading the AI transition. He argues system integrators remain crucial for integrating new tech, driving transformative projects, and redesigning business processes. Enterprise AI spending is now focused on operational efficiency, modernization, and AI transformation itself, with a bullish outlook for FY27.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_1_revpar_guidance"
-      ],
-      "dimension_primary": "check_1_revpar_guidance",
-      "relevance_score": 7,
-      "stage2_confidence": 0.4,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "TCS CEO K Krithivasan dismisses fears of IT giants faltering in an AI-first era, asserting the company is actively leading the AI transition. He argues system integrators remain crucial for integrating new tech, driving transformative projects, and redesigning business process...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/companies/tcs-ceo-calls-street-wrong-on-ai-threat-posts-40-bn-order-book-and-2-3-billion-in-ai-revenue-for-fy26/articleshow/130166020.cms | 2026-04-10]",
-      "uid": "d808f78302ae0e76da7afc1195268bab8b435ba4",
-      "content_signature": "d7d85cfc22e4e6ad9c552014dd7cab6f5cbabdaa"
-    },
-    {
-      "title": "Tata Investment, Tata Chemicals shares surge up to 8% after Mistry backs Tata Sons listing push",
-      "url": "https://economictimes.indiatimes.com/markets/stocks/news/tata-investment-tata-chemicals-shares-surge-up-to-8-after-mistry-backs-tata-sons-listing-push/articleshow/130167350.cms",
-      "source": "Rating/Credit",
-      "published_date": "2026-04-10",
-      "summary": "Shares of select Tata group companies moved sharply higher after Shapoorji Pallonji Mistry backed the case for listing Tata Sons, calling it a \"necessary revolution\" rather than a regulatory compulsion. Tata Chemicals rose as much as 8%, while Tata Investment Corporation gained around 6%, reflecting renewed investor interest in holding company and group-linked plays.",
-      "content": "Shares of select Tata group companies moved sharply higher after Shapoorji Pallonji Mistry backed the case for listing Tata Sons, calling it a \"necessary revolution\" rather than a regulatory compulsion. Tata Chemicals rose as much as 8%, while Tata Investment Corporation gained around 6%, reflecting renewed investor interest in holding company and group-linked plays.",
-      "bucket": "RATING_CREDIT",
-      "company_tags": [],
-      "dimensions": [
-        "check_5_debt_coverage",
-        "check_6_supply_overhang"
-      ],
-      "dimension_primary": "check_5_debt_coverage",
-      "relevance_score": 6,
-      "stage2_confidence": 0.4,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Watch",
-      "investment_impact_sentiment": "Watch",
-      "sentiment": "Watch",
-      "market_scope": "sector",
-      "summary_2line": "Shares of select Tata group companies moved sharply higher after Shapoorji Pallonji Mistry backed the case for listing Tata Sons, calling it a \"necessary revolution\" rather than a regulatory compulsion. Tata Chemicals rose as much as 8%, while Tata Investment Corporation gaine...",
-      "citation": "[Rating/Credit | https://economictimes.indiatimes.com/markets/stocks/news/tata-investment-tata-chemicals-shares-surge-up-to-8-after-mistry-backs-tata-sons-listing-push/articleshow/130167350.cms | 2026-04-10]",
-      "uid": "24d6483b7a1811ec00e1be7c291a4669cfbf86a1",
-      "content_signature": "70079bedd620110dc45c57c05d7c8d88c0add9cb"
-    },
-    {
-      "title": "Mint Explainer | IBC's clean slate: How new law gives firms a true fresh start, voids old debt claims",
-      "url": "https://www.livemint.com/companies/ibc-clean-slate-amended-ibc-old-debt-claims-nclt-creditors-resolution-plans-11775797193802.html",
-      "source": "RSS",
-      "published_date": "2026-04-10",
-      "summary": "The amended Insolvency and Bankruptcy Code ensures new investors are not liable for past dues from any creditor, including government agencies, effective from 2016. This aims to boost investments in distressed assets.",
-      "content": "The amended Insolvency and Bankruptcy Code ensures new investors are not liable for past dues from any creditor, including government agencies, effective from 2016. This aims to boost investments in distressed assets.",
-      "bucket": "PUBLISHER_RSS",
-      "company_tags": [],
-      "dimensions": [
-        "check_5_debt_coverage"
-      ],
-      "dimension_primary": "check_5_debt_coverage",
-      "relevance_score": 4,
-      "stage2_confidence": 0.4,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "The amended Insolvency and Bankruptcy Code ensures new investors are not liable for past dues from any creditor, including government agencies, effective from 2016. This aims to boost investments in distressed assets.",
-      "citation": "[RSS | https://www.livemint.com/companies/ibc-clean-slate-amended-ibc-old-debt-claims-nclt-creditors-resolution-plans-11775797193802.html | 2026-04-10]",
-      "uid": "b1c9ea610981c99d76f22607fa50edd21f4fc863",
-      "content_signature": "f13b45276356104d1ff7d2bf5dc8442076338b9b"
-    },
-    {
-      "title": "Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline",
-      "url": "https://www.moneycontrol.com/news/business/hindustan-unilever-q4-preview-price-cuts-slow-demand-regional-competition-to-hurt-topline_17531901.html",
-      "source": "RSS",
-      "published_date": "2024-04-23",
-      "summary": "<img align=\" left\" alt=\"Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline\" border=\"0\" height=\"75\" hspace=\"5\" src=\"https://www.moneycontrol.com/news_image_files/2020/200x200/H/HUL_HIndustan-Unilever_200.jpg\" title=\"Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline\" width=\"75\" /> The hike in royalty payments to parent Unilever are likely to adversely impact HUL#39;s EBITDA margins, say experts",
-      "content": "<img align=\" left\" alt=\"Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline\" border=\"0\" height=\"75\" hspace=\"5\" src=\"https://www.moneycontrol.com/news_image_files/2020/200x200/H/HUL_HIndustan-Unilever_200.jpg\" title=\"Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline\" width=\"75\" /> The hike in royalty payments to parent Unilever are likely to adversely impact HUL#39;s EBITDA margins, say experts",
-      "bucket": "PUBLISHER_RSS",
-      "company_tags": [],
-      "dimensions": [
-        "check_4_fnb_mix_margin",
-        "check_3_occupancy_vs_adr"
-      ],
-      "dimension_primary": "check_4_fnb_mix_margin",
-      "relevance_score": 6,
-      "stage2_confidence": 0.5,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Neutral",
-      "investment_impact_sentiment": "Neutral",
-      "sentiment": "Neutral",
-      "market_scope": "sector",
-      "summary_2line": "<img align=\" left\" alt=\"Hindustan Unilever Q4 Preview: Price cuts, slow demand, regional competition to hurt topline\" border=\"0\" height=\"75\" hspace=\"5\" src=\"https://www.moneycontrol.com/news_image_files/2020/200x200/H/HUL_HIndustan-Unilever_200.jpg\" title=\"Hindustan Unilever Q...",
-      "citation": "[RSS | https://www.moneycontrol.com/news/business/hindustan-unilever-q4-preview-price-cuts-slow-demand-regional-competition-to-hurt-topline_17531901.html | 2024-04-23]",
-      "uid": "46b49a2a3ab02daeaf9b2c3f41f6b30668284431",
-      "content_signature": "26d97e7d12989101b1a94e07e0b44832dd3781f3"
-    }
-  ],
-  "global_hospitality_news": [
-    {
-      "title": "What is gold and silver price prediction for Monday, and will precious metals continue to rise or fall again? Analysts insights, market outlook and what should investors do now",
-      "url": "https://economictimes.indiatimes.com/news/international/us/what-is-gold-and-silver-price-prediction-for-monday-and-will-precious-metals-continue-to-rise-or-fall-again-analysts-insights-market-outlook-and-what-should-investors-do-now/articleshow/130189605.cms",
-      "source": "Policy/Regulation",
-      "published_date": "2026-04-11",
-      "summary": "What is gold and silver price prediction for Monday, and will precious metals continue to rise or fall again? Gold moved toward a weekly gain as the US dollar weakened after a US-Iran truce. Inflation data and interest rate expectations also shaped sentiment. Silver and other metals moved higher during the week. Investors now watch geopolitical risks, interest rates, and inflation signals to understand the next move for precious metals.",
-      "content": "What is gold and silver price prediction for Monday, and will precious metals continue to rise or fall again? Gold moved toward a weekly gain as the US dollar weakened after a US-Iran truce. Inflation data and interest rate expectations also shaped sentiment. Silver and other metals moved higher during the week. Investors now watch geopolitical risks, interest rates, and inflation signals to understand the next move for precious metals.",
-      "bucket": "POLICY_REGULATION",
-      "company_tags": [],
-      "dimensions": [
-        "check_1_revpar_guidance",
-        "check_5_debt_coverage",
-        "check_6_supply_overhang"
-      ],
-      "dimension_primary": "check_1_revpar_guidance",
-      "relevance_score": 9,
-      "stage2_confidence": 0.5,
-      "stage2_reason": "accepted",
-      "linguistic_sentiment": "Negative",
-      "investment_impact_sentiment": "Negative",
-      "sentiment": "Negative",
-      "market_scope": "global",
-      "summary_2line": "What is gold and silver price prediction for Monday, and will precious metals continue to rise or fall again? Gold moved toward a weekly gain as the US dollar weakened after a US-Iran truce. Inflation data and interest rate expectations also shaped sentiment. Silver and other...",
-      "citation": "[Policy/Regulation | https://economictimes.indiatimes.com/news/international/us/what-is-gold-and-silver-price-prediction-for-monday-and-will-precious-metals-continue-to-rise-or-fall-again-analysts-insights-market-outlook-and-what-should-investors-do-now/articleshow/130189605.cms | 2026-04-11]",
-      "uid": "5d4a4dde3c6920e99267d3616192a2aad5fae284",
-      "content_signature": "4bc6b420a74e6e73d5427d06371043cb8081f5d6"
-    }
-  ],
+  "sector_news": [],
+  "global_hospitality_news": [],
   "metadata": {
-    "generated_at_utc": "2026-04-11T14:35:26.000870+00:00",
+    "generated_at_utc": "2026-04-11T18:28:00.381957+00:00",
     "citation_format": "[Source | URL | Date]",
     "check_dimensions": [
       "check_1_revpar_guidance",

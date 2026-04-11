@@ -5,3 +5,4 @@ python-dateutil>=2.9.0.post0
 rapidfuzz>=3.9.7
 tenacity>=9.0.0
 python-dotenv>=1.0.1
+neo4j>=5.23.1

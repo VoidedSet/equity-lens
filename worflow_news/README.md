@@ -5,9 +5,11 @@ This module builds a daily, fully automated Indian hospitality news pipeline ali
 ## What It Does
 - Aggregates news from Google Alerts RSS, publisher RSS, NewsAPI, Bing News API, and optional web scraping.
 - Filters for material relevance against EquityLens analytical dimensions (`check_1` ... `check_6`).
+- Applies stricter hospitality relevance gates to reject broad-market and non-hotel headlines.
 - Tags sentiment (`Positive`, `Neutral`, `Negative`, `Watch`).
 - Deduplicates across sources (URL normalization + title fuzzy matching).
 - Generates daily digest in JSON and Markdown with citation format: `[Source | URL | Date]`.
+- Builds graph-ready events with confidence scoring and optional Neo4j upsert.
 
 ## Files
 - `news_pipeline.py`: End-to-end pipeline script.
@@ -32,6 +34,10 @@ python news_pipeline.py
 Outputs are written to `output/`:
 - `daily_digest_YYYY-MM-DD.json`
 - `daily_digest_YYYY-MM-DD.md`
+- `graph_events_YYYY-MM-DD.json`
+- `pipeline_health_YYYY-MM-DD.json`
+
+If Neo4j credentials are configured in `.env`, graph events are also upserted into Neo4j with confidence-gated relationships.
 
 ## Scheduler
 ### Linux cron (07:00 IST daily)
@@ -49,3 +55,4 @@ Outputs are written to `output/`:
 - Any source can fail independently; pipeline continues with remaining sources.
 - If no material items are found for a section, digest explicitly marks it.
 - All retained items must map to at least one of PRD checks (`check_1` to `check_6`).
+- Graph confidence gating: low-confidence events are skipped, medium confidence events are marked `review_needed`, high confidence events are written as strong edges.
