@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IHCL & Peers Knowledge Graph Explorer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --node-brand: #ff7b72;
+            --node-company: #d2a8ff;
+            --node-location: #79c0ff;
+            --node-person: #a5d6ff;
+            --node-strategy: #ffa657;
+            --node-time_period: #8b949e;
+            --node-topic: #7ee787;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Canvas deals with panning */
+        }
+
+        #app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #sidebar {
+            width: 350px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-header h1 {
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"], select, button {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #21262d;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #30363d;
+        }
+
+        .primary-btn {
+            background-color: #238636;
+            color: white;
+            border-color: #2ea043;
+        }
+        
+        .primary-btn:hover {
+            background-color: #2ea043;
+        }
+
+        #details-panel {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #graph-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .node circle {
+            stroke: var(--bg-color);
+            stroke-width: 1.5px;
+            cursor: pointer;
+            transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
+        }
+        
+        .node circle:hover {
+            stroke: white;
+            stroke-width: 2.5px;
+        }
+
+        .node text {
+            font-size: 12px;
+            fill: #c9d1d9;
+            pointer-events: none;
+            text-shadow: 0px 0px 4px #000, 0px 0px 2px #000;
+            transition: opacity 0.2s;
+        }
+        
+        .node.selected circle {
+            stroke: white;
+            stroke-width: 3px;
+        }
+
+        .link {
+            stroke: #30363d;
+            stroke-opacity: 0.5;
+            transition: stroke-opacity 0.2s, stroke 0.2s;
+        }
+
+        /* Hover Interaction States */
+        .node.dimmed circle, .node.dimmed text { 
+            opacity: 0.1 !important; 
+        }
+        .link.dimmed { 
+            stroke-opacity: 0.05 !important; 
+        }
+        .link.highlighted { 
+            stroke-opacity: 0.9 !important; 
+            stroke: var(--accent-color); 
+            stroke-width: 2px !important;
+        }
+        .node.highlighted circle { 
+            stroke: white; 
+            stroke-width: 3px; 
+            opacity: 1 !important;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(22, 27, 34, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Detail panel styles */
+        .detail-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .detail-meta {
+            font-size: 0.9rem;
+            color: #8b949e;
+            margin-bottom: 15px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h3 {
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #21262d;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 0 5px 5px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .quote {
+            background-color: #21262d;
+            border-left: 3px solid var(--accent-color);
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border-radius: 0 4px 4px 0;
+        }
+
+        #file-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--panel-bg);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            z-index: 100;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="file-loader">
+        <h2>Knowledge Graph Explorer</h2>
+        <p>Could not auto-load <code>graph_data.json</code> (possibly due to browser security restrictions on local files).</p>
+        <p>Please select the <code>graph_data.json</code> file to continue:</p>
+        <br>
+        <input type="file" id="json-file-input" accept=".json">
+    </div>
+
+    <div id="app-container" style="display: none;">
+        <div id="sidebar">
+            <div class="panel-header">
+                <h1>DataHack Graph Explorer</h1>
+                <div class="controls">
+                    <input type="text" id="search-input" placeholder="Search nodes...">
+                    <select id="company-filter">
+                        <option value="ALL">All Companies</option>
+                    </select>
+                    <select id="type-filter">
+                        <option value="ALL">All Node Types</option>
+                        <option value="TOPIC">Topics</option>
+                        <option value="PERSON">People</option>
+                        <option value="BRAND">Brands</option>
+                        <option value="LOCATION">Locations</option>
+                        <option value="STRATEGY">Strategies</option>
+                        <option value="COMPANY">Companies</option>
+                    </select>
+                    <!-- Performance improvement: Edge Weight Filter -->
+                    <div style="margin-top: 5px;">
+                        <span style="font-size: 0.9rem; color: #8b949e;">Min Edge Weight: <span id="weight-val">2.0</span></span>
+                        <input type="range" id="weight-filter" min="0" max="5" step="0.1" value="2.0" style="width: 100%; margin-top: 5px;">
+                    </div>
+                    <button id="reset-btn">Reset View</button>
+                    <!-- Compare Mode -->
+                    <div style="border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
+                        <span style="font-size: 0.9rem; color: #8b949e;">Compare Mode (Select Two)</span>
+                        <div style="display: flex; gap: 5px; margin-top: 5px;">
+                            <select id="compare-c1" style="flex: 1;">
+                                <option value="">Comp 1</option>
+                            </select>
+                            <select id="compare-c2" style="flex: 1;">
+                                <option value="">Comp 2</option>
+                            </select>
+                        </div>
+                        <button id="compare-btn" style="width: 100%; margin-top: 5px;" class="primary-btn">Compare</button>
+                    </div>
+                </div>
+            </div>
+            <div id="details-panel">
+                <div id="default-msg" style="color: #8b949e; text-align: center; margin-top: 50px;">
+                    Select a node or edge to see details
+                </div>
+                <div id="node-details" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div id="graph-container">
+            <svg id="network-viz"></svg>
+            <div id="edge-tooltip" style="position: absolute; display: none; background: rgba(13, 17, 23, 0.95); border: 1px solid var(--accent-color); border-radius: 8px; padding: 12px; color: white; font-size: 13px; max-width: 350px; pointer-events: none; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.8); backdrop-filter: blur(8px);"></div>
+            <div class="legend" id="legend-container">
+                <!-- Legend items injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="visualize_graph.js"></script>
+</body>
+</html>
