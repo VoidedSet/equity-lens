@@ -1,0 +1,32 @@
+[
+  {
+    "category": "risk",
+    "page": 194,
+    "detail": "Key person dependency on Mr. N. Chandrasekaran",
+    "value": null,
+    "unit": null,
+    "quote": null,
+    "target_period": null,
+    "severity": "high"
+  },
+  {
+    "category": "risk",
+    "page": 194,
+    "detail": "Conflict of interest due to multiple directorships",
+    "value": null,
+    "unit": null,
+    "quote": null,
+    "target_period": null,
+    "severity": "medium"
+  },
+  {
+    "category": "risk",
+    "page": 194,
+    "detail": "Dependence on Mr. Chandrasekaran's expertise and experience",
+    "value": null,
+    "unit": null,
+    "quote": null,
+    "target_period": null,
+    "severity": "high"
+  }
+]
