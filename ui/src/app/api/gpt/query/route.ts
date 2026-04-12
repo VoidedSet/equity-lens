@@ -8,8 +8,8 @@ import {
 
 // ── RAG Pipeline: embed query → match documents → LLM synthesis ──
 
-const FEATHERLESS_API_KEY = process.env.FEATHERLESS_API_KEY || "";
-const FEATHERLESS_BASE_URL = process.env.FEATHERLESS_BASE_URL || "https://api.featherless.ai/v1";
+const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 type ChunkMatch = {
   id: string;
@@ -106,59 +106,53 @@ async function synthesizeAnswer(
       return `${doc}${page}${period}`;
     });
 
-  // Call Featherless API (Gemma 3) for synthesis
-  if (!FEATHERLESS_API_KEY) {
-    // No API key — return a summary from chunks directly
-    const topChunk = chunks[0];
-    return {
-      answer: `Based on ${chunks.length} source documents: ${topChunk.chunk_text.substring(0, 500)}...`,
-      citations,
-    };
+  // Call Groq Llama 3.3 70B for synthesis
+  if (!GROQ_API_KEY) {
+    return buildChunkSummary(question, chunks, citations);
   }
 
   try {
-    const response = await fetch(`${FEATHERLESS_BASE_URL}/chat/completions`, {
+    const response = await fetch(GROQ_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${FEATHERLESS_API_KEY}`,
+        Authorization: `Bearer ${GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemma-3-27b-it",
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
             role: "system",
-            content: `You are EquityLens AI, an expert equity research analyst specializing in Indian hotel companies (IHCL, Chalet Hotels, Lemon Tree, EIH/Oberoi, Juniper Hotels).
+            content: `You are EquityLens AI — an expert equity research analyst covering Indian hotel companies (IHCL, Chalet Hotels, Lemon Tree Hotels, EIH/Oberoi, Juniper Hotels).
 
-RULES:
-1. ONLY use information from the provided source documents below. Never invent facts.
-2. If the answer is not in the sources, say "DATA NOT AVAILABLE — this information was not found in the ingested documents."
-3. Cite specific sources using [Source N] notation.
-4. Be concise but thorough. Use specific numbers and quotes when available.
-5. Focus on management guidance accuracy, financial performance, and risk factors.`,
+Your job is to answer the analyst's question using ONLY the source documents provided.
+
+STRICT RULES:
+1. Never invent or extrapolate beyond what the sources say.
+2. If the answer is not found, respond: "DATA NOT AVAILABLE — not found in ingested documents."
+3. Cite sources using [Source N] notation inline.
+4. Be analytical. Extract the signal: did management over-promise? Did numbers diverge? What is the trend?
+5. Use specific figures, dates, and direct quotes when available.
+6. Structure your response clearly with a 1-2 sentence direct answer first, then supporting detail.`,
           },
           {
             role: "user",
             content: `QUESTION: ${question}
 
-SOURCE DOCUMENTS:
+SOURCE DOCUMENTS (use ONLY these):
 ${context}
 
-Answer the question using ONLY the source documents above. Cite sources using [Source N] notation.`,
+Provide a concise analyst-grade answer with source citations.`,
           },
         ],
-        max_tokens: 1024,
-        temperature: 0.3,
+        max_tokens: 1200,
+        temperature: 0.2,
       }),
     });
 
     if (!response.ok) {
-      console.error("[RAG] LLM API error:", response.status, await response.text());
-      // Fallback to chunk summary
-      return {
-        answer: `Based on ${chunks.length} source documents from earnings calls and annual reports: ${chunks[0].chunk_text.substring(0, 500)}...`,
-        citations,
-      };
+      console.error("[RAG] Groq API error:", response.status, await response.text());
+      return buildChunkSummary(question, chunks, citations);
     }
 
     const result = await response.json();
@@ -166,12 +160,33 @@ Answer the question using ONLY the source documents above. Cite sources using [S
 
     return { answer: llmAnswer, citations };
   } catch (err) {
-    console.error("[RAG] LLM call failed:", err);
-    return {
-      answer: `Based on ${chunks.length} retrieved documents: ${chunks[0].chunk_text.substring(0, 500)}...`,
-      citations,
-    };
+    console.error("[RAG] Groq call failed:", err);
+    return buildChunkSummary(question, chunks, citations);
   }
+}
+
+function buildChunkSummary(
+  question: string,
+  chunks: ChunkMatch[],
+  citations: string[]
+): { answer: string; citations: string[] } {
+  const topSources = chunks.slice(0, 3).map((c, i) => {
+    const src = c.source_document?.replace(/.*\//, "") || "Document";
+    const period = c.period ? ` (${c.period})` : "";
+    const speaker = c.speaker ? `${c.speaker}: ` : "";
+    const snippet = c.chunk_text.slice(0, 180).replace(/\s+/g, " ").trim();
+    return `[Source ${i + 1} — ${src}${period}]\n${speaker}"${snippet}…"`;
+  });
+  return {
+    answer: [
+      `**Groq API key not configured.** Showing raw retrieved passages for: *${question}*`,
+      "",
+      ...topSources,
+      "",
+      `Add GROQ_API_KEY to ui/.env.local to enable AI synthesis.`,
+    ].join("\n"),
+    citations,
+  };
 }
 
 async function buildStructuredDataResponse(

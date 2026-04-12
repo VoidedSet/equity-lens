@@ -442,16 +442,59 @@ def content_signature(item: dict) -> str:
     return hashlib.sha1(base.encode("utf-8")).hexdigest()
 
 
+# Extended specificity terms — hospitality & financial signals that indicate the article
+# is genuinely about the hotel sector, not just a passing mention.
+_SPECIFICITY_TERMS = [
+    "revpar", "occupancy", "adr", "ebitda", "debt",
+    "guidance", "room nights", "key additions", "branded inventory",
+    "hotel supply", "pipeline rooms", "management contract", "asset light",
+    "hotel opening", "check-in", "room revenue", "banquet", "resort fee",
+    "hospitality sector", "hospitality industry", "star hotel", "luxury hotel",
+    "budget hotel", "mid-market hotel", "5-star", "4-star", "3-star",
+    "investor day", "earnings call", "annual report", "q1 fy", "q2 fy",
+    "q3 fy", "q4 fy", "fy25", "fy26", "fy24",
+]
+
+# Hard noise patterns — headlines about generic topics with only tangential hotel mention
+_HARD_NOISE_PATTERNS = [
+    "cricket", "ipl", "sports", "bollywood", "movie", "election",
+    "parliament", "political party", "prime minister",
+    "oil price", "petrol", "diesel", "cryptocurrency", "bitcoin",
+    "agriculture", "farming", "monsoon", "weather forecast",
+    "school", "college", "university", "education board",
+    "hospital", "medicine", "pharma drug", "vaccine",
+]
+
+
 def stage_two_relevance_check(item: dict, text: str, dimensions: List[str], dim_score: int, materiality: int, companies: List[str]) -> Tuple[bool, float, str]:
-    # Stage-2 classifier (deterministic) to reduce noisy headlines after stage-1 keyword pass.
+    """
+    Stage-2 classifier — deterministic, tightened.
+    Confidence formula: (hard_signal + specificity - noise) / 12.0
+    Threshold: 0.45 (raised from 0.35 to reduce off-topic noise)
+    Additional gates:
+      - Hard noise patterns instantly reject
+      - Must have company detection OR specificity hit
+    """
+    # Hard reject: article is dominated by off-topic content
+    noise_hits = sum(1 for p in _HARD_NOISE_PATTERNS if p in text)
+    if noise_hits >= 2:
+        return False, 0.0, "hard_noise_pattern"
+
     hard_signal = dim_score + materiality + len(companies)
-    noise = 2 if is_press_release_like(text) else 0
-    specificity = 2 if any(k in text for k in ["revpar", "occupancy", "adr", "ebitda", "debt", "guidance"]) else 0
-    confidence = max(0.0, min(1.0, (hard_signal + specificity - noise) / 10.0))
+    noise = (2 if is_press_release_like(text) else 0) + noise_hits
+    specificity = sum(1 for k in _SPECIFICITY_TERMS if k in text)
+    specificity = min(specificity, 4)  # cap bonus to prevent gaming
+
+    confidence = max(0.0, min(1.0, (hard_signal + specificity - noise) / 12.0))
 
     if not dimensions:
         return False, confidence, "no_dimension_mapping"
-    if confidence < 0.35:
+
+    # Must have either a company signal OR meaningful specificity (prevents generic hospitality noise)
+    if not companies and specificity < 2:
+        return False, confidence, "no_company_no_specificity"
+
+    if confidence < 0.45:
         return False, confidence, "low_stage2_confidence"
     return True, confidence, "accepted"
 
@@ -758,7 +801,7 @@ def enrich_and_filter(raw_items: List[dict]) -> Tuple[List[dict], dict]:
             continue
 
         relevance_score = dim_score * 2 + materiality + (2 if companies else 0)
-        if relevance_score < 3:
+        if relevance_score < 4:
             stats["dropped_low_relevance"] += 1
             continue
 

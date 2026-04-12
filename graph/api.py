@@ -25,11 +25,48 @@ from graph.neo4j_client import Neo4jClient
 
 # Import LLM client for AI queries
 try:
-    from agent.llm_client import chat_completion
+    from agent.llm_client import groq_chat_completion
     HAS_LLM = True
 except ImportError:
-    HAS_LLM = False
-    print("Warning: LLM client not available. AI query endpoint will be disabled.")
+    try:
+        import requests as _req
+        HAS_LLM = True
+        groq_chat_completion = None
+    except ImportError:
+        HAS_LLM = False
+    print("Warning: agent.llm_client not found; will use inline Groq call.")
+
+
+import requests as _requests
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL = "llama-3.3-70b-versatile"
+
+
+def _groq_call(messages: list, temperature: float = 0.1, max_tokens: int = 1024) -> str:
+    """Inline Groq call — used if agent module is unavailable."""
+    if not GROQ_API_KEY:
+        return "[LLM Error] GROQ_API_KEY not set in graph/.env"
+    try:
+        resp = _requests.post(
+            GROQ_URL,
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
+            json={"model": GROQ_MODEL, "messages": messages, "temperature": temperature, "max_tokens": max_tokens},
+            timeout=60,
+        )
+        if resp.status_code == 200:
+            return resp.json()["choices"][0]["message"]["content"]
+        return f"[LLM Error] Groq {resp.status_code}: {resp.text[:300]}"
+    except Exception as exc:
+        return f"[LLM Error] {exc}"
+
+
+def _call_llm(messages: list, temperature: float = 0.1, max_tokens: int = 1024) -> str:
+    """Route to agent module if available, else use inline Groq call."""
+    if groq_chat_completion is not None:
+        return groq_chat_completion(messages, temperature, max_tokens)
+    return _groq_call(messages, temperature, max_tokens)
 
 
 app = FastAPI(title="Knowledge Graph API", version="1.0.0")
@@ -206,32 +243,40 @@ async def get_stats():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/query", response_model=CypherQueryResponse)
+@app.post("/query")
 async def natural_language_query(request: NLQueryRequest):
     """
-    Convert natural language question to Cypher query and execute it.
-    Uses LLM to generate Cypher from the question.
+    Convert natural language question to Cypher query via Groq Llama 3.3 70B,
+    execute it, and return both tabular results AND graph-renderable nodes/edges.
     """
-    if not HAS_LLM:
+    if not GROQ_API_KEY:
         raise HTTPException(
             status_code=501,
-            detail="LLM client not available. AI query endpoint is disabled."
+            detail="GROQ_API_KEY not set. Add it to graph/.env to enable AI queries."
         )
     
     try:
         # Get schema for context
         schema = neo4j_client.get_schema()
         
-        # Build prompt for LLM
+        # Build prompt
         prompt = build_cypher_prompt(request.question, schema, request.company)
         
-        # Generate Cypher
         messages = [
-            {"role": "system", "content": "You are a Neo4j Cypher query expert."},
+            {
+                "role": "system",
+                "content": (
+                    "You are a Neo4j Cypher query expert for an Indian hotel sector knowledge graph. "
+                    "Generate precise, read-only Cypher queries. Output ONLY the raw Cypher, no markdown, no explanation."
+                )
+            },
             {"role": "user", "content": prompt}
         ]
         
-        llm_response = chat_completion(messages, temperature=0.1, max_tokens=1000)
+        llm_response = _call_llm(messages, temperature=0.05, max_tokens=512)
+        
+        if llm_response.startswith("[LLM Error]"):
+            raise HTTPException(status_code=502, detail=llm_response)
         
         # Parse Cypher from response
         cypher = extract_cypher_from_response(llm_response)
@@ -239,23 +284,24 @@ async def natural_language_query(request: NLQueryRequest):
         if not cypher:
             raise HTTPException(
                 status_code=400,
-                detail="Could not generate valid Cypher query from question"
+                detail=f"Could not parse valid Cypher from LLM response: {llm_response[:200]}"
             )
         
-        # Execute Cypher (read-only safety check)
+        # Safety check
         if not is_read_only_query(cypher):
-            raise HTTPException(
-                status_code=403,
-                detail="Only read-only queries are allowed"
-            )
+            raise HTTPException(status_code=403, detail="Only read-only queries are allowed")
         
         # Execute query
-        result = neo4j_client._run_query(cypher)
+        raw_result = neo4j_client._run_query(cypher)
+        
+        # Build graph-renderable nodes + edges from the result rows
+        graph_nodes, graph_edges = extract_graph_from_result(raw_result, request.company)
         
         return {
             "cypher": cypher,
-            "result": {"data": result, "count": len(result)},
-            "explanation": f"Executed query for: {request.question}"
+            "result": {"data": raw_result, "count": len(raw_result)},
+            "graph": {"nodes": graph_nodes, "edges": graph_edges},
+            "explanation": f"Groq (Llama 3.3 70B) answered: {request.question}",
         }
         
     except HTTPException:
@@ -267,62 +313,117 @@ async def natural_language_query(request: NLQueryRequest):
 # ─── Helper Functions ──────────────────────────────────────
 
 def build_cypher_prompt(question: str, schema: dict, company: Optional[str]) -> str:
-    """Build prompt for LLM to generate Cypher."""
-    
+    """Build a rich prompt for Groq Llama 3.3 70B to generate Cypher."""
+
     company_context = ""
     if company:
-        company_context = f"\nFocus on company code: {company} (filter using '$company IN n.companies' on entity nodes)"
-    
+        company_context = (
+            f"\nACTIVE COMPANY FILTER: {company}. "
+            f"When relevant, scope results to this company using: WHERE '{company}' IN n.companies"
+        )
+
     examples = """
-IMPORTANT SCHEMA NOTES:
-- Company nodes only have a 'code' property (e.g. 'IHCL', 'CHALET', 'EIH', 'JUNIPER', 'LEMONTREE')
-- Entity nodes (TOPIC, LOCATION, BRAND, STRATEGY, PERSON, TIME_PERIOD) have: name, count, companies (list of company codes)
-- To find entities for a company, use: WHERE 'IHCL' IN n.companies
-- Entities are connected via CO_OCCURS relationships (not to Company nodes directly)
-- Use UPPERCASE labels for entities: TOPIC, LOCATION, BRAND, STRATEGY, PERSON, TIME_PERIOD
+=== SCHEMA RULES (READ CAREFULLY) ===
+- Company nodes: label=Company, property: code (e.g. 'IHCL', 'CHALET', 'EIH', 'JUNIPER', 'LEMONTREE')
+- Entity nodes: labels TOPIC, LOCATION, BRAND, STRATEGY, PERSON, TIME_PERIOD
+  Properties on entity nodes: name (string), count (int = mention frequency), companies (list of codes)
+- Relationships: CO_OCCURS connects entities to entities. Company nodes do NOT have direct edges to entities.
+- To find entities for a company: WHERE 'IHCL' IN n.companies
+- ALWAYS use UPPERCASE labels: TOPIC not Topic, LOCATION not Location, etc.
 
-Example 1:
-Question: "Which locations are associated with IHCL?"
-Cypher: MATCH (l:LOCATION) WHERE 'IHCL' IN l.companies RETURN l.name, l.count ORDER BY l.count DESC LIMIT 10
+=== EXAMPLES ===
 
-Example 2:
-Question: "What are the top 5 most discussed topics?"
-Cypher: MATCH (t:TOPIC) RETURN t.name, t.count ORDER BY t.count DESC LIMIT 5
+Q: Which locations are associated with IHCL?
+A: MATCH (l:LOCATION) WHERE 'IHCL' IN l.companies RETURN elementId(l) as id, labels(l)[0] as type, l.name as name, l.count as count, l.companies as companies ORDER BY l.count DESC LIMIT 15
 
-Example 3:
-Question: "Which companies operate in Mumbai?"
-Cypher: MATCH (l:LOCATION {name: 'Mumbai'}) RETURN l.name, l.companies
+Q: Top discussed topics across all companies
+A: MATCH (t:TOPIC) RETURN elementId(t) as id, labels(t)[0] as type, t.name as name, t.count as count, t.companies as companies ORDER BY t.count DESC LIMIT 20
 
-Example 4:
-Question: "Compare brands of IHCL and EIH"
-Cypher: MATCH (b:BRAND) WHERE 'IHCL' IN b.companies OR 'EIH' IN b.companies RETURN b.name, b.companies, b.count ORDER BY b.count DESC
+Q: Which companies operate in Mumbai?
+A: MATCH (l:LOCATION) WHERE toLower(l.name) CONTAINS 'mumbai' RETURN elementId(l) as id, labels(l)[0] as type, l.name as name, l.count as count, l.companies as companies
 
-Example 5:
-Question: "What topics are common between IHCL and CHALET?"
-Cypher: MATCH (t:TOPIC) WHERE 'IHCL' IN t.companies AND 'CHALET' IN t.companies RETURN t.name, t.count ORDER BY t.count DESC LIMIT 10
+Q: Compare brands of IHCL and EIH
+A: MATCH (b:BRAND) WHERE 'IHCL' IN b.companies OR 'EIH' IN b.companies RETURN elementId(b) as id, labels(b)[0] as type, b.name as name, b.count as count, b.companies as companies ORDER BY b.count DESC LIMIT 20
 
-Example 6:
-Question: "Find strategies related to digital"
-Cypher: MATCH (s:STRATEGY) WHERE toLower(s.name) CONTAINS 'digital' RETURN s.name, s.count, s.companies ORDER BY s.count DESC
+Q: What topics are common between IHCL and CHALET?
+A: MATCH (t:TOPIC) WHERE 'IHCL' IN t.companies AND 'CHALET' IN t.companies RETURN elementId(t) as id, labels(t)[0] as type, t.name as name, t.count as count, t.companies as companies ORDER BY t.count DESC LIMIT 15
+
+Q: Strategies related to expansion
+A: MATCH (s:STRATEGY) WHERE toLower(s.name) CONTAINS 'expan' RETURN elementId(s) as id, labels(s)[0] as type, s.name as name, s.count as count, s.companies as companies ORDER BY s.count DESC LIMIT 15
+
+Q: Find connections between revenue and Mumbai
+A: MATCH (a)-[r:CO_OCCURS]-(b) WHERE (toLower(a.name) CONTAINS 'revenue' OR toLower(a.name) CONTAINS 'revpar') AND (toLower(b.name) CONTAINS 'mumbai') RETURN elementId(a) as id, labels(a)[0] as type, a.name as name, a.count as count, a.companies as companies UNION MATCH (a)-[r:CO_OCCURS]-(b) WHERE (toLower(a.name) CONTAINS 'revenue' OR toLower(a.name) CONTAINS 'revpar') AND (toLower(b.name) CONTAINS 'mumbai') RETURN elementId(b) as id, labels(b)[0] as type, b.name as name, b.count as count, b.companies as companies LIMIT 20
+
+Q: Key persons mentioned for Lemon Tree
+A: MATCH (p:PERSON) WHERE 'LEMONTREE' IN p.companies RETURN elementId(p) as id, labels(p)[0] as type, p.name as name, p.count as count, p.companies as companies ORDER BY p.count DESC LIMIT 10
+
+=== OUTPUT FORMAT REQUIREMENT ===
+Always RETURN these columns when possible: elementId(n) as id, labels(n)[0] as type, n.name as name, n.count as count, n.companies as companies
+This enables the frontend to render the results as a knowledge graph visualization.
 """
-    
-    prompt = f"""You are a Neo4j Cypher query expert. Generate a Cypher query to answer the user's question.
 
-Graph Schema:
-- Node Labels: {', '.join(schema['node_labels'])}
-- Relationship Types: {', '.join(schema['relationship_types'])}
-- Node Properties: {json.dumps(schema['node_properties'], indent=2)}
+    prompt = f"""Graph Schema:
+- Node Labels: {', '.join(schema.get('node_labels', []))}
+- Relationship Types: {', '.join(schema.get('relationship_types', []))}
 
 {examples}
 
 User Question: {question}{company_context}
 
-Generate ONLY the Cypher query. No explanations, no markdown fences. Just the raw Cypher.
-The query must be read-only (MATCH/RETURN only, no CREATE/DELETE/SET).
-Always add LIMIT 20 unless user specifies a number.
+Output ONLY the raw Cypher query. No markdown. No explanation. No code fences.
+Must be read-only (MATCH/RETURN only). Add LIMIT 25 if not already specified.
 """
-    
     return prompt
+
+
+def extract_graph_from_result(rows: list, company: Optional[str]) -> tuple:
+    """
+    Convert raw Cypher result rows into graph-renderable nodes and edges.
+    Looks for 'id', 'type', 'name', 'count', 'companies' columns.
+    Then fetches edges between returned node IDs.
+    """
+    nodes = []
+    seen_ids = set()
+
+    for row in rows:
+        node_id = row.get("id")
+        if not node_id or node_id in seen_ids:
+            continue
+        seen_ids.add(node_id)
+        nodes.append({
+            "id": str(node_id),
+            "type": str(row.get("type", "TOPIC")),
+            "name": str(row.get("name", "")),
+            "count": int(row.get("count", 0) or 0),
+            "companies": list(row.get("companies") or []),
+        })
+
+    # Fetch edges between the returned nodes
+    edges = []
+    if len(seen_ids) > 1 and neo4j_client:
+        try:
+            id_list = list(seen_ids)
+            edge_cypher = """
+            MATCH (a)-[r]-(b)
+            WHERE elementId(a) IN $ids AND elementId(b) IN $ids
+              AND elementId(a) < elementId(b)
+            RETURN DISTINCT
+                elementId(startNode(r)) as source,
+                elementId(endNode(r)) as target,
+                type(r) as type,
+                coalesce(r.weight, 1) as weight
+            LIMIT 100
+            """
+            edge_rows = neo4j_client._run_query(edge_cypher, {"ids": id_list})
+            edges = [
+                {"source": str(e["source"]), "target": str(e["target"]),
+                 "type": e["type"], "weight": e.get("weight", 1)}
+                for e in edge_rows
+            ]
+        except Exception:
+            pass
+
+    return nodes, edges
 
 
 def extract_cypher_from_response(response: str) -> Optional[str]:

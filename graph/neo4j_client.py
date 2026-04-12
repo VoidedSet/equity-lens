@@ -64,37 +64,69 @@ class Neo4jClient:
         company_filter: str = None,
         limit: int = 50
     ) -> List[Dict[str, Any]]:
-        """Search nodes by name with optional filters."""
+        """
+        Search nodes with multi-tier relevance scoring:
+          3 = exact name match
+          2 = name starts with query
+          1 = name contains query (case-insensitive)
+        Results are sorted by relevance tier first, then by mention count.
+        """
+        if not query.strip():
+            # No query: return top nodes by count
+            cypher = """
+            MATCH (n)
+            WHERE n.name IS NOT NULL
+            """
+            params: dict = {"limit": limit}
+            if node_type:
+                cypher += f" AND '{node_type}' IN labels(n)"
+            if company_filter:
+                cypher += " AND (n.code = $company OR $company IN n.companies)"
+                params["company"] = company_filter
+            cypher += """
+            RETURN
+                elementId(n) as id,
+                labels(n)[0] as type,
+                coalesce(n.name, n.label, n.code) as name,
+                coalesce(n.count, 0) as count,
+                coalesce(n.companies, []) as companies
+            ORDER BY count DESC
+            LIMIT $limit
+            """
+            return self._run_query(cypher, params)
+
+        # Multi-tier relevance search
         cypher = """
         MATCH (n)
-        WHERE ($query = '' OR toLower(n.name) CONTAINS toLower($query) OR toLower(n.label) CONTAINS toLower($query))
+        WHERE n.name IS NOT NULL
+          AND toLower(n.name) CONTAINS toLower($query)
         """
-        
-        params = {"query": query, "limit": limit}
-        
+        params = {"query": query.strip(), "limit": limit}
+
         if node_type:
             cypher += f" AND '{node_type}' IN labels(n)"
-        
+
         if company_filter:
-            cypher += """
-            AND (
-                n.code = $company 
-                OR $company IN n.companies
-            )
-            """
+            cypher += " AND (n.code = $company OR $company IN n.companies)"
             params["company"] = company_filter
-        
+
         cypher += """
-        RETURN 
+        WITH n,
+             CASE
+               WHEN toLower(n.name) = toLower($query) THEN 3
+               WHEN toLower(n.name) STARTS WITH toLower($query) THEN 2
+               ELSE 1
+             END as relevance
+        RETURN
             elementId(n) as id,
             labels(n)[0] as type,
             coalesce(n.name, n.label, n.code) as name,
             coalesce(n.count, 0) as count,
-            coalesce(n.companies, []) as companies
-        ORDER BY count DESC
+            coalesce(n.companies, []) as companies,
+            relevance
+        ORDER BY relevance DESC, count DESC
         LIMIT $limit
         """
-        
         return self._run_query(cypher, params)
 
     def get_node_neighbors(

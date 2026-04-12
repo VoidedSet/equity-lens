@@ -35,7 +35,7 @@ function JSONTranscriptViewer({ url }: { url: string }) {
   return (
     <div className="overflow-auto max-h-[calc(100vh-120px)] p-4 space-y-3">
       {entries.map((entry, i) => {
-        const speaker = entry.speaker || entry.Speaker || "";
+        const speaker = String(entry.speaker || entry.Speaker || "");
         const text = entry.text || entry.chunk_text || entry.content || entry.body || JSON.stringify(entry);
         const ts = entry.timestamp || entry.time || "";
         return (
@@ -147,8 +147,17 @@ export function SourceModal() {
 
   if (!open) return null;
 
-  // Build PDF URL
-  const searchSnippet = quote ? quote.split(/\s+/).slice(0, 8).join(" ") : null;
+  // Build PDF search snippet — pick the most-specific 8-word window,
+  // skipping generic filler at the start (articles, conjunctions, etc.)
+  const searchSnippet = (() => {
+    if (!quote) return null;
+    const stopWords = new Set(["the","a","an","and","or","but","in","on","at","to","for","of","with","by","from","that","this","is","are","was","were","be","been","being","have","has","had"]);
+    const words = quote.split(/\s+/).filter((w) => w.length > 0);
+    // Find first non-stop-word position
+    let start = words.findIndex((w) => !stopWords.has(w.toLowerCase().replace(/[^a-z]/g, "")));
+    if (start < 0) start = 0;
+    return words.slice(start, start + 10).join(" ");
+  })();
   let pdfViewUrl: string | null = null;
   if (source?.pdfUrl) {
     const fragments: string[] = [];

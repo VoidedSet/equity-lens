@@ -16,6 +16,7 @@ import { NewsFeed } from "@/components/NewsFeed";
 import { FootnoteSection } from "@/components/FootnoteSection";
 import { Footer } from "@/components/Footer";
 import { SourceModal } from "@/components/SourceModal";
+import { GovernanceInsights } from "@/components/GovernanceInsights";
 import { useCompanies, useCompanyData, useCompare, useNews } from "@/lib/hooks";
 import {
   toUICompany,
@@ -120,6 +121,7 @@ export default function Home() {
             <CredibilityTrend credibilityTrend={uiCredibility} opmTrend={opmTrend} />
           )}
           {uiRiskFlags.length > 0 && <RiskFlags risks={uiRiskFlags} />}
+          <GovernanceInsights companyId={selectedCompany || undefined} />
           <KnowledgeGraph companyCode={selectedCompany || undefined} />
           {uiCompare && (
             <CompanyCompare
