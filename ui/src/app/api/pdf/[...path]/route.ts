@@ -15,9 +15,10 @@ export async function GET(
   const RAW_DIR = path.resolve(process.cwd(), "../Raw Data Extraction");
   const filePath = path.join(RAW_DIR, relativePath);
 
-  // Security: ensure we stay inside RAW_DIR
+  // Security: ensure we stay inside the workspace root
+  const ROOT_DIR = path.resolve(process.cwd(), "..");
   const resolved = path.resolve(filePath);
-  if (!resolved.startsWith(path.resolve(RAW_DIR))) {
+  if (!resolved.startsWith(ROOT_DIR)) {
     return NextResponse.json({ error: "Access denied" }, { status: 403 });
   }
 

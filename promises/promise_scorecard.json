@@ -1,0 +1,1108 @@
+{
+  "summary": {
+    "total_promises": 25,
+    "by_status": {
+      "EXCEEDED": 9,
+      "KEPT": 1,
+      "PARTIAL": 1,
+      "BROKEN": 0,
+      "PENDING": 14
+    },
+    "company_scores": {
+      "CHALET": {
+        "total": 2,
+        "EXCEEDED": 1,
+        "KEPT": 0,
+        "PARTIAL": 1,
+        "BROKEN": 0,
+        "PENDING": 0,
+        "resolved": 2,
+        "credibility_score": 85
+      },
+      "IHCL": {
+        "total": 3,
+        "EXCEEDED": 0,
+        "KEPT": 0,
+        "PARTIAL": 0,
+        "BROKEN": 0,
+        "PENDING": 3,
+        "resolved": 0,
+        "credibility_score": 50
+      },
+      "LEMONTREE": {
+        "total": 20,
+        "EXCEEDED": 8,
+        "KEPT": 1,
+        "PARTIAL": 0,
+        "BROKEN": 0,
+        "PENDING": 11,
+        "resolved": 9,
+        "credibility_score": 100
+      }
+    }
+  },
+  "details": [
+    {
+      "id": "promise_6ce81f65ef45",
+      "company": "CHALET",
+      "source_period": "May 2022",
+      "target_period": "FY23",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Sanjay Sethi",
+      "source_file": "2022_May.json",
+      "text": "No, debt repayment will be in the range of Rs.300 Crores for the year FY2023.",
+      "metrics": [
+        "Debt"
+      ],
+      "primary_metric": "Debt",
+      "target": "Rs.300 Crore",
+      "target_value": {
+        "low": 300.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "down",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "Borrowings +",
+      "verification_source": "balance_sheet_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Chalet_Hotels\\balance_sheet_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": -256.0,
+      "base_period": "Mar 2022",
+      "base_value": 2597.0,
+      "ending_value": 2853.0,
+      "comparable_target": "300",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2022_May.json",
+          "source_period": "May 2022",
+          "speaker": "Sanjay Sethi",
+          "text": "No, debt repayment will be in the range of Rs.300 Crores for the year FY2023."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Chalet_Hotels\\balance_sheet_enriched.csv",
+          "csv_key": "balance_sheet_enriched",
+          "metric": "Borrowings +",
+          "period": "Mar 2023",
+          "value": -256.0,
+          "base_period": "Mar 2022",
+          "base_value": 2597.0,
+          "ending_value": 2853.0
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "Borrowings + fell from 2597 in Mar 2022 to 2853 in Mar 2023, a reduction of -256 versus target reduction 300; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_c5ce1c76261a",
+      "company": "CHALET",
+      "source_period": "May 2022",
+      "target_period": "FY23",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Milind Wadekar",
+      "source_file": "2022_May.json",
+      "text": "So, the net debt as of March 2022 is 2234 Crores and we expect it will peak to 2600 Crores in FY2023 and it will start tapering down",
+      "metrics": [
+        "Debt"
+      ],
+      "primary_metric": "Debt",
+      "target": "2600 Crore",
+      "target_value": {
+        "low": 2600.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "down",
+      "status": "PARTIAL",
+      "score": 0.5,
+      "verification_metric": "Borrowings +",
+      "verification_source": "balance_sheet_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Chalet_Hotels\\balance_sheet_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": 2853.0,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "2600",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2022_May.json",
+          "source_period": "May 2022",
+          "speaker": "Milind Wadekar",
+          "text": "So, the net debt as of March 2022 is 2234 Crores and we expect it will peak to 2600 Crores in FY2023 and it will start tapering down"
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Chalet_Hotels\\balance_sheet_enriched.csv",
+          "csv_key": "balance_sheet_enriched",
+          "metric": "Borrowings +",
+          "period": "Mar 2023",
+          "value": 2853.0,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "Borrowings + in Mar 2023 was 2853 versus comparable target 2600; classified as PARTIAL."
+    },
+    {
+      "id": "promise_9f1f2ad0b545",
+      "company": "IHCL",
+      "source_period": "Jun 2025",
+      "target_period": "FY26",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Our expansion momentum continues",
+      "source_file": "2025_Jun.json",
+      "text": "In the first full year of operations, the flagship Ginger Hotel at Mumbai Airport closed the year with a revenue of INR 97 crores and is expected to comfortably cross the milestone of INR 100-plus crores in this financial year.  Qmin on the other hand, has expanded to 72 outlets and in addition to service as the F&B brand for Ginger Hotels, has also established a presence in Westside stores in Mumbai and Bengaluru through a shop-in-shop format.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "INR 100",
+      "target_value": {
+        "low": 100.0,
+        "high": null,
+        "unit": "currency",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "Sales +",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Indian_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_f9125a7ecba0",
+      "company": "IHCL",
+      "source_period": "Jun 2025",
+      "target_period": "FY26",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Ankur Dalwani",
+      "source_file": "2025_Jun.json",
+      "text": "The Indian Hotels Company Limited May 5, 2025 Page 11 of 20 Overall, if you look at how we are looking at their numbers, the next year, FY '26, we expect because of this, there could be a 1% impact on the margin, but this will also help in growth in the revenues because this levy now gets added to the revenue itself.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "1%",
+      "target_value": {
+        "low": 1.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Indian_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_54334d8972b2",
+      "company": "IHCL",
+      "source_period": "Feb 2026",
+      "target_period": "FY27",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Ankur Dalwani",
+      "source_file": "2026_Feb.json",
+      "text": "But you know, organically itself, there is growth opportunity in the current asset, which will add both rooms and wellness lots in the next financial year, and take the revenues close to about INR 100 crores in the coming year.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "INR 100 crore",
+      "target_value": {
+        "low": 100.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "Sales +",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Indian_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2027",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2027 is still pending."
+    },
+    {
+      "id": "promise_d0d8b0e6e1a5",
+      "company": "LEMONTREE",
+      "source_period": "Aug 2022",
+      "target_period": "Unknown",
+      "target_period_basis": "near_term",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2022_Aug.json",
+      "text": "So how did we achieve this despite higher room inventory and F&B cost inflation, what we're seeing currently, and how sustainable it is going forward, like you know, earlier in the interview | heard in the morning, we were talking about 50% EBITDA margin.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "about 50%",
+      "target_value": {
+        "low": 50.0,
+        "high": null,
+        "unit": "%",
+        "comparator": "about"
+      },
+      "direction": "maintain",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "quarter_analysis_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\quarter_analysis_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": 55.3,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "50",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2022_Aug.json",
+          "source_period": "Aug 2022",
+          "speaker": "Patanjali Keswani",
+          "text": "So how did we achieve this despite higher room inventory and F&B cost inflation, what we're seeing currently, and how sustainable it is going forward, like you know, earlier in the interview | heard in the morning, we were talking about 50% EBITDA margin."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\quarter_analysis_enriched.csv",
+          "csv_key": "quarter_analysis_enriched",
+          "metric": "EBITDA Margin %",
+          "period": "Mar 2023",
+          "value": 55.3,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "future_window_csv",
+        "window_periods": [
+          "Dec 2022",
+          "Mar 2023",
+          "Jun 2023",
+          "Sep 2023"
+        ]
+      },
+      "rationale": "No explicit target date was stated, so checked the next reported window (Dec 2022, Mar 2023, Jun 2023, Sep 2023); best comparable EBITDA Margin % was 55.3 in Mar 2023 versus target 50; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_cb8a16363b88",
+      "company": "LEMONTREE",
+      "source_period": "Feb 2022",
+      "target_period": "FY23",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Rajiv",
+      "source_file": "2022_Feb.json",
+      "text": "You mentioned that EBITDA will be 14% in FY 23.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "14%",
+      "target_value": {
+        "low": 14.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": 51.2,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "14",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2022_Feb.json",
+          "source_period": "Feb 2022",
+          "speaker": "Rajiv",
+          "text": "You mentioned that EBITDA will be 14% in FY 23."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "EBITDA Margin %",
+          "period": "Mar 2023",
+          "value": 51.2,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "EBITDA Margin % in Mar 2023 was 51.2 versus comparable target 14; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_5722187599aa",
+      "company": "LEMONTREE",
+      "source_period": "Jun 2022",
+      "target_period": "FY23",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2022_Jun.json",
+      "text": "See, | don't want to give specific numbers, let me put it this way that in this financial year FY23, we will at least grow 100% in revenue versus FY22, and we will have a minimum net EBITDA margin of 50%.",
+      "metrics": [
+        "Revenue",
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "50%",
+      "target_value": {
+        "low": 50.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "KEPT",
+      "score": 1.0,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": 51.2,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "50",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2022_Jun.json",
+          "source_period": "Jun 2022",
+          "speaker": "Patanjali Keswani",
+          "text": "See, | don't want to give specific numbers, let me put it this way that in this financial year FY23, we will at least grow 100% in revenue versus FY22, and we will have a minimum net EBITDA margin of 50%."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "EBITDA Margin %",
+          "period": "Mar 2023",
+          "value": 51.2,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "EBITDA Margin % in Mar 2023 was 51.2 versus comparable target 50; classified as KEPT."
+    },
+    {
+      "id": "promise_e3f356e3943c",
+      "company": "LEMONTREE",
+      "source_period": "Feb 2023",
+      "target_period": "FY23",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Nikhil Agrawal",
+      "source_file": "2023_Feb.json",
+      "text": "It will be a 20% revenue growth and our net EBITDA margin will be higher than this year.",
+      "metrics": [
+        "Revenue",
+        "EBITDA Margin"
+      ],
+      "primary_metric": "Revenue",
+      "target": "20%",
+      "target_value": {
+        "low": 20.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2023",
+      "actual_value": 117.7,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "20",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2023_Feb.json",
+          "source_period": "Feb 2023",
+          "speaker": "Nikhil Agrawal",
+          "text": "It will be a 20% revenue growth and our net EBITDA margin will be higher than this year."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "YoY Sales Growth %",
+          "period": "Mar 2023",
+          "value": 117.7,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "YoY Sales Growth % in Mar 2023 was 117.7 versus comparable target 20; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_107bc9b676f5",
+      "company": "LEMONTREE",
+      "source_period": "Jun 2023",
+      "target_period": "FY24",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "To further explain, total management fees can be broken into three parts",
+      "source_file": "2023_Jun.json",
+      "text": "This will increase our operating expenses by a further 2% to 2.5% on a revenue basis for this year but will position our hotels to capture better pricing and demand in H2 and in the following years.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "2.5%",
+      "target_value": {
+        "low": 2.5,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2024",
+      "actual_value": 22.4,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "2.5",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2023_Jun.json",
+          "source_period": "Jun 2023",
+          "speaker": "To further explain, total management fees can be broken into three parts",
+          "text": "This will increase our operating expenses by a further 2% to 2.5% on a revenue basis for this year but will position our hotels to capture better pricing and demand in H2 and in the following years."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "YoY Sales Growth %",
+          "period": "Mar 2024",
+          "value": 22.4,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "YoY Sales Growth % in Mar 2024 was 22.4 versus comparable target 2.5; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_640d97eae1ba",
+      "company": "LEMONTREE",
+      "source_period": "Jun 2023",
+      "target_period": "FY24",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2023_Jun.json",
+      "text": "This year, we will spend about INR 55 crores, of which about INR 40 crores will be or INR 43 crores will be opex and that will come pre-net EBITDA.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "INR 43 crore",
+      "target_value": {
+        "low": 43.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "EBITDA",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2024",
+      "actual_value": 523.0,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "43",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2023_Jun.json",
+          "source_period": "Jun 2023",
+          "speaker": "Patanjali Keswani",
+          "text": "This year, we will spend about INR 55 crores, of which about INR 40 crores will be or INR 43 crores will be opex and that will come pre-net EBITDA."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "EBITDA",
+          "period": "Mar 2024",
+          "value": 523.0,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "EBITDA in Mar 2024 was 523 versus comparable target 43; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_14bda44320fe",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2023",
+      "target_period": "FY24",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2023_Nov.json",
+      "text": "Last year we did a bit, this year, next year and the following year, when this entire investment is made, I would expect that the Keys portfolio should give me a minimum return of 15% or INR 100 crore EBITDA.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "INR 100 crore",
+      "target_value": {
+        "low": 100.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "EBITDA",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2024",
+      "actual_value": 523.0,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "100",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2023_Nov.json",
+          "source_period": "Nov 2023",
+          "speaker": "Patanjali Keswani",
+          "text": "Last year we did a bit, this year, next year and the following year, when this entire investment is made, I would expect that the Keys portfolio should give me a minimum return of 15% or INR 100 crore EBITDA."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "EBITDA",
+          "period": "Mar 2024",
+          "value": 523.0,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "EBITDA in Mar 2024 was 523 versus comparable target 100; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_f682bb750131",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2023",
+      "target_period": "FY24",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2023_Nov.json",
+      "text": "So, from that perspective, and I'm just speaking without really getting into the math of it, if our revenue in H1 was say, 460 crores then technically and this is not guidance we should do INR 1,000 crore of revenue owned hotels this year.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "INR 1,000 crore",
+      "target_value": {
+        "low": 1000.0,
+        "high": null,
+        "unit": "crore",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "Sales +",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2024",
+      "actual_value": 1071.0,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "1000",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2023_Nov.json",
+          "source_period": "Nov 2023",
+          "speaker": "Patanjali Keswani",
+          "text": "So, from that perspective, and I'm just speaking without really getting into the math of it, if our revenue in H1 was say, 460 crores then technically and this is not guidance we should do INR 1,000 crore of revenue owned hotels this year."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+          "csv_key": "profit_loss_enriched",
+          "metric": "Sales +",
+          "period": "Mar 2024",
+          "value": 1071.0,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "exact_period_csv",
+        "window_periods": []
+      },
+      "rationale": "Sales + in Mar 2024 was 1071 versus comparable target 1000; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_f804d4a959bd",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2023",
+      "target_period": "FY26",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2023_Nov.json",
+      "text": "So, we invest Rs.100 in this entire assignment, we expect to increase our EBITDA by Rs.100 once all the levers are in place, and that will really be frankly from FY26.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "Rs.100",
+      "target_value": {
+        "low": 100.0,
+        "high": null,
+        "unit": "currency",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "EBITDA",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_4c3e4bdb37bd",
+      "company": "LEMONTREE",
+      "source_period": "Jun 2025",
+      "target_period": "FY26",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2025_Jun.json",
+      "text": "At the end of which we will drop from 2.2 %, in fact this year it will be 3% of the revenue.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "3%",
+      "target_value": {
+        "low": 3.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_b6904a8a2e0d",
+      "company": "LEMONTREE",
+      "source_period": "Jun 2025",
+      "target_period": "Unknown",
+      "target_period_basis": "near_term",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2025_Jun.json",
+      "text": "But now going forward these 3 main contributors to an increase in fixed and variable costs will all start trending to what I would call Norm which means EBITDA margin automatically will be up by over 3%.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "over 3%",
+      "target_value": {
+        "low": 3.0,
+        "high": null,
+        "unit": "%",
+        "comparator": "over"
+      },
+      "direction": "up",
+      "status": "EXCEEDED",
+      "score": 1.2,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "quarter_analysis_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\quarter_analysis_enriched.csv",
+      "actual_period": "Dec 2025",
+      "actual_value": 50.5,
+      "base_period": "",
+      "base_value": "",
+      "ending_value": "",
+      "comparable_target": "3",
+      "evidence": {
+        "promise_source": {
+          "document_type": "call_transcript",
+          "source_file": "2025_Jun.json",
+          "source_period": "Jun 2025",
+          "speaker": "Patanjali Keswani",
+          "text": "But now going forward these 3 main contributors to an increase in fixed and variable costs will all start trending to what I would call Norm which means EBITDA margin automatically will be up by over 3%."
+        },
+        "actual_source": {
+          "csv_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\quarter_analysis_enriched.csv",
+          "csv_key": "quarter_analysis_enriched",
+          "metric": "EBITDA Margin %",
+          "period": "Dec 2025",
+          "value": 50.5,
+          "base_period": "",
+          "base_value": "",
+          "ending_value": ""
+        },
+        "method": "future_window_csv",
+        "window_periods": [
+          "Sep 2025",
+          "Dec 2025"
+        ]
+      },
+      "rationale": "No explicit target date was stated, so checked the next reported window (Sep 2025, Dec 2025); best comparable EBITDA Margin % was 50.5 in Dec 2025 versus target 3; classified as EXCEEDED."
+    },
+    {
+      "id": "promise_3ce9e0da34f9",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2025",
+      "target_period": "FY28",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2025_Nov.json",
+      "text": "I expect that in FY28, '29, '30, we will probably spend 0.5% of our revenue in renovations or upkeep.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "0.5%",
+      "target_value": {
+        "low": 0.5,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2028",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2028 is still pending."
+    },
+    {
+      "id": "promise_a80e5d5218c0",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2025",
+      "target_period": "FY28",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2025_Nov.json",
+      "text": "But going forward, our forward thinking is that we would be very disappointed if by FY28, our net EBITDA without extraordinary expenses is less than 59%.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "less than 59%",
+      "target_value": {
+        "low": 59.0,
+        "high": null,
+        "unit": "%",
+        "comparator": "less than"
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2028",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2028 is still pending."
+    },
+    {
+      "id": "promise_b43ecafbbf50",
+      "company": "LEMONTREE",
+      "source_period": "Nov 2025",
+      "target_period": "FY28",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2025_Nov.json",
+      "text": "While these expenses/investments accounted for 8% of revenue in this quarter, we expect all these 3 expense heads to reduce to 5% of revenue in the next year, before stabilizing at 2% of revenue by FY28 onwards.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "5%",
+      "target_value": {
+        "low": 5.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2028",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2028 is still pending."
+    },
+    {
+      "id": "promise_d40399a062a6",
+      "company": "LEMONTREE",
+      "source_period": "Feb 2026",
+      "target_period": "FY27",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Feb.json",
+      "text": "The change in GST in this quarter accounted for 1.8% of revenue in a seasonally strong quarter of the year, and we expect this to be 2% for the full year in FY27 and then further reduce to 1.7% in FY28.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "2%",
+      "target_value": {
+        "low": 2.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2027",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2027 is still pending."
+    },
+    {
+      "id": "promise_ec631e11caff",
+      "company": "LEMONTREE",
+      "source_period": "Feb 2026",
+      "target_period": "FY28",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Feb.json",
+      "text": "While these expenses in investments accounted for 6.4% of revenue for this quarter, we expect all these 3 expense heads to reduce to about 3.6% of revenue by FY28 Page 2 of 20 and onwards, leading to a corresponding expansion in EBITDA margins.",
+      "metrics": [
+        "Revenue",
+        "EBITDA Margin"
+      ],
+      "primary_metric": "Revenue",
+      "target": "about 3.6%",
+      "target_value": {
+        "low": 3.6,
+        "high": null,
+        "unit": "%",
+        "comparator": "about"
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2028",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2028 is still pending."
+    },
+    {
+      "id": "promise_2dde14b977b8",
+      "company": "LEMONTREE",
+      "source_period": "Jan 2026",
+      "target_period": "FY26",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Jan.json",
+      "text": "Obviously, the EBITDA margins will be 5% below what they should be this year and next year.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "5%",
+      "target_value": {
+        "low": 5.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_6bc769fb4326",
+      "company": "LEMONTREE",
+      "source_period": "Jan 2026",
+      "target_period": "FY26",
+      "target_period_basis": "relative",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Jan.json",
+      "text": "But this year, it Page 10 of 28 will be 9% of revenue.",
+      "metrics": [
+        "Revenue"
+      ],
+      "primary_metric": "Revenue",
+      "target": "9%",
+      "target_value": {
+        "low": 9.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    },
+    {
+      "id": "promise_bdf49c6e0469",
+      "company": "LEMONTREE",
+      "source_period": "Jan 2026",
+      "target_period": "FY28",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Jan.json",
+      "text": "We expect that our underwriting is that within 2 years, which is by FY28, our EBITDA margin should be North of 80%.",
+      "metrics": [
+        "EBITDA Margin"
+      ],
+      "primary_metric": "EBITDA Margin",
+      "target": "North of 80%",
+      "target_value": {
+        "low": 80.0,
+        "high": null,
+        "unit": "%",
+        "comparator": "north of"
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "EBITDA Margin %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2028",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2028 is still pending."
+    },
+    {
+      "id": "promise_d7fedb0f2235",
+      "company": "LEMONTREE",
+      "source_period": "Jan 2026",
+      "target_period": "FY26",
+      "target_period_basis": "explicit",
+      "doc_type": "call_transcript",
+      "speaker": "Patanjali Keswani",
+      "source_file": "2026_Jan.json",
+      "text": "If we put all this together, the incremental impact on our EBITDA margins will be 5% of revenue for FY26 and FY27.",
+      "metrics": [
+        "Revenue",
+        "EBITDA Margin"
+      ],
+      "primary_metric": "Revenue",
+      "target": "5%",
+      "target_value": {
+        "low": 5.0,
+        "high": null,
+        "unit": "%",
+        "comparator": ""
+      },
+      "direction": "up",
+      "status": "PENDING",
+      "score": 0.0,
+      "verification_metric": "YoY Sales Growth %",
+      "verification_source": "profit_loss_enriched",
+      "verification_source_file": "c:\\Users\\91845\\Desktop\\DataHack\\Raw Data Extraction\\Lemon_Tree_Hotels\\profit_loss_enriched.csv",
+      "actual_period": "Mar 2026",
+      "latest_available_period": "Mar 2025",
+      "rationale": "Actual data only runs through Mar 2025; Mar 2026 is still pending."
+    }
+  ]
+}

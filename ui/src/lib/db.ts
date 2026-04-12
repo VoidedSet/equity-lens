@@ -480,8 +480,30 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
     return null;
   }
 
-  // Bare .json / .txt fallback
+  // Bare .pdf fallback (for root level files like TO-Oct2025.pdf)
+  if (ref.endsWith(".pdf")) {
+    for (const pdfp of [path.join(companyPath, ref), path.join(RAW_DIR, ref)]) {
+      if (fs.existsSync(pdfp)) {
+        return { type: "pdf", filePath: pdfp, relativePath: path.relative(RAW_DIR, pdfp).replace(/\\/g, "/"), page: extractedPage, searchText: null, label: ref.replace(".pdf", "").replace(/-/g, " ") };
+      }
+    }
+  }
+
+  // Bare .json fallback (checks Data Ingestion first)
   if (ref.endsWith(".json")) {
+    const INGESTION_DIR = path.resolve(DATA_DIR, "../../Data Ingestion/extracted_json");
+    const dictPath = path.join(INGESTION_DIR, cid, ref);
+    if (fs.existsSync(dictPath)) {
+      return {
+        type: "csv",
+        filePath: dictPath,
+        relativePath: `../Data Ingestion/extracted_json/${cid}/${ref}`,
+        page: null,
+        searchText: null,
+        label: `${cid} — ${ref.replace(".json", "").replace(/_/g, " ")}`
+      };
+    }
+
     for (const jp of [path.join(companyPath, "Call_Transcripts_JSON", ref), path.join(RAW_DIR, "Call_Transcripts_JSON", ref)]) {
       if (fs.existsSync(jp)) {
         return { type: "csv", filePath: jp, relativePath: path.relative(RAW_DIR, jp).replace(/\\/g, "/"), page: null, searchText: null, label: `Earnings Call — ${ref.replace(".json", "").replace("_", " ")}` };

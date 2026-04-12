@@ -168,6 +168,88 @@ def process_query(query: str, conversation_history: list) -> str:
     return final_analysis
 
 
+def process_query_stream(query: str, conversation_history: list):
+    """
+    Process a user query through the full agent pipeline and yield status updates
+    as dictionaries. Used for streaming responses to the frontend.
+    """
+    # Step 1: Analyze query
+    yield {"type": "status", "message": "Analyzing query..."}
+
+    system_prompt = get_system_prompt()
+    messages = [{"role": "system", "content": system_prompt}]
+
+    for entry in conversation_history[-4:]:
+        messages.append(entry)
+
+    messages.append({"role": "user", "content": query})
+
+    tool_response = chat_completion(messages, temperature=0.2, json_mode=True)
+
+    if tool_response.startswith("[LLM Error]"):
+        yield {"type": "error", "message": f"LLM Error: {tool_response}"}
+        return
+
+    # Step 2: Parse tool call
+    tool_call = parse_json_response(tool_response)
+
+    if "error" in tool_call:
+        yield {"type": "error", "message": f"Could not parse tool selection. LLM response:\n{tool_response[:500]}"}
+        return
+
+    tool_name = tool_call.get("tool", "custom_analysis")
+    tool_args = tool_call.get("args", {})
+    thought = tool_call.get("thought", "")
+
+    yield {
+        "type": "thought",
+        "thought": thought,
+        "tool": tool_name,
+        "args": tool_args
+    }
+
+    # Step 3: Execute tool
+    yield {"type": "status", "message": f"Executing tool: {tool_name}..."}
+    start_time = time.time()
+
+    tool_result = execute_tool(tool_name, tool_args)
+    elapsed = time.time() - start_time
+
+    yield {"type": "status", "message": f"Tool execution took {elapsed:.1f}s."}
+
+    chart_paths = []
+    for k in ["chart_path", "chart_path_latest", "chart_path_trend", "chart_path_overall", "chart_path_leverage", "chart_path_bar"]:
+        if tool_result.get(k):
+            chart_paths.append(tool_result.get(k))
+
+    if chart_paths:
+        yield {"type": "charts", "paths": chart_paths}
+
+    # Step 4: Synthesize final answer
+    yield {"type": "status", "message": "Generating analysis..."}
+
+    tool_output_str = tool_result.get("output", json.dumps(tool_result, default=str)[:3000])
+    
+    primary_chart_path = tool_result.get("chart_path")
+    synthesis_prompt = get_synthesis_prompt(query, tool_output_str, primary_chart_path)
+
+    synthesis_messages = [
+        {"role": "system", "content": "You are an expert Equity Research Analyst providing financial insights."},
+        {"role": "user", "content": synthesis_prompt},
+    ]
+
+    final_analysis = chat_completion(synthesis_messages, temperature=0.4, max_tokens=2048)
+
+    if final_analysis.startswith("[LLM Error]"):
+        yield {
+            "type": "result", 
+            "content": f"LLM synthesis failed. Here's the raw data:\n\n```json\n{tool_output_str}\n```"
+        }
+    else:
+        yield {"type": "result", "content": final_analysis}
+
+
+
 def main():
     """Main interactive loop."""
     print_banner()

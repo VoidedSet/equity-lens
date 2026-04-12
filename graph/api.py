@@ -8,8 +8,10 @@ Provides endpoints for the Next.js UI.
 import os
 import sys
 import json
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -26,15 +28,17 @@ from graph.neo4j_client import Neo4jClient
 # Import LLM client for AI queries
 try:
     from agent.llm_client import groq_chat_completion
+    from agent.agent import process_query_stream
     HAS_LLM = True
 except ImportError:
     try:
-        import requests as _req
-        HAS_LLM = True
-        groq_chat_completion = None
+         import requests as _req
+         HAS_LLM = True
+         groq_chat_completion = None
+         process_query_stream = None
     except ImportError:
-        HAS_LLM = False
-    print("Warning: agent.llm_client not found; will use inline Groq call.")
+         HAS_LLM = False
+    print("Warning: agent module not found; will use inline Groq call.")
 
 
 import requests as _requests
@@ -80,6 +84,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Serve the output directory
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
+if os.path.exists(OUTPUT_DIR):
+    app.mount("/output", StaticFiles(directory=OUTPUT_DIR), name="output")
+
+
 # Global Neo4j client
 neo4j_client = None
 
@@ -113,6 +123,11 @@ class SubgraphResponse(BaseModel):
 class NLQueryRequest(BaseModel):
     question: str
     company: Optional[str] = None
+
+
+class AgentStreamRequest(BaseModel):
+    query: str
+    history: List[Dict[str, Any]] = []
 
 
 class CypherQueryResponse(BaseModel):
@@ -308,6 +323,24 @@ async def natural_language_query(request: NLQueryRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/agent/stream")
+async def agent_stream(request: AgentStreamRequest):
+    """
+    Stream agent thoughts and tool execution to the frontend using SSE.
+    """
+    if process_query_stream is None:
+        raise HTTPException(status_code=501, detail="Agent module not available")
+
+    async def event_generator():
+        try:
+            for event in process_query_stream(request.query, request.history):
+                # Format as Server-Sent Events (SSE)
+                yield f"data: {json.dumps(event)}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 # ─── Helper Functions ──────────────────────────────────────

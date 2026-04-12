@@ -72,6 +72,9 @@ export function Navbar({
         </div>
 
         <div className="flex items-center gap-4">
+          <Link href="/agent" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#888] hover:text-[#222] transition-colors">
+            AI Agent
+          </Link>
           <Link href="/board" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#888] hover:text-[#222] transition-colors">
             Evidence Board
           </Link>

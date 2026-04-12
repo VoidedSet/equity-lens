@@ -1,5 +1,7 @@
 "use client";
 
+import { SectorAnalysis } from "@/components/SectorAnalysis";
+
 const COMPANIES: Record<string, { short: string; tagline: string }> = {
   IHCL: { short: "Indian Hotels (Taj)", tagline: "Premium & luxury hybrid" },
   CHALET: { short: "Chalet Hotels", tagline: "Asset-heavy upper midscale" },
@@ -13,7 +15,7 @@ export function Hero({ onSelectCompany, companies }: { onSelectCompany: (id: str
   const issue = `Vol. 1 — ${today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}`;
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <div style={{ padding: "4rem 0" }}>
       <div className="ed-container">
         {/* Masthead line */}
         <div className="flex items-center justify-between pb-4 mb-12 border-b-2 border-[#222]">
@@ -60,6 +62,9 @@ export function Hero({ onSelectCompany, companies }: { onSelectCompany: (id: str
           <span>Groq Llama 3.3 70B &bull; Neo4j &bull; Supabase &bull; RAG Pipeline</span>
           <span>Zero hallucination</span>
         </div>
+        
+        {/* Sector Analysis Part 1 & 3 */}
+        <SectorAnalysis />
       </div>
     </div>
   );
