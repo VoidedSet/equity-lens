@@ -57,7 +57,7 @@ export function Hero({ onSelectCompany, companies }: { onSelectCompany: (id: str
 
         {/* Footer line */}
         <div className="mt-12 pt-4 border-t border-[#e0e0e0] flex items-center justify-between text-[10px] text-[#bbb] tracking-wider uppercase">
-          <span>Gemma 3 27B &bull; Supabase &bull; RAG Pipeline</span>
+          <span>Groq Llama 3.3 70B &bull; Neo4j &bull; Supabase &bull; RAG Pipeline</span>
           <span>Zero hallucination</span>
         </div>
       </div>

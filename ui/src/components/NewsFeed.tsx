@@ -106,35 +106,90 @@ export function NewsFeed({ items, digestDate }: NewsFeedProps) {
           ))}
         </div>
 
-        {/* News items */}
-        <div className="space-y-0">
-          {filtered.slice(0, 20).map((item, idx) => {
-            const isExpanded = expanded.has(idx);
-            return (
-              <div key={idx} className="border-t border-[#e0e0e0] py-4">
-                <div className="flex items-center gap-2 mb-1 text-[10px] text-[#999]">
-                  <span className="font-semibold uppercase tracking-wider">{item.sentiment}</span>
-                  {item.dimension_primary && (
-                    <><span>&middot;</span><span>{DIMENSION_LABELS[item.dimension_primary] || item.dimension_primary}</span></>
+        {/* ── Lead story ── */}
+        {filtered.length > 0 && (() => {
+          const lead = filtered[0];
+          const sc = SENTIMENT_COLORS[lead.sentiment] || SENTIMENT_COLORS.Neutral;
+          return (
+            <div className="border-t-2 border-[#222] pt-5 mb-8">
+              <div className="ed-grid">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`inline-block w-2 h-2 rounded-full ${sc.dot}`} />
+                    <span className="kicker">{DIMENSION_LABELS[lead.dimension_primary] || lead.dimension_primary}</span>
+                    {lead.company_tags.length > 0 && (
+                      <span className="kicker text-[#bbb]">· {lead.company_tags.join(", ")}</span>
+                    )}
+                  </div>
+                  <a href={lead.url} target="_blank" rel="noopener noreferrer"
+                    className="font-serif text-2xl font-bold text-[#222] leading-snug hover:underline underline-offset-4 decoration-1 block mb-3">
+                    {lead.title}
+                  </a>
+                  {lead.summary_2line && (
+                    <p className="text-[14px] text-[#555] leading-[1.85] mb-3">{lead.summary_2line}</p>
                   )}
-                  {item.company_tags.length > 0 && (
-                    <><span>&middot;</span><span>{item.company_tags.join(", ")}</span></>
-                  )}
+                  <span className="text-[11px] text-[#bbb]">{lead.source} &middot; {lead.published_date}</span>
                 </div>
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[14px] font-semibold text-[#222] hover:underline leading-snug block mb-1">
-                  {item.title}
-                </a>
-                <div className="flex items-center gap-2 text-[11px] text-[#999]">
-                  <span>{item.source}</span><span>&middot;</span><span>{item.published_date}</span>
-                </div>
-                {isExpanded && item.summary_2line && <p className="text-[13px] text-[#888] leading-relaxed mt-2">{item.summary_2line}</p>}
-                <button onClick={() => toggle(idx)} className="text-[11px] text-[#bbb] hover:text-[#222] mt-1 cursor-pointer">
-                  {isExpanded ? "Less" : "More"}
-                </button>
+                <aside>
+                  <div className="sidebar-card">
+                    <p className="kicker mb-3">Signal Breakdown</p>
+                    <div className="space-y-2">
+                      {(["Positive","Negative","Watch","Neutral"] as const).map((s) => {
+                        const n = sentimentCounts[s];
+                        if (!n) return null;
+                        const sc2 = SENTIMENT_COLORS[s];
+                        return (
+                          <div key={s} className="flex items-center justify-between text-[12px]">
+                            <span className={`flex items-center gap-1.5 ${sc2.text}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${sc2.dot}`} />
+                              {s}
+                            </span>
+                            <span className="font-mono font-semibold text-[#222]">{n}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </aside>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Column grid (remaining items) ── */}
+        {filtered.length > 1 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-[#e0e0e0]">
+            {filtered.slice(1, 19).map((item, idx) => {
+              const isExpanded = expanded.has(idx + 1);
+              const sc = SENTIMENT_COLORS[item.sentiment] || SENTIMENT_COLORS.Neutral;
+              return (
+                <div key={idx}
+                  className="py-4 pr-5 border-b border-[#f0f0f0] lg:border-r lg:last-of-type:border-r-0 [&:nth-child(3n)]:border-r-0">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${sc.dot}`} />
+                    <span className="kicker truncate">{DIMENSION_LABELS[item.dimension_primary] || item.dimension_primary}</span>
+                  </div>
+                  <a href={item.url} target="_blank" rel="noopener noreferrer"
+                    className="text-[13px] font-semibold text-[#222] hover:underline underline-offset-2 leading-snug block mb-1.5">
+                    {item.title}
+                  </a>
+                  {isExpanded && item.summary_2line && (
+                    <p className="text-[12px] text-[#666] leading-relaxed mb-1.5">{item.summary_2line}</p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#bbb]">{item.source} &middot; {item.published_date}</span>
+                    {item.summary_2line && (
+                      <button onClick={() => toggle(idx + 1)}
+                        className="text-[10px] text-[#bbb] hover:text-[#555] cursor-pointer shrink-0 ml-2">
+                        {isExpanded ? "▲" : "▼"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {filtered.length === 0 && <p className="text-[13px] text-[#999] text-center py-8">No news items for this filter.</p>}
       </div>

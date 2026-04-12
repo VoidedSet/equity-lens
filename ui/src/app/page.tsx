@@ -112,6 +112,32 @@ export default function Home() {
       ) : uiCompany ? (
         <>
           <CompanyHeader company={uiCompany} metrics={uiMetrics} />
+
+          {/* ── Editorial narrative lede ── */}
+          {uiDeviations.length > 0 && (() => {
+            const beats  = uiDeviations.filter((d) => d.flag === "BEAT").length;
+            const misses = uiDeviations.filter((d) => d.flag === "MISS").length;
+            const inline = uiDeviations.filter((d) => d.flag === "IN-LINE").length;
+            const total  = uiDeviations.length;
+            const hitPct = Math.round(((beats + inline) / total) * 100);
+            const tone   = hitPct >= 70 ? "credible" : hitPct >= 50 ? "uneven" : "poor";
+            const score  = uiScorecard?.composite;
+            const risks  = uiRiskFlags.length;
+            return (
+              <div className="ed-section-ruled">
+                <div className="ed-container">
+                  <p className="kicker mb-3">Analyst Summary &mdash; {selectedCompany}</p>
+                  <p className="font-serif text-[1.15rem] leading-[1.95] text-[#333] max-w-3xl drop-cap">
+                    {selectedCompany}&rsquo;s management guidance record is <strong>{tone}</strong>: {beats} beat{beats !== 1 ? "s" : ""}, {misses} miss{misses !== 1 ? "es" : ""}, and {inline} in-line
+                    across {total} tracked forward-looking claims &mdash; a {hitPct}&thinsp;% delivery rate.
+                    {score ? ` The composite credibility score stands at ${score} / 100.` : ""}
+                    {risks > 0 ? ` ${risks} risk flag${risks !== 1 ? "s" : ""} identified in the source documents require attention before forming a position.` : " No material risk flags were identified in the source documents."}
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
+
           {uiDeviations.length > 0 && <SaidVsDelivered deviations={uiDeviations} />}
           {companyData?.managementTone && companyData.managementTone.length > 0 && (
             <ManagementTone tones={companyData.managementTone} />

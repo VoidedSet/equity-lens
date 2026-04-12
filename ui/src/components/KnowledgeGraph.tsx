@@ -79,6 +79,17 @@ export function KnowledgeGraph({ companyCode }: { companyCode?: string }) {
   const [hoveredNode, setHoveredNode] = useState<GNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<GNode | null>(null);
 
+  /* ── Force tuning: repulsion + collision to prevent overlap ─ */
+  useEffect(() => {
+    if (!fgRef.current || !graphData.nodes.length) return;
+    const fg = fgRef.current as any;
+    import("d3-force-3d").then(({ forceCollide, forceManyBody }) => {
+      fg.d3Force("charge", forceManyBody().strength(-280));
+      fg.d3Force("collision", forceCollide().radius(40).strength(1).iterations(3));
+      fg.d3ReheatSimulation();
+    });
+  }, [graphData.nodes.length]);
+
   /* ── Container size observer ─────────────────────────── */
   useEffect(() => {
     const el = containerRef.current;
