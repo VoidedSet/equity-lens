@@ -2,7 +2,7 @@
 
 type Footnote = { id: number; source: string; document: string; page?: string; timestamp?: string; period: string };
 
-export function FootnoteSection({ footnotes }: { footnotes: Footnote[] }) {
+export function FootnoteSection({ footnotes, companyId }: { footnotes: Footnote[]; companyId?: string }) {
   return (
     <div className="ed-section-ruled" id="sources">
       <div className="ed-container">
@@ -28,7 +28,7 @@ export function FootnoteSection({ footnotes }: { footnotes: Footnote[] }) {
               <span className="text-[11px] font-mono w-6 shrink-0 text-right text-[#bbb]">[{fn.id}]</span>
               <button
                 onClick={() => {
-                  window.dispatchEvent(new CustomEvent("open-source", { detail: { ref: fn.document, company: "IHCL", quote: "" } }));
+                  window.dispatchEvent(new CustomEvent("open-source", { detail: { ref: fn.document, company: companyId || "IHCL", quote: "" } }));
                 }}
                 className="text-[13px] text-[#888] leading-relaxed hover:text-[#222] transition-colors cursor-pointer group text-left"
               >

@@ -11,14 +11,26 @@ export async function GET(
   const { path: segments } = await params;
   const relativePath = segments.join("/");
 
-  // Resolve to Raw Data Extraction folder
+  // Flat files folder (new naming convention: COMPANY_Subfolder_filename.ext)
+  const FILES_DIR = path.resolve(process.cwd(), "../data/files");
+  // Legacy folder (old nested structure)
   const RAW_DIR = path.resolve(process.cwd(), "../Raw Data Extraction");
-  const filePath = path.join(RAW_DIR, relativePath);
 
-  // Security: ensure we stay inside RAW_DIR
-  const resolved = path.resolve(filePath);
-  if (!resolved.startsWith(path.resolve(RAW_DIR))) {
-    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  let resolved: string;
+
+  if (relativePath.startsWith("files/")) {
+    // New flat path: /api/pdf/files/IHCL_Annual_Reports_2024.pdf
+    const filename = relativePath.slice("files/".length);
+    resolved = path.resolve(FILES_DIR, filename);
+    if (!resolved.startsWith(FILES_DIR)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+  } else {
+    // Legacy nested path: /api/pdf/Indian_Hotels/Annual_Reports/2024.pdf
+    resolved = path.resolve(RAW_DIR, relativePath);
+    if (!resolved.startsWith(path.resolve(RAW_DIR))) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
   }
 
   if (!fs.existsSync(resolved)) {

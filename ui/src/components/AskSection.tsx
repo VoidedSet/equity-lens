@@ -13,7 +13,7 @@ function extractJSON(raw: string): string {
 }
 
 /* Format AI response — handle JSON objects, markdown-like lists, source refs */
-function FormattedResponse({ content }: { content: string }) {
+function AssistantMessage({ content, companyId }: { content: string; companyId?: string }) {
   // Try to parse as JSON first
   try {
     const cleaned = extractJSON(content);
@@ -71,20 +71,20 @@ function FormattedResponse({ content }: { content: string }) {
               {lines.filter((l) => l.trim()).map((l, j) => (
                 <li key={j} className="text-[13px] text-[#333] leading-relaxed flex gap-2">
                   <span className="text-[#bbb] shrink-0">&bull;</span>
-                  <span><SourceRefText text={l.replace(/^[-*•]\s*/, "")} /></span>
+                  <span><SourceRefText text={l.replace(/^[-*•]\s*/, "")} companyId={companyId} /></span>
                 </li>
               ))}
             </ul>
           );
         }
-        return <p key={i} className="text-[13px] text-[#333] leading-relaxed"><SourceRefText text={p} /></p>;
+        return <p key={i} className="text-[13px] text-[#333] leading-relaxed"><SourceRefText text={p} companyId={companyId} /></p>;
       })}
     </div>
   );
 }
 
 /* Render [Source: ...] refs as clickable buttons that open source modal */
-function SourceRefText({ text }: { text: string }) {
+function SourceRefText({ text, companyId }: { text: string; companyId?: string }) {
   const parts = text.split(/(\[Source:?[^\]]*\]|\[(?:AR|Q[1-4])\s+FY\d{2}[^\]]*\])/gi);
   return (
     <>
@@ -96,7 +96,7 @@ function SourceRefText({ text }: { text: string }) {
             <button
               key={i}
               onClick={() => {
-                window.dispatchEvent(new CustomEvent("open-source", { detail: { ref, company: "IHCL", quote: "" } }));
+                window.dispatchEvent(new CustomEvent("open-source", { detail: { ref, company: companyId || "IHCL", quote: "" } }));
               }}
               className="inline text-[#222] underline underline-offset-2 decoration-dotted hover:decoration-solid cursor-pointer font-medium text-[12px]"
             >
@@ -123,7 +123,7 @@ type Message = {
   citations?: string[];
 };
 
-export function AskSection() {
+export function AskSection({ companyId }: { companyId?: string }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -226,7 +226,7 @@ export function AskSection() {
                     ) : (
                       <div key={i}>
                         <div className="bg-[#fafafa] rounded-2xl rounded-bl-sm px-4 py-3 border border-[#eee]">
-                          <div className="mb-2"><FormattedResponse content={msg.content} /></div>
+                          <div className="mb-2"><AssistantMessage content={msg.content} companyId={companyId} /></div>
                           {msg.citations && msg.citations.length > 0 && (
                             <div className="flex flex-wrap gap-1 pt-2 border-t border-[#eee]">
                               {msg.citations.map((c, j) => (

@@ -113,8 +113,6 @@ export function GovernanceInsights({ companyId }: Props) {
             the sector level. Individual company reports show the same checks applied to verbatim
             management quotes with source citations.{" "}
             <Citation source="hotel_companies_governance.pdf" company={companyId} quote="governance analysis source" />
-            &nbsp;
-            <Citation source="Hotelivate Trends 2025" company={companyId} quote="India hotel market RevPAR" />
           </p>
         </div>
 
@@ -242,9 +240,7 @@ export function GovernanceInsights({ companyId }: Props) {
                   <span className="font-mono font-semibold text-red-600">1,00,000+</span>
                 </div>
               </div>
-              <p className="text-[10px] text-[#bbb] mt-3">
-                <Citation source="Hotelivate Trends 2025" company={companyId} quote="India hotel market 27 billion RevPAR" />
-              </p>
+              <p className="text-[10px] text-[#bbb] mt-3">Source: Hotelivate India Hotel Market Trends 2025</p>
             </div>
           </aside>
         </div>

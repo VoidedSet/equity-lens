@@ -20,7 +20,7 @@ const confidenceMeta: Record<string, { label: string; color: string; description
   hope: { label: "HOPE", color: "text-slate-600 bg-slate-50 border-slate-200", description: "Low conviction" },
 };
 
-function ExhibitBlock({ claim, index, allClaims }: { claim: UIDeviation; index: number; allClaims: UIDeviation[] }) {
+function ExhibitBlock({ claim, index, allClaims, companyId }: { claim: UIDeviation; index: number; allClaims: UIDeviation[]; companyId?: string }) {
   const flagColor =
     claim.flag === "BEAT" ? "border-l-emerald-500" :
     claim.flag === "MISS" ? "border-l-red-400" : "border-l-blue-400";
@@ -69,7 +69,7 @@ function ExhibitBlock({ claim, index, allClaims }: { claim: UIDeviation; index: 
             — {claim.speaker}, {claim.statementQuarter}
           </p>
           <div className="mt-2">
-            <Citation source={claim.sourceGuidance} quote={claim.verbatimQuote} />
+            <Citation source={claim.sourceGuidance} company={companyId} quote={claim.verbatimQuote} />
           </div>
         </div>
 
@@ -96,7 +96,7 @@ function ExhibitBlock({ claim, index, allClaims }: { claim: UIDeviation; index: 
             </div>
           </div>
           <div className="mt-2">
-            <Citation source={claim.sourceActual} quote={claim.verbatimQuote} />
+            <Citation source={claim.sourceActual} company={companyId} quote={claim.verbatimQuote} />
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@ function ExhibitBlock({ claim, index, allClaims }: { claim: UIDeviation; index: 
   );
 }
 
-export function SaidVsDelivered({ deviations }: { deviations: UIDeviation[] }) {
+export function SaidVsDelivered({ deviations, companyId }: { deviations: UIDeviation[]; companyId?: string }) {
   const [filter, setFilter] = useState<"ALL" | "BEAT" | "MISS" | "IN-LINE">("ALL");
 
   const filtered = filter === "ALL" ? deviations : deviations.filter(d => d.flag === filter);
@@ -184,7 +184,7 @@ export function SaidVsDelivered({ deviations }: { deviations: UIDeviation[] }) {
             </div>
 
             {filtered.map((claim, i) => (
-              <ExhibitBlock key={claim.id} claim={claim} index={i + 1} allClaims={deviations} />
+              <ExhibitBlock key={claim.id} claim={claim} index={i + 1} allClaims={deviations} companyId={companyId} />
             ))}
           </div>
 
