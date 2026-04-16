@@ -164,15 +164,15 @@ export default function Home() {
             {/* Financial Trends Graphs */}
             <FinancialGraphs companyId={selectedCompany} />
 
-            {uiDeviations.length > 0 && <SaidVsDelivered deviations={uiDeviations} />}
+            {uiDeviations.length > 0 && <SaidVsDelivered deviations={uiDeviations} companyId={selectedCompany || undefined} />}
             {companyData?.managementTone && companyData.managementTone.length > 0 && (
-              <ManagementTone tones={companyData.managementTone} />
+              <ManagementTone tones={companyData.managementTone} companyId={selectedCompany || undefined} />
             )}
             {uiScorecard && <Scorecard scorecard={uiScorecard} />}
             {(uiCredibility.length > 0 || opmTrend.length > 0) && (
               <CredibilityTrend credibilityTrend={uiCredibility} opmTrend={opmTrend} />
             )}
-            {uiRiskFlags.length > 0 && <RiskFlags risks={uiRiskFlags} />}
+            {uiRiskFlags.length > 0 && <RiskFlags risks={uiRiskFlags} companyId={selectedCompany || undefined} />}
             <GovernanceInsights companyId={selectedCompany || undefined} />
             <KnowledgeGraph companyCode={selectedCompany || undefined} />
             
@@ -188,7 +188,7 @@ export default function Home() {
             {newsData && newsData.items.length > 0 && (
               <NewsFeed items={newsData.items} digestDate={newsData.digest_date || ""} />
             )}
-            {footnotes.length > 0 && <FootnoteSection footnotes={footnotes} />}
+            {footnotes.length > 0 && <FootnoteSection footnotes={footnotes} companyId={selectedCompany || undefined} />}
           </div>
         ) : null}
       </div>

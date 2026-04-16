@@ -482,7 +482,8 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
 
   // Bare .pdf fallback (for root level files like TO-Oct2025.pdf)
   if (ref.endsWith(".pdf")) {
-    for (const pdfp of [path.join(companyPath, ref), path.join(RAW_DIR, ref)]) {
+    const GOVERNANCE_DIR = path.resolve(DATA_DIR, "../../governance");
+    for (const pdfp of [path.join(companyPath, ref), path.join(RAW_DIR, ref), path.join(GOVERNANCE_DIR, ref)]) {
       if (fs.existsSync(pdfp)) {
         return { type: "pdf", filePath: pdfp, relativePath: path.relative(RAW_DIR, pdfp).replace(/\\/g, "/"), page: extractedPage, searchText: null, label: ref.replace(".pdf", "").replace(/-/g, " ") };
       }

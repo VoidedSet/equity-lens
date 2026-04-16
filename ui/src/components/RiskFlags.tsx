@@ -9,7 +9,7 @@ type UIRiskFlag = {
 
 const SEV: Record<string, string> = { critical: "CRITICAL", high: "HIGH", medium: "MEDIUM" };
 
-export function RiskFlags({ risks }: { risks: UIRiskFlag[] }) {
+export function RiskFlags({ risks, companyId }: { risks: UIRiskFlag[]; companyId?: string }) {
   const critical = risks.filter((r) => r.severity === "critical").length;
   const high = risks.filter((r) => r.severity === "high").length;
 
@@ -42,7 +42,7 @@ export function RiskFlags({ risks }: { risks: UIRiskFlag[] }) {
                   </blockquote>
                 )}
                 <div className="flex items-center gap-2 text-[11px] text-[#999]">
-                  <Citation source={risk.source} company={risk.id.split("-")[0]} quote={risk.verbatimQuote} />
+                  <Citation source={risk.source} company={companyId || "IHCL"} quote={risk.verbatimQuote} />
                   <span>&middot;</span>
                   <span>{risk.period}</span>
                 </div>

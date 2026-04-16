@@ -12,7 +12,7 @@ const sentimentColors: Record<string, { bg: string; text: string; label: string 
   neutral: { bg: "bg-slate-50", text: "text-slate-600", label: "Neutral" },
 };
 
-export function ManagementTone({ tones }: { tones: ToneItem[] }) {
+export function ManagementTone({ tones, companyId }: { tones: ToneItem[]; companyId?: string }) {
 
   if (!tones.length) return null;
 
@@ -96,7 +96,7 @@ export function ManagementTone({ tones }: { tones: ToneItem[] }) {
 
                 <button
                   onClick={() => {
-                    window.dispatchEvent(new CustomEvent("open-source", { detail: { ref: t.source, company: "IHCL", quote: "" } }));
+                    window.dispatchEvent(new CustomEvent("open-source", { detail: { ref: t.source, company: companyId || "IHCL", quote: "" } }));
                   }}
                   className="mt-3 text-[10px] text-[#bbb] hover:text-[#222] cursor-pointer transition-colors"
                 >

@@ -55,9 +55,6 @@ function JSONTranscriptViewer({ url, searchQuote }: { url: string; searchQuote: 
       .finally(() => setLoading(false));
   }, [url]);
 
-  if (loading) return <p className="text-sm text-[#999] p-8">Loading transcript...</p>;
-  if (error) return <p className="text-sm text-[#dc2626] p-8">Failed to load transcript.</p>;
-
   const words = getSearchWords(searchQuote);
 
   useEffect(() => {
@@ -70,6 +67,9 @@ function JSONTranscriptViewer({ url, searchQuote }: { url: string; searchQuote: 
       }, 300);
     }
   }, [loading, entries, words.length]);
+
+  if (loading) return <p className="text-sm text-[#999] p-8">Loading transcript...</p>;
+  if (error) return <p className="text-sm text-[#dc2626] p-8">Failed to load transcript.</p>;
 
   return (
     <div ref={containerRef} className="overflow-auto max-h-[calc(100vh-120px)] p-4 space-y-3">
