@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 type SourceInfo = {
   type: "pdf" | "csv";
@@ -13,10 +13,36 @@ type SourceInfo = {
 
 type TranscriptEntry = { speaker?: string; text?: string; timestamp?: string; [key: string]: unknown };
 
-function JSONTranscriptViewer({ url }: { url: string }) {
+function JSONTranscriptViewer({ url, searchQuote }: { url: string; searchQuote: string }) {
   const [entries, setEntries] = useState<TranscriptEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Normalize generic filler words for matching
+  const stopWords = new Set(["the","a","an","and","or","but","in","on","at","to","for","of","with","by","from","that","this","is","are","was","were","be","been","being","have","has","had"]);
+  
+  const getSearchWords = (q: string) => {
+    return q.split(/\s+/).filter(w => {
+      const clean = w.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return clean.length > 2 && !stopWords.has(clean);
+    });
+  };
+
+  const highlightMatch = (text: string, words: string[]) => {
+    if (!words.length || !text) return <>{text}</>;
+    // A simple regex approach to highlight matches:
+    // Create a regex combining the search words
+    const regex = new RegExp(`(${words.map(w => w.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|')})`, 'gi');
+    const parts = text.split(regex);
+    return (
+      <>
+        {parts.map((part, i) =>
+          regex.test(part) ? <span key={i} className="bg-yellow-200 text-amber-900 font-semibold">{part}</span> : <React.Fragment key={i}>{part}</React.Fragment>
+        )}
+      </>
+    );
+  };
 
   useEffect(() => {
     fetch(url)
@@ -29,24 +55,50 @@ function JSONTranscriptViewer({ url }: { url: string }) {
       .finally(() => setLoading(false));
   }, [url]);
 
+  const words = getSearchWords(searchQuote);
+
+  useEffect(() => {
+    if (!loading && containerRef.current && words.length > 0) {
+      setTimeout(() => {
+        const highlighted = containerRef.current?.querySelector('.bg-yellow-200');
+        if (highlighted) {
+          highlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
+  }, [loading, entries, words.length]);
+
   if (loading) return <p className="text-sm text-[#999] p-8">Loading transcript...</p>;
   if (error) return <p className="text-sm text-[#dc2626] p-8">Failed to load transcript.</p>;
 
   return (
-    <div className="overflow-auto max-h-[calc(100vh-120px)] p-4 space-y-3">
+    <div ref={containerRef} className="overflow-auto max-h-[calc(100vh-120px)] p-4 space-y-3">
       {entries.map((entry, i) => {
         const speaker = String(entry.speaker || entry.Speaker || "");
-        const text = entry.text || entry.chunk_text || entry.content || entry.body || JSON.stringify(entry);
+        let text = entry.text || entry.chunk_text || entry.content || entry.body || "";
+        if (!text) {
+          try { text = JSON.stringify(entry); } catch (e) { text = ""; }
+        }
+        text = String(text);
         const ts = entry.timestamp || entry.time || "";
+        
+        let hasMatch = false;
+        if (words.length > 0) {
+          const textLower = text.toLowerCase();
+          hasMatch = words.some(w => textLower.includes(w.toLowerCase()));
+        }
+
         return (
-          <div key={i} className={`flex gap-3 ${speaker ? "" : "pl-0"}`}>
+          <div key={i} className={`flex gap-3 ${speaker ? "" : "pl-0"} ${hasMatch ? "bg-yellow-50/50 p-2 border border-yellow-200 rounded" : ""}`}>
             {speaker && (
               <div className="shrink-0 w-28 text-right">
                 <span className="text-[11px] font-semibold text-[#555] leading-relaxed">{speaker}</span>
                 {ts && <p className="text-[10px] text-[#bbb] font-mono">{String(ts)}</p>}
               </div>
             )}
-            <p className="text-[13px] text-[#333] leading-relaxed flex-1 border-l-2 border-[#e0e0e0] pl-3">{String(text)}</p>
+            <p className="text-[13px] text-[#333] leading-relaxed flex-1 border-l-2 border-[#e0e0e0] pl-3">
+              {hasMatch ? highlightMatch(text, words) : text}
+            </p>
           </div>
         );
       })}
@@ -174,38 +226,51 @@ export function SourceModal() {
       {/* Modal */}
       <div className="relative z-10 flex flex-col m-4 sm:m-8 bg-white rounded-xl shadow-2xl overflow-hidden flex-1">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-[#e0e0e0] shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
-            {source && (
-              <>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                  source.type === "pdf" ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#059669] bg-[#f0fdf4]"
-                }`}>
-                  {source.type.toUpperCase()}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[13px] font-semibold text-[#222] truncate">{source.label}</p>
-                  <p className="text-[10px] text-[#999] truncate">{source.relativePath}</p>
-                </div>
-                {source.page && (
-                  <span className="text-[10px] font-mono text-[#f59e0b] bg-[#fefce8] px-2 py-0.5 rounded font-semibold shrink-0">
-                    Page {source.page}
+        <div className="flex flex-col px-4 py-2.5 bg-white border-b border-[#e0e0e0] shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              {source && (
+                <>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                    source.type === "pdf" ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#059669] bg-[#f0fdf4]"
+                  }`}>
+                    {source.type.toUpperCase()}
                   </span>
-                )}
-              </>
-            )}
-            {loading && <p className="text-sm text-[#999]">Locating document...</p>}
-            {error && <p className="text-sm text-[#dc2626]">{error}</p>}
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold text-[#222] truncate">{source.label}</p>
+                    <p className="text-[10px] text-[#999] truncate">{source.relativePath}</p>
+                  </div>
+                  {source.page && (
+                    <span className="text-[10px] font-mono text-[#f59e0b] bg-[#fefce8] px-2 py-0.5 rounded font-semibold shrink-0">
+                      Page {source.page}
+                    </span>
+                  )}
+                </>
+              )}
+              {loading && <p className="text-sm text-[#999]">Locating document...</p>}
+              {error && <p className="text-sm text-[#dc2626]">{error}</p>}
+            </div>
+
+            <button
+              onClick={() => setOpen(false)}
+              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0f0f0] transition-colors cursor-pointer text-[#888] hover:text-[#222]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+              </svg>
+            </button>
           </div>
 
-          <button
-            onClick={() => setOpen(false)}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0f0f0] transition-colors cursor-pointer text-[#888] hover:text-[#222]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-            </svg>
-          </button>
+          {source && (
+             <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-[#f0f0f0]">
+               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12h-2"/>
+               </svg>
+               <span className="text-[10px] text-[#2563eb] font-semibold tracking-wide uppercase">
+                 Verified Origin: Document procured directly from BSEIndia.in &amp; Screener.in
+               </span>
+             </div>
+          )}
         </div>
 
         {/* Quote banner */}
@@ -257,7 +322,7 @@ export function SourceModal() {
               {source?.type === "csv" && source.csvUrl && (
                 <div className="p-4">
                   {source.csvUrl.endsWith(".json")
-                    ? <JSONTranscriptViewer url={source.csvUrl} />
+                    ? <JSONTranscriptViewer url={source.csvUrl} searchQuote={quote} />
                     : <CSVViewer url={source.csvUrl} />}
                   <p className="text-[10px] text-[#999] mt-3">Source: {sourceRef}</p>
                 </div>

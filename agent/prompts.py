@@ -33,6 +33,24 @@ Time Periods:
 - Latest balance sheet: Sep 2025
 """
 
+KNOWLEDGE_GRAPH_CONTEXT = """
+Knowledge Graph (Neo4j):
+The system has a Neo4j knowledge graph built from earnings transcripts and annual reports.
+- Node Types: Company, TOPIC, LOCATION, BRAND, STRATEGY, PERSON, TIME_PERIOD
+- Relationships: CO_OCCURS (entity co-occurrence in documents)
+- Entity properties: name (string), count (int = mention frequency), companies (list of company codes)
+- Company codes in graph: IHCL, CHALET, EIH, JUNIPER, LEMONTREE
+
+Key entities extracted include:
+- TOPICS: RevPAR, occupancy, room additions, F&B revenue, EBITDA margin, debt reduction, capex, ADR, management contracts, asset-light strategy
+- LOCATIONS: Mumbai, Delhi, Bengaluru, Goa, Rajasthan, Jaipur, Udaipur, Kolkata, London, New York
+- BRANDS: Taj, Vivanta, Ginger, SeleQtions (IHCL); Oberoi, Trident (EIH); Lemon Tree, Keys (LEMONTREE); JW Marriott, Westin (CHALET); Hyatt, Andaz (JUNIPER)
+- STRATEGIES: asset-light expansion, management contracts, renovation capex, F&B diversification, international expansion
+- PERSONS: Key management personnel from each company
+
+This context helps answer questions about what topics management discusses, which locations are strategically important, brand portfolio comparisons, and strategic themes across companies.
+"""
+
 TOOL_SCHEMAS = [
     {
         "name": "compare_companies",
@@ -112,6 +130,8 @@ def get_system_prompt() -> str:
 {COMPANIES_INFO}
 
 {DATA_STRUCTURE}
+
+{KNOWLEDGE_GRAPH_CONTEXT}
 
 ## Available Tools
 You have the following tools to answer financial queries:

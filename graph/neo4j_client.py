@@ -11,7 +11,7 @@ from neo4j import GraphDatabase
 
 class Neo4jClient:
     def __init__(self, uri: str = None, user: str = None, password: str = None, database: str = None):
-        self.uri = uri or os.getenv("GRAPH_NEO4J_URI", "neo4j://127.0.0.1:7687")
+        self.uri = uri or os.getenv("GRAPH_NEO4J_URI", "bolt://127.0.0.1:7687")
         self.user = user or os.getenv("GRAPH_NEO4J_USER", "neo4j")
         self.password = password or os.getenv("GRAPH_NEO4J_PASSWORD", "kshayik1")
         self.database = database or os.getenv("GRAPH_NEO4J_DATABASE", "datahack-graphdb")

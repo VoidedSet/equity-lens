@@ -1,0 +1,581 @@
+[
+  {
+    "id": "promise_6ce81f65ef45",
+    "company": "CHALET",
+    "source_period": "May 2022",
+    "target_period": "FY23",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Sanjay Sethi",
+    "source_file": "2022_May.json",
+    "text": "No, debt repayment will be in the range of Rs.300 Crores for the year FY2023.",
+    "metrics": [
+      "Debt"
+    ],
+    "primary_metric": "Debt",
+    "target": "Rs.300 Crore",
+    "target_value": {
+      "low": 300.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "down"
+  },
+  {
+    "id": "promise_c5ce1c76261a",
+    "company": "CHALET",
+    "source_period": "May 2022",
+    "target_period": "FY23",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Milind Wadekar",
+    "source_file": "2022_May.json",
+    "text": "So, the net debt as of March 2022 is 2234 Crores and we expect it will peak to 2600 Crores in FY2023 and it will start tapering down",
+    "metrics": [
+      "Debt"
+    ],
+    "primary_metric": "Debt",
+    "target": "2600 Crore",
+    "target_value": {
+      "low": 2600.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "down"
+  },
+  {
+    "id": "promise_9f1f2ad0b545",
+    "company": "IHCL",
+    "source_period": "Jun 2025",
+    "target_period": "FY26",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Our expansion momentum continues",
+    "source_file": "2025_Jun.json",
+    "text": "In the first full year of operations, the flagship Ginger Hotel at Mumbai Airport closed the year with a revenue of INR 97 crores and is expected to comfortably cross the milestone of INR 100-plus crores in this financial year.  Qmin on the other hand, has expanded to 72 outlets and in addition to service as the F&B brand for Ginger Hotels, has also established a presence in Westside stores in Mumbai and Bengaluru through a shop-in-shop format.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "INR 100",
+    "target_value": {
+      "low": 100.0,
+      "high": null,
+      "unit": "currency",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_f9125a7ecba0",
+    "company": "IHCL",
+    "source_period": "Jun 2025",
+    "target_period": "FY26",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Ankur Dalwani",
+    "source_file": "2025_Jun.json",
+    "text": "The Indian Hotels Company Limited May 5, 2025 Page 11 of 20 Overall, if you look at how we are looking at their numbers, the next year, FY '26, we expect because of this, there could be a 1% impact on the margin, but this will also help in growth in the revenues because this levy now gets added to the revenue itself.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "1%",
+    "target_value": {
+      "low": 1.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_54334d8972b2",
+    "company": "IHCL",
+    "source_period": "Feb 2026",
+    "target_period": "FY27",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Ankur Dalwani",
+    "source_file": "2026_Feb.json",
+    "text": "But you know, organically itself, there is growth opportunity in the current asset, which will add both rooms and wellness lots in the next financial year, and take the revenues close to about INR 100 crores in the coming year.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "INR 100 crore",
+    "target_value": {
+      "low": 100.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_d0d8b0e6e1a5",
+    "company": "LEMONTREE",
+    "source_period": "Aug 2022",
+    "target_period": "Unknown",
+    "target_period_basis": "near_term",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2022_Aug.json",
+    "text": "So how did we achieve this despite higher room inventory and F&B cost inflation, what we're seeing currently, and how sustainable it is going forward, like you know, earlier in the interview | heard in the morning, we were talking about 50% EBITDA margin.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "about 50%",
+    "target_value": {
+      "low": 50.0,
+      "high": null,
+      "unit": "%",
+      "comparator": "about"
+    },
+    "direction": "maintain"
+  },
+  {
+    "id": "promise_cb8a16363b88",
+    "company": "LEMONTREE",
+    "source_period": "Feb 2022",
+    "target_period": "FY23",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Rajiv",
+    "source_file": "2022_Feb.json",
+    "text": "You mentioned that EBITDA will be 14% in FY 23.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "14%",
+    "target_value": {
+      "low": 14.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_5722187599aa",
+    "company": "LEMONTREE",
+    "source_period": "Jun 2022",
+    "target_period": "FY23",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2022_Jun.json",
+    "text": "See, | don't want to give specific numbers, let me put it this way that in this financial year FY23, we will at least grow 100% in revenue versus FY22, and we will have a minimum net EBITDA margin of 50%.",
+    "metrics": [
+      "Revenue",
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "50%",
+    "target_value": {
+      "low": 50.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_e3f356e3943c",
+    "company": "LEMONTREE",
+    "source_period": "Feb 2023",
+    "target_period": "FY23",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Nikhil Agrawal",
+    "source_file": "2023_Feb.json",
+    "text": "It will be a 20% revenue growth and our net EBITDA margin will be higher than this year.",
+    "metrics": [
+      "Revenue",
+      "EBITDA Margin"
+    ],
+    "primary_metric": "Revenue",
+    "target": "20%",
+    "target_value": {
+      "low": 20.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_107bc9b676f5",
+    "company": "LEMONTREE",
+    "source_period": "Jun 2023",
+    "target_period": "FY24",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "To further explain, total management fees can be broken into three parts",
+    "source_file": "2023_Jun.json",
+    "text": "This will increase our operating expenses by a further 2% to 2.5% on a revenue basis for this year but will position our hotels to capture better pricing and demand in H2 and in the following years.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "2.5%",
+    "target_value": {
+      "low": 2.5,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_640d97eae1ba",
+    "company": "LEMONTREE",
+    "source_period": "Jun 2023",
+    "target_period": "FY24",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2023_Jun.json",
+    "text": "This year, we will spend about INR 55 crores, of which about INR 40 crores will be or INR 43 crores will be opex and that will come pre-net EBITDA.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "INR 43 crore",
+    "target_value": {
+      "low": 43.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_14bda44320fe",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2023",
+    "target_period": "FY24",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2023_Nov.json",
+    "text": "Last year we did a bit, this year, next year and the following year, when this entire investment is made, I would expect that the Keys portfolio should give me a minimum return of 15% or INR 100 crore EBITDA.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "INR 100 crore",
+    "target_value": {
+      "low": 100.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_f682bb750131",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2023",
+    "target_period": "FY24",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2023_Nov.json",
+    "text": "So, from that perspective, and I'm just speaking without really getting into the math of it, if our revenue in H1 was say, 460 crores then technically and this is not guidance we should do INR 1,000 crore of revenue owned hotels this year.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "INR 1,000 crore",
+    "target_value": {
+      "low": 1000.0,
+      "high": null,
+      "unit": "crore",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_f804d4a959bd",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2023",
+    "target_period": "FY26",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2023_Nov.json",
+    "text": "So, we invest Rs.100 in this entire assignment, we expect to increase our EBITDA by Rs.100 once all the levers are in place, and that will really be frankly from FY26.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "Rs.100",
+    "target_value": {
+      "low": 100.0,
+      "high": null,
+      "unit": "currency",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_4c3e4bdb37bd",
+    "company": "LEMONTREE",
+    "source_period": "Jun 2025",
+    "target_period": "FY26",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2025_Jun.json",
+    "text": "At the end of which we will drop from 2.2 %, in fact this year it will be 3% of the revenue.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "3%",
+    "target_value": {
+      "low": 3.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_b6904a8a2e0d",
+    "company": "LEMONTREE",
+    "source_period": "Jun 2025",
+    "target_period": "Unknown",
+    "target_period_basis": "near_term",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2025_Jun.json",
+    "text": "But now going forward these 3 main contributors to an increase in fixed and variable costs will all start trending to what I would call Norm which means EBITDA margin automatically will be up by over 3%.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "over 3%",
+    "target_value": {
+      "low": 3.0,
+      "high": null,
+      "unit": "%",
+      "comparator": "over"
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_3ce9e0da34f9",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2025",
+    "target_period": "FY28",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2025_Nov.json",
+    "text": "I expect that in FY28, '29, '30, we will probably spend 0.5% of our revenue in renovations or upkeep.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "0.5%",
+    "target_value": {
+      "low": 0.5,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_a80e5d5218c0",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2025",
+    "target_period": "FY28",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2025_Nov.json",
+    "text": "But going forward, our forward thinking is that we would be very disappointed if by FY28, our net EBITDA without extraordinary expenses is less than 59%.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "less than 59%",
+    "target_value": {
+      "low": 59.0,
+      "high": null,
+      "unit": "%",
+      "comparator": "less than"
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_b43ecafbbf50",
+    "company": "LEMONTREE",
+    "source_period": "Nov 2025",
+    "target_period": "FY28",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2025_Nov.json",
+    "text": "While these expenses/investments accounted for 8% of revenue in this quarter, we expect all these 3 expense heads to reduce to 5% of revenue in the next year, before stabilizing at 2% of revenue by FY28 onwards.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "5%",
+    "target_value": {
+      "low": 5.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_d40399a062a6",
+    "company": "LEMONTREE",
+    "source_period": "Feb 2026",
+    "target_period": "FY27",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Feb.json",
+    "text": "The change in GST in this quarter accounted for 1.8% of revenue in a seasonally strong quarter of the year, and we expect this to be 2% for the full year in FY27 and then further reduce to 1.7% in FY28.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "2%",
+    "target_value": {
+      "low": 2.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_ec631e11caff",
+    "company": "LEMONTREE",
+    "source_period": "Feb 2026",
+    "target_period": "FY28",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Feb.json",
+    "text": "While these expenses in investments accounted for 6.4% of revenue for this quarter, we expect all these 3 expense heads to reduce to about 3.6% of revenue by FY28 Page 2 of 20 and onwards, leading to a corresponding expansion in EBITDA margins.",
+    "metrics": [
+      "Revenue",
+      "EBITDA Margin"
+    ],
+    "primary_metric": "Revenue",
+    "target": "about 3.6%",
+    "target_value": {
+      "low": 3.6,
+      "high": null,
+      "unit": "%",
+      "comparator": "about"
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_2dde14b977b8",
+    "company": "LEMONTREE",
+    "source_period": "Jan 2026",
+    "target_period": "FY26",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Jan.json",
+    "text": "Obviously, the EBITDA margins will be 5% below what they should be this year and next year.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "5%",
+    "target_value": {
+      "low": 5.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_6bc769fb4326",
+    "company": "LEMONTREE",
+    "source_period": "Jan 2026",
+    "target_period": "FY26",
+    "target_period_basis": "relative",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Jan.json",
+    "text": "But this year, it Page 10 of 28 will be 9% of revenue.",
+    "metrics": [
+      "Revenue"
+    ],
+    "primary_metric": "Revenue",
+    "target": "9%",
+    "target_value": {
+      "low": 9.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_bdf49c6e0469",
+    "company": "LEMONTREE",
+    "source_period": "Jan 2026",
+    "target_period": "FY28",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Jan.json",
+    "text": "We expect that our underwriting is that within 2 years, which is by FY28, our EBITDA margin should be North of 80%.",
+    "metrics": [
+      "EBITDA Margin"
+    ],
+    "primary_metric": "EBITDA Margin",
+    "target": "North of 80%",
+    "target_value": {
+      "low": 80.0,
+      "high": null,
+      "unit": "%",
+      "comparator": "north of"
+    },
+    "direction": "up"
+  },
+  {
+    "id": "promise_d7fedb0f2235",
+    "company": "LEMONTREE",
+    "source_period": "Jan 2026",
+    "target_period": "FY26",
+    "target_period_basis": "explicit",
+    "doc_type": "call_transcript",
+    "speaker": "Patanjali Keswani",
+    "source_file": "2026_Jan.json",
+    "text": "If we put all this together, the incremental impact on our EBITDA margins will be 5% of revenue for FY26 and FY27.",
+    "metrics": [
+      "Revenue",
+      "EBITDA Margin"
+    ],
+    "primary_metric": "Revenue",
+    "target": "5%",
+    "target_value": {
+      "low": 5.0,
+      "high": null,
+      "unit": "%",
+      "comparator": ""
+    },
+    "direction": "up"
+  }
+]
