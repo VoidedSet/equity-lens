@@ -293,6 +293,34 @@ const COMPANY_DIRS: Record<string, string> = {
   JUNIPER: "Juniper_Hotels",
 };
 
+// Flat files directory created by scripts/organize_docs.py
+const FILES_DIR = path.resolve(DATA_DIR, "../../data/files");
+
+/**
+ * Scan data/files/ for any file that starts with COMPANY_ and ends with _filename.
+ * This is resilient to subfolder naming changes in the organize script.
+ * Returns the relative path used by /api/pdf/files/... or null.
+ */
+let _filesCache: string[] | null = null;
+function tryFlatPath(cid: string, filename: string): string | null {
+  try {
+    if (!fs.existsSync(FILES_DIR)) return null;
+    if (!_filesCache) _filesCache = fs.readdirSync(FILES_DIR);
+    const needle = `_${filename}`.toLowerCase();
+    const prefix = `${cid}_`.toLowerCase();
+    const match = _filesCache.find(
+      (f) => f.toLowerCase().startsWith(prefix) && f.toLowerCase().endsWith(needle)
+    );
+    if (match) return `files/${match}`;
+    
+    // Fallback: check if exact filename exists (for sector-wide docs like hotel_companies_governance.pdf)
+    const exactMatch = _filesCache.find((f) => f.toLowerCase() === filename.toLowerCase());
+    return exactMatch ? `files/${exactMatch}` : null;
+  } catch {
+    return null;
+  }
+}
+
 // Dynamic: scan actual files and pick the closest call transcript
 // Q1 FY24 = Apr-Jun 2023 → call ~Jul-Aug 2023
 // Q2 FY24 = Jul-Sep 2023 → call ~Oct-Nov 2023
@@ -398,6 +426,8 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
   // Annual Report: "2024.pdf"
   if (ref.match(/^\d{4}\.pdf$/i)) {
     const year = ref.replace(/\.pdf$/i, "");
+    const flat = tryFlatPath(cid, ref);
+    if (flat) return { type: "pdf", filePath: path.join(FILES_DIR, flat.slice("files/".length)), relativePath: flat, page: extractedPage, searchText: null, label: `Annual Report ${year}` };
     const pdfPath = path.join(companyPath, "Annual_Reports", ref);
     if (fs.existsSync(pdfPath)) {
       return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Annual_Reports/${ref}`, page: extractedPage, searchText: null, label: `Annual Report ${year}` };
@@ -407,9 +437,11 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
 
   // Call Transcript JSON: "2023_Aug.json"
   if (ref.match(/^\d{4}_\w+\.json$/i)) {
+    const label = ref.replace(/\.json$/i, "").replace(/_/, " ");
+    const flat = tryFlatPath(cid, ref);
+    if (flat) return { type: "csv", filePath: path.join(FILES_DIR, flat.slice("files/".length)), relativePath: flat, page: null, searchText: null, label: `Earnings Call — ${label}` };
     const jsonPath = path.join(companyPath, "Call_Transcripts_JSON", ref);
     if (fs.existsSync(jsonPath)) {
-      const label = ref.replace(/\.json$/i, "").replace(/_/, " ");
       return { type: "csv", filePath: jsonPath, relativePath: `${companyDir}/Call_Transcripts_JSON/${ref}`, page: null, searchText: null, label: `Earnings Call — ${label}` };
     }
     return null;
@@ -417,21 +449,28 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
 
   // Quarterly Report: "Sep_2024.pdf" or "Dec_2024.pdf"
   if (ref.match(/^[A-Za-z]{3}_\d{4}\.pdf$/i)) {
+    const qLabel = ref.replace(/\.pdf$/i, "").replace(/_/, " ");
+    const flat = tryFlatPath(cid, ref);
+    if (flat) return { type: "pdf", filePath: path.join(FILES_DIR, flat.slice("files/".length)), relativePath: flat, page: extractedPage, searchText: null, label: `Quarterly Report — ${qLabel}` };
     const pdfPath = path.join(companyPath, "Quarterly_Report", ref);
     if (fs.existsSync(pdfPath)) {
-      const label = ref.replace(/\.pdf$/i, "").replace(/_/, " ");
-      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Quarterly_Report/${ref}`, page: extractedPage, searchText: null, label: `Quarterly Report — ${label}` };
+      return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/Quarterly_Report/${ref}`, page: extractedPage, searchText: null, label: `Quarterly Report — ${qLabel}` };
     }
     return null;
   }
 
   // Credit Rating or Announcement: "2024_Sep_25.pdf"
   if (ref.match(/^\d{4}_\w+_\d{2}\.pdf$/i)) {
+    const docLabel = ref.replace(/\.pdf$/i, "").replace(/_/g, " ");
+    const flat = tryFlatPath(cid, ref);
+    if (flat) {
+      const isRating = flat.toLowerCase().includes("credit");
+      return { type: "pdf", filePath: path.join(FILES_DIR, flat.slice("files/".length)), relativePath: flat, page: extractedPage, searchText: null, label: `${isRating ? "Credit Rating" : "Announcement"} — ${docLabel}` };
+    }
     for (const sub of ["Credit_Ratings", "Announcements"]) {
       const pdfPath = path.join(companyPath, sub, ref);
       if (fs.existsSync(pdfPath)) {
-        const label = ref.replace(/\.pdf$/i, "").replace(/_/g, " ");
-        return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/${sub}/${ref}`, page: extractedPage, searchText: null, label: `${sub === "Credit_Ratings" ? "Credit Rating" : "Announcement"} — ${label}` };
+        return { type: "pdf", filePath: pdfPath, relativePath: `${companyDir}/${sub}/${ref}`, page: extractedPage, searchText: null, label: `${sub === "Credit_Ratings" ? "Credit Rating" : "Announcement"} — ${docLabel}` };
       }
     }
     return null;
@@ -510,7 +549,6 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
         return { type: "csv", filePath: jp, relativePath: path.relative(RAW_DIR, jp).replace(/\\/g, "/"), page: null, searchText: null, label: `Earnings Call — ${ref.replace(".json", "").replace("_", " ")}` };
       }
     }
-    return null;
   }
   if (ref.endsWith(".txt")) {
     for (const tp of [path.join(companyPath, ref), path.join(RAW_DIR, ref)]) {
@@ -518,10 +556,18 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
         return { type: "csv", filePath: tp, relativePath: path.relative(RAW_DIR, tp).replace(/\\/g, "/"), page: null, searchText: null, label: ref };
       }
     }
-    return null;
   }
 
-  // --- Step 4: Filesystem scan fallback ---
+  // --- Step 4: Try flat path for any unmatched file reference ---
+  if (ref.match(/\.(pdf|json|txt|csv)$/i)) {
+    const flat = tryFlatPath(cid, ref);
+    if (flat) {
+      const ext = path.extname(ref).toLowerCase();
+      return { type: ext === ".pdf" ? "pdf" : "csv", filePath: path.join(FILES_DIR, flat.slice("files/".length)), relativePath: flat, page: extractedPage, searchText: null, label: ref.replace(/\.[^.]+$/, "").replace(/_/g, " ") };
+    }
+  }
+
+  // --- Step 5: Filesystem scan fallback ---
   // Try to find any file in the company directory whose name matches
   const scanDirs = ["Annual_Reports", "Quarterly_Report", "Call_Transcripts_JSON", "Credit_Ratings", "Announcements"];
   for (const sub of scanDirs) {
