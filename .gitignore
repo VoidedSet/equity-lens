@@ -2,3 +2,16 @@ node_modules
 datahack docs
 .env
 venv
+
+pycache
+__pycache__
+output
+
+
+**/node_modules
+**/datahack docs
+**/.env
+**/venv
+**/pycache
+**/__pycache__
+**/output
