@@ -143,3 +143,54 @@ pip install -r cloud/requirements.txt
 # 3. Install Docker Desktop (required for Phase 7 ECS container image builds)
 winget install Docker.DockerDesktop
 ```
+
+---
+
+## 8. Phase 7 & 8: Switching Bedrock Models, Pushing Docker Image & Running Step Functions
+
+### Switching Between Gemma 3 27B and Mistral Large 3
+
+No code changes are needed to swap foundation models. Either pass a preset alias or the exact Bedrock model/inference-profile ID via `BEDROCK_MODEL_ID`:
+
+- **Gemma 3 27B:** `BEDROCK_MODEL_ID=google.gemma-3-27b-it` (or preset `gemma3-27b`)
+- **Mistral Large 3:** `BEDROCK_MODEL_ID=mistral.mistral-large-3-675b-instruct` (or preset `mistral-large-3`)
+
+Update `cloud/.env` (or pass `--context` / `BEDROCK_MODEL_ID` before `cdk deploy --all`) and re-run ECS/Step Functions. `BedrockProvider` automatically folds system prompts into the user message if a specific model rejects separate `system` blocks.
+
+### Build & Push Worker Image to ECR
+
+```powershell
+$ACCOUNT_ID = (aws sts get-caller-identity --query Account --output text)
+$REGION = "ap-south-1"
+$ECR_URI = "$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/equity-lens-worker-dev"
+
+aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin "$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com"
+docker build -f cloud/worker/Dockerfile -t equity-lens-worker:latest .
+docker tag equity-lens-worker:latest "$ECR_URI:latest"
+docker push "$ECR_URI:latest"
+```
+
+### Deploy All Stacks & Trigger Step Functions
+
+```powershell
+# 1. Create Supabase secret in Secrets Manager (once)
+aws secretsmanager create-secret `
+  --name equity-lens/supabase-dev `
+  --secret-string '{"SUPABASE_URL":"<url>","SUPABASE_SERVICE_KEY":"<key>"}'
+
+# 2. Deploy Lakehouse + Compute (ECS) + Orchestration (Step Functions)
+cd cloud/infra
+$env:BEDROCK_MODEL_ID = "google.gemma-3-27b-it"   # or mistral.mistral-large-3-675b-instruct
+cdk deploy --all
+cd ../..
+
+# 3. Upload Glue scripts package
+Compress-Archive -Path cloud -DestinationPath cloud_pkg.zip -Force
+aws s3 cp cloud_pkg.zip "s3://equity-lens-datalake-$ACCOUNT_ID-dev/scripts/cloud_pkg.zip"
+aws s3 cp cloud/glue_jobs/ "s3://equity-lens-datalake-$ACCOUNT_ID-dev/scripts/glue_jobs/" --recursive
+
+# 4. Run the Step Functions workflow
+aws stepfunctions start-execution `
+  --state-machine-arn "arn:aws:states:$REGION:$ACCOUNT_ID:stateMachine:equity-lens-pipeline-dev" `
+  --input '{"max_docs": 10}'
+```

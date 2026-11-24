@@ -1,0 +1,320 @@
+{
+  "Comment": "EquityLens AI parallel document extraction, Glue Parquet curation, and Supabase serving sync",
+  "StartAt": "ListPendingDocuments",
+  "States": {
+    "ListPendingDocuments": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ListPendingLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.pending",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "HasPendingDocuments"
+    },
+    "HasPendingDocuments": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.pending.Payload.count",
+          "NumericGreaterThan": 0,
+          "Next": "ProcessDocumentsMap"
+        },
+        {
+          "Variable": "$.pending.Payload.force_curate",
+          "BooleanEquals": true,
+          "Next": "RunCurateParallel"
+        }
+      ],
+      "Default": "NoWorkSucceeded"
+    },
+    "ProcessDocumentsMap": {
+      "Type": "Map",
+      "ItemsPath": "$.pending.Payload.doc_ids",
+      "MaxConcurrency": 4,
+      "ResultPath": "$.map_results",
+      "ItemSelector": {
+        "doc_id.$": "$$.Map.Item.Value"
+      },
+      "ItemProcessor": {
+        "ProcessorConfig": {
+          "Mode": "INLINE"
+        },
+        "StartAt": "RunDocumentWorker",
+        "States": {
+          "RunDocumentWorker": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::ecs:runTask.sync",
+            "Parameters": {
+              "LaunchType": "FARGATE",
+              "Cluster": "${EcsClusterArn}",
+              "TaskDefinition": "${WorkerTaskDefinitionArn}",
+              "NetworkConfiguration": {
+                "AwsvpcConfiguration": {
+                  "Subnets": [
+                    "${SubnetId1}",
+                    "${SubnetId2}"
+                  ],
+                  "SecurityGroups": [
+                    "${SecurityGroupId}"
+                  ],
+                  "AssignPublicIp": "ENABLED"
+                }
+              },
+              "Overrides": {
+                "ContainerOverrides": [
+                  {
+                    "Name": "${WorkerContainerName}",
+                    "Command.$": "States.Array('--mode', 'process_document', '--doc-id', $.doc_id)"
+                  }
+                ]
+              }
+            },
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed",
+                  "ECS.AmazonECSException",
+                  "States.Timeout"
+                ],
+                "IntervalSeconds": 5,
+                "MaxAttempts": 3,
+                "BackoffRate": 2.0,
+                "JitterStrategy": "FULL"
+              }
+            ],
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.ALL"
+                ],
+                "ResultPath": "$.worker_error",
+                "Next": "MarkDocumentFailed"
+              }
+            ],
+            "End": true
+          },
+          "MarkDocumentFailed": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Parameters": {
+              "FunctionName": "${MarkQuarantinedLambdaArn}",
+              "Payload": {
+                "doc_id.$": "$.doc_id",
+                "worker_error.$": "$.worker_error"
+              }
+            },
+            "End": true
+          }
+        }
+      },
+      "Next": "RunCurateParallel"
+    },
+    "RunCurateParallel": {
+      "Type": "Parallel",
+      "ResultPath": "$.curation",
+      "Branches": [
+        {
+          "StartAt": "CurateFinancials",
+          "States": {
+            "CurateFinancials": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "${CurateFinancialsJobName}"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CurateFacts",
+          "States": {
+            "CurateFacts": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "${CurateFactsJobName}"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CurateChunks",
+          "States": {
+            "CurateChunks": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "${CurateChunksJobName}"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "ComputeDeviations"
+    },
+    "ComputeDeviations": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "${ComputeDeviationsJobName}"
+      },
+      "ResultPath": "$.deviations",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "SyncSupabase"
+    },
+    "SyncSupabase": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::ecs:runTask.sync",
+      "Parameters": {
+        "LaunchType": "FARGATE",
+        "Cluster": "${EcsClusterArn}",
+        "TaskDefinition": "${WorkerTaskDefinitionArn}",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "Subnets": [
+              "${SubnetId1}",
+              "${SubnetId2}"
+            ],
+            "SecurityGroups": [
+              "${SecurityGroupId}"
+            ],
+            "AssignPublicIp": "ENABLED"
+          }
+        },
+        "Overrides": {
+          "ContainerOverrides": [
+            {
+              "Name": "${WorkerContainerName}",
+              "Command": [
+                "--mode",
+                "supabase_sync"
+              ]
+            }
+          ]
+        }
+      },
+      "ResultPath": "$.sync",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed",
+            "ECS.AmazonECSException"
+          ],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "ComputeScorecards"
+    },
+    "ComputeScorecards": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::ecs:runTask.sync",
+      "Parameters": {
+        "LaunchType": "FARGATE",
+        "Cluster": "${EcsClusterArn}",
+        "TaskDefinition": "${WorkerTaskDefinitionArn}",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "Subnets": [
+              "${SubnetId1}",
+              "${SubnetId2}"
+            ],
+            "SecurityGroups": [
+              "${SecurityGroupId}"
+            ],
+            "AssignPublicIp": "ENABLED"
+          }
+        },
+        "Overrides": {
+          "ContainerOverrides": [
+            {
+              "Name": "${WorkerContainerName}",
+              "Command": [
+                "--mode",
+                "scorecard",
+                "--company",
+                "ALL"
+              ]
+            }
+          ]
+        }
+      },
+      "ResultPath": "$.scorecards",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed",
+            "ECS.AmazonECSException"
+          ],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "PipelineSucceeded"
+    },
+    "PipelineSucceeded": {
+      "Type": "Succeed"
+    },
+    "NoWorkSucceeded": {
+      "Type": "Succeed"
+    }
+  }
+}
