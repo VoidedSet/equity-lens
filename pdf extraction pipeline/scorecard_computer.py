@@ -21,12 +21,18 @@ import argparse
 from statistics import mean, pstdev
 from typing import Any, Dict, List, Optional, Tuple
 
-from supabase import Client, create_client
+try:
+    from supabase import Client, create_client
+except ImportError:
+    create_client = None  # type: ignore[assignment]
+    Client = Any  # type: ignore[assignment,misc]
 
 from config import COMPANIES, SUPABASE_SERVICE_KEY, SUPABASE_URL
 
 
 def get_supabase() -> Client:
+    if create_client is None:
+        raise ImportError("supabase package is required to query Supabase")
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 
@@ -656,13 +662,20 @@ def _dimension_snapshot(company_id: str, supabase: Client) -> Dict[str, float]:
     }
 
 
-def compute_peer_normalization(company_id: str, current_snapshot: Dict[str, float], supabase: Client) -> Dict[str, Any]:
+def compute_peer_normalization(
+    company_id: str,
+    current_snapshot: Dict[str, float],
+    supabase: Client,
+    peer_cache: Optional[Dict[str, Dict[str, float]]] = None,
+) -> Dict[str, Any]:
+    cache = peer_cache if peer_cache is not None else {}
+    cache[company_id] = current_snapshot
+
     peers = []
     for cid in COMPANIES:
-        if cid == company_id:
-            peers.append({"company_id": cid, **current_snapshot})
-        else:
-            peers.append({"company_id": cid, **_dimension_snapshot(cid, supabase)})
+        if cid not in cache:
+            cache[cid] = _dimension_snapshot(cid, supabase)
+        peers.append({"company_id": cid, **cache[cid]})
 
     dimensions = [
         "industry_position",
@@ -716,7 +729,11 @@ def compute_uncertainty_band(
     }
 
 
-def compute_scorecard(company_id: str, supabase: Client) -> None:
+def compute_scorecard(
+    company_id: str,
+    supabase: Client,
+    peer_cache: Optional[Dict[str, Dict[str, float]]] = None,
+) -> None:
     print(f"\n[Scorecard] Computing for {company_id}...")
 
     # Delivery credibility from existing table (kept for continuity)
@@ -763,7 +780,7 @@ def compute_scorecard(company_id: str, supabase: Client) -> None:
         "composite": composite,
     }
 
-    peer_norm = compute_peer_normalization(company_id, current_snapshot, supabase)
+    peer_norm = compute_peer_normalization(company_id, current_snapshot, supabase, peer_cache=peer_cache)
     forward_risk = compute_forward_risk(
         company_id,
         supabase,
@@ -845,9 +862,10 @@ def main() -> None:
 
     supabase = get_supabase()
     targets = COMPANIES if args.company == "ALL" else [args.company]
+    peer_cache: Dict[str, Dict[str, float]] = {}
 
     for company in targets:
-        compute_scorecard(company, supabase)
+        compute_scorecard(company, supabase, peer_cache=peer_cache)
 
     print("\n[Done] Scorecard computation complete.")
 
