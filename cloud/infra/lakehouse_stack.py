@@ -25,6 +25,7 @@ class EquityLensLakehouseStack(Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        self.env_name = env_name
         bucket_name = f"equity-lens-datalake-{self.account}-{env_name}".lower()
 
         datalake_bucket = s3.Bucket(
@@ -44,6 +45,7 @@ class EquityLensLakehouseStack(Stack):
                 )
             ],
         )
+        self.datalake_bucket = datalake_bucket
 
         glue_role = iam.Role(
             self,
@@ -72,17 +74,20 @@ class EquityLensLakehouseStack(Stack):
         )
 
         job_specs = [
-            ("CurateFinancialsJob", "equity-lens-curate-financials", "curate_financials.py"),
-            ("CurateFactsJob", "equity-lens-curate-facts", "curate_facts.py"),
-            ("CurateChunksJob", "equity-lens-curate-chunks", "curate_chunks.py"),
-            ("ComputeDeviationsJob", "equity-lens-compute-deviations", "compute_deviations.py"),
+            ("CurateFinancialsJob", "curate_financials", "equity-lens-curate-financials", "curate_financials.py"),
+            ("CurateFactsJob", "curate_facts", "equity-lens-curate-facts", "curate_facts.py"),
+            ("CurateChunksJob", "curate_chunks", "equity-lens-curate-chunks", "curate_chunks.py"),
+            ("ComputeDeviationsJob", "compute_deviations", "equity-lens-compute-deviations", "compute_deviations.py"),
         ]
 
-        for logical_id, job_name, script_name in job_specs:
+        self.glue_job_names: dict[str, str] = {}
+        for logical_id, key_name, job_name, script_name in job_specs:
+            full_job_name = f"{job_name}-{env_name}"
+            self.glue_job_names[key_name] = full_job_name
             job = glue.CfnJob(
                 self,
                 logical_id,
-                name=f"{job_name}-{env_name}",
+                name=full_job_name,
                 role=glue_role.role_arn,
                 glue_version="5.0",
                 worker_type="G.1X",

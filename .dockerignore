@@ -1,0 +1,13 @@
+.git
+ui/
+local_datalake/
+Raw Data Extraction/
+data/
+output/
+docs/
+misc/
+node_modules/
+.venv*
+__pycache__/
+*.pyc
+architecture_audit.md

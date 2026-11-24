@@ -2,9 +2,22 @@
 
 import random
 import time
-from typing import Any, Callable, List, Optional, Protocol, Sequence, Union
+from typing import Any, Callable, Dict, List, Optional, Protocol, Sequence, Union
 
 from cloud.common.config import CloudConfig, get_config
+
+BEDROCK_MODEL_PRESETS: Dict[str, str] = {
+    "gemma3-27b": "google.gemma-3-27b-it",
+    "mistral-large-3": "mistral.mistral-large-3-675b-instruct",
+    "mistral-large-2": "mistral.mistral-large-2407-v1:0",
+    "llama3-3-70b": "meta.llama3-3-70b-instruct-v1:0",
+}
+
+
+def resolve_bedrock_model_id(model_id: str) -> str:
+    """Resolve friendly preset alias (e.g. 'gemma3-27b', 'mistral-large-3') or pass raw Bedrock model/profile ID."""
+    cleaned = model_id.strip()
+    return BEDROCK_MODEL_PRESETS.get(cleaned.lower(), cleaned)
 
 
 class LLMProvider(Protocol):
@@ -94,13 +107,14 @@ class BedrockProvider:
         max_delay: float = 30.0,
         sleep_fn: Callable[[float], None] = time.sleep,
     ) -> None:
-        self.model_id = model_id
+        self.model_id = resolve_bedrock_model_id(model_id)
         self.region = region
         self._client = client
         self.max_attempts = max_attempts
         self.base_delay = base_delay
         self.max_delay = max_delay
         self.sleep_fn = sleep_fn
+        self._supports_system = True
 
     def _get_client(self) -> Any:
         if self._client is not None:
@@ -111,6 +125,13 @@ class BedrockProvider:
         cfg = Config(region_name=self.region, retries={"max_attempts": 1})
         self._client = boto3.client("bedrock-runtime", config=cfg)
         return self._client
+
+    @staticmethod
+    def _is_system_unsupported_error(exc: Exception) -> bool:
+        code, _ = _extract_error_meta(exc)
+        msg = str(exc).lower()
+        is_validation = code == "ValidationException" or "validationexception" in f"{type(exc).__name__} {msg}".lower()
+        return is_validation and "system" in msg
 
     def generate(
         self,
@@ -123,12 +144,32 @@ class BedrockProvider:
         client = self._get_client()
 
         def _invoke() -> str:
-            response = client.converse(
-                modelId=self.model_id,
-                system=[{"text": system_prompt}],
-                messages=[{"role": "user", "content": [{"text": user_content}]}],
-                inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
-            )
+            if self._supports_system and system_prompt:
+                try:
+                    response = client.converse(
+                        modelId=self.model_id,
+                        system=[{"text": system_prompt}],
+                        messages=[{"role": "user", "content": [{"text": user_content}]}],
+                        inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
+                    )
+                except Exception as exc:
+                    if not self._is_system_unsupported_error(exc):
+                        raise
+                    self._supports_system = False
+                    folded = f"{system_prompt}\n\n{user_content}"
+                    response = client.converse(
+                        modelId=self.model_id,
+                        messages=[{"role": "user", "content": [{"text": folded}]}],
+                        inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
+                    )
+            else:
+                folded = f"{system_prompt}\n\n{user_content}" if system_prompt else user_content
+                response = client.converse(
+                    modelId=self.model_id,
+                    messages=[{"role": "user", "content": [{"text": folded}]}],
+                    inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
+                )
+
             blocks = response.get("output", {}).get("message", {}).get("content", [])
             texts = [blk["text"] for blk in blocks if isinstance(blk, dict) and "text" in blk]
             return "\n".join(texts)
