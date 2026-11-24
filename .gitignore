@@ -15,3 +15,7 @@ output
 **/pycache
 **/__pycache__
 **/output
+Raw Data Extraction/
+local_datalake/
+.venv-cloud/
+cloud/.env

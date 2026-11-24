@@ -8,12 +8,23 @@ Gemma 3 27B-IT Extractor (via Featherless AI — OpenAI-compatible API)
 """
 
 import json
+import os
 import time
 import re
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from openai import OpenAI
-from supabase import create_client, Client
+
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None  # type: ignore[assignment,misc]
+
+try:
+    from supabase import create_client, Client
+except ImportError:
+    create_client = None  # type: ignore[assignment]
+    Client = Any  # type: ignore[assignment,misc]
+
 from config import (
     FEATHERLESS_API_KEY, FEATHERLESS_BASE_URL, GEMMA_MODEL,
     SUPABASE_URL, SUPABASE_SERVICE_KEY
@@ -26,10 +37,14 @@ CHUNKS_PER_BATCH = 5  # chunks per single LLM call
 # CLIENTS
 # ─────────────────────────────────────────────────────────────────
 
-def get_llm_client() -> OpenAI:
+def get_llm_client():
+    if OpenAI is None:
+        raise ImportError("openai package is required for Featherless LLM calls")
     return OpenAI(api_key=FEATHERLESS_API_KEY, base_url=FEATHERLESS_BASE_URL)
 
 def get_supabase_client() -> Client:
+    if create_client is None:
+        raise ImportError("supabase package is required for Supabase writes")
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 
@@ -168,9 +183,36 @@ Return ONLY a JSON array."""
 # LLM CALL WITH RETRY
 # ─────────────────────────────────────────────────────────────────
 
-def call_gemma(client: OpenAI, system_prompt: str, user_content: str,
-               retries: int = 3, delay: float = 2.0) -> Optional[str]:
-    """Call Gemma with retry on failure. Returns raw response text."""
+def _resolve_default_provider(llm_provider: Optional[Any]) -> Optional[Any]:
+    if llm_provider is not None:
+        return llm_provider
+    if os.getenv("LLM_PROVIDER", "featherless").strip().lower() == "bedrock":
+        from cloud.common.llm import get_llm_provider
+        return get_llm_provider()
+    return None
+
+
+def call_gemma(
+    client: Any,
+    system_prompt: str,
+    user_content: str,
+    retries: int = 3,
+    delay: float = 2.0,
+    llm_provider: Optional[Any] = None,
+) -> Optional[str]:
+    """Call configured LLM provider (or Featherless OpenAI client) with retry."""
+    if llm_provider is not None:
+        try:
+            return llm_provider.generate(
+                system_prompt,
+                user_content,
+                temperature=0.1,
+                max_tokens=2048,
+            )
+        except Exception as e:
+            print(f"  [LLMProvider] Call failed: {e}")
+            return None
+
     for attempt in range(retries):
         try:
             response = client.chat.completions.create(
@@ -441,16 +483,23 @@ def build_batched_user_msg(chunks: List[Dict], prompt_type: str = "annual") -> s
     return "\n".join(parts)
 
 
-def process_one_batch(client: OpenAI, system_prompt: str, chunks: List[Dict],
-                      prompt_type: str = "annual") -> List[Dict]:
-    """Process a batch of chunks in one LLM call. Returns extracted items with metadata."""
+def extract_batch_with_raw(
+    client: Any,
+    system_prompt: str,
+    chunks: List[Dict],
+    prompt_type: str = "annual",
+    llm_provider: Optional[Any] = None,
+) -> Tuple[List[Dict], Optional[str]]:
+    """Process a batch of chunks and return (extracted_items, raw_llm_text)."""
     user_msg = build_batched_user_msg(chunks, prompt_type)
-    raw = call_gemma(client, system_prompt, user_msg)
+    raw = call_gemma(client, system_prompt, user_msg, llm_provider=llm_provider)
     items = parse_json_response(raw)
 
     # Inject metadata — match items to their source chunk via source_page
     page_to_chunk = {c["source_page"]: c for c in chunks}
     for item in items:
+        if not isinstance(item, dict):
+            continue
         pg = item.get("source_page")
         src_chunk = page_to_chunk.get(pg, chunks[0])  # fallback to first chunk
         item.setdefault("company_id", src_chunk["company_id"])
@@ -463,6 +512,24 @@ def process_one_batch(client: OpenAI, system_prompt: str, chunks: List[Dict],
             item.setdefault("statement_quarter", src_chunk["period"])
             item["table"] = "guidance_claims"
 
+    return items, raw
+
+
+def process_one_batch(
+    client: Any,
+    system_prompt: str,
+    chunks: List[Dict],
+    prompt_type: str = "annual",
+    llm_provider: Optional[Any] = None,
+) -> List[Dict]:
+    """Process a batch of chunks in one LLM call. Returns extracted items with metadata."""
+    items, _ = extract_batch_with_raw(
+        client,
+        system_prompt,
+        chunks,
+        prompt_type=prompt_type,
+        llm_provider=llm_provider,
+    )
     return items
 
 
@@ -474,12 +541,16 @@ def process_annual_report_chunks(
     text_chunks: List[Dict],
     table_rows: List[Dict],
     dry_run: bool = False,
+    llm_provider: Optional[Any] = None,
+    sink: Optional[str] = None,
 ) -> Dict[str, int]:
     """
-    Process Annual Report chunks: pre-filter → batch → parallel LLM → Supabase.
+    Process Annual Report chunks: pre-filter → batch → parallel LLM → sink.
     """
-    client = get_llm_client()
-    supabase = get_supabase_client() if not dry_run else None
+    resolved_provider = _resolve_default_provider(llm_provider)
+    resolved_sink = (sink or os.getenv("SINK", "supabase")).strip().lower()
+    client = None if resolved_provider is not None else get_llm_client()
+    supabase = get_supabase_client() if (not dry_run and resolved_sink == "supabase") else None
     total_counts = {"financials": 0, "guidance_claims": 0, "risk_flags": 0,
                     "raw_data": 0, "credit_ratings": 0, "errors": 0, "skipped": 0}
 
@@ -499,7 +570,9 @@ def process_annual_report_chunks(
     t0 = time.time()
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {
-            executor.submit(process_one_batch, client, ANNUAL_REPORT_SYSTEM, batch, "annual"): idx
+            executor.submit(
+                process_one_batch, client, ANNUAL_REPORT_SYSTEM, batch, "annual", resolved_provider
+            ): idx
             for idx, batch in enumerate(batches)
         }
         done = 0
@@ -524,21 +597,23 @@ def process_annual_report_chunks(
             f"Period: {row['period']}\n\n"
             f"TABLE ROW:\n{json.dumps(row['data'], indent=2)}"
         )
-        raw = call_gemma(client, TABLE_ROW_SYSTEM, user_msg)
+        raw = call_gemma(client, TABLE_ROW_SYSTEM, user_msg, llm_provider=resolved_provider)
         items = parse_json_response(raw)
         for item in items:
+            if not isinstance(item, dict):
+                continue
             item.setdefault("company_id", row["company_id"])
             item.setdefault("source_document", row["source_document"])
             item.setdefault("source_page", row["source_page"])
             item.setdefault("period", row["period"])
         all_items.extend(items)
 
-    # ── Route to Supabase ─────────────────────────────────────────
-    if dry_run:
+    # ── Route to Supabase (optional sink) ─────────────────────────
+    if dry_run or resolved_sink != "supabase":
         for item in all_items:
             tbl = TABLE_NAME_MAP.get(item.get("table"), item.get("table"))
             snippet = item.get("verbatim_quote") or item.get("value_text") or item.get("description") or str(item.get("value", ""))
-            print(f"  [DRY RUN] {tbl}: {snippet[:120]}")
+            print(f"  [{resolved_sink.upper() if not dry_run else 'DRY RUN'}] {tbl}: {snippet[:120]}")
     else:
         counts = route_to_supabase(supabase, all_items)
         for k, v in counts.items():
@@ -552,12 +627,16 @@ def process_annual_report_chunks(
 def process_transcript_chunks(
     mgmt_chunks: List[Dict],
     dry_run: bool = False,
+    llm_provider: Optional[Any] = None,
+    sink: Optional[str] = None,
 ) -> Dict[str, int]:
     """
     Process transcript management chunks: batch → parallel LLM → guidance_claims.
     """
-    client = get_llm_client()
-    supabase = get_supabase_client() if not dry_run else None
+    resolved_provider = _resolve_default_provider(llm_provider)
+    resolved_sink = (sink or os.getenv("SINK", "supabase")).strip().lower()
+    client = None if resolved_provider is not None else get_llm_client()
+    supabase = get_supabase_client() if (not dry_run and resolved_sink == "supabase") else None
     total_counts = {"guidance_claims": 0, "errors": 0}
 
     batches = [mgmt_chunks[i:i+CHUNKS_PER_BATCH] for i in range(0, len(mgmt_chunks), CHUNKS_PER_BATCH)]
@@ -567,7 +646,9 @@ def process_transcript_chunks(
     t0 = time.time()
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {
-            executor.submit(process_one_batch, client, TRANSCRIPT_SYSTEM, batch, "transcript"): idx
+            executor.submit(
+                process_one_batch, client, TRANSCRIPT_SYSTEM, batch, "transcript", resolved_provider
+            ): idx
             for idx, batch in enumerate(batches)
         }
         done = 0
@@ -582,9 +663,9 @@ def process_transcript_chunks(
                 print(f"  [Error] Batch failed: {e}")
                 total_counts["errors"] += 1
 
-    if dry_run:
+    if dry_run or resolved_sink != "supabase":
         for item in all_items:
-            print(f"  [DRY RUN] guidance: {item.get('verbatim_quote', '')[:120]}")
+            print(f"  [{resolved_sink.upper() if not dry_run else 'DRY RUN'}] guidance: {item.get('verbatim_quote', '')[:120]}")
     else:
         counts = route_to_supabase(supabase, all_items)
         total_counts["guidance_claims"] += counts.get("guidance_claims", 0)

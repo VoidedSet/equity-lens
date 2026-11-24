@@ -1,22 +1,29 @@
 import os, json
+from pathlib import Path
 import pandas as pd
 import streamlit as st
 from PyPDF2 import PdfReader
 import docx # for .docx
+from dotenv import load_dotenv
 from openai import OpenAI
 from supabase import create_client, Client
+
+load_dotenv()
 
 # ==========================================
 # CONFIG
 # ==========================================
-SUPABASE_URL = "https://nzofdwwcouzfpacapvmz.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56b2Zkd3djb3V6ZnBhY2Fwdm16Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg5NDE5OCwiZXhwIjoyMDkxNDcwMTk4fQ.YB0xsa4EOKjK0O3Vtgi23ffVdU3yAeEzPeW503Tqi4I"
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
 
 TARGET_COMPANY = "EIH"
-ROOT_FOLDER = "../Raw Data Extraction/EIH_Limited"
+ROOT_FOLDER = os.getenv(
+    "RAW_DATA_ROOT",
+    str(Path(__file__).resolve().parents[2] / "Raw Data Extraction" / "EIH_Limited"),
+)
 
-llm_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+llm_client = OpenAI(base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"), api_key="ollama")
+supabase: Client | None = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
 # ==========================================
 # 1 -> EXTRACT

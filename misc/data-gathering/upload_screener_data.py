@@ -8,14 +8,25 @@ Usage: python upload_screener_data.py
 
 import os
 import csv
+from pathlib import Path
+from dotenv import load_dotenv
 from supabase import create_client
 
-SUPABASE_URL = "https://nzofdwwcouzfpacapvmz.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56b2Zkd3djb3V6ZnBhY2Fwdm16Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg5NDE5OCwiZXhwIjoyMDkxNDcwMTk4fQ.YB0xsa4EOKjK0O3Vtgi23ffVdU3yAeEzPeW503Tqi4I"
+load_dotenv()
 
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
 
-RAW_DATA_ROOT = os.path.join(os.path.dirname(__file__), "Raw Data Extraction")
+RAW_DATA_ROOT = os.getenv(
+    "RAW_DATA_ROOT",
+    str(Path(__file__).resolve().parents[2] / "Raw Data Extraction"),
+)
+
+
+def get_supabase():
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        raise RuntimeError("SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables are required")
+    return create_client(SUPABASE_URL, SUPABASE_KEY)
 
 COMPANY_MAP = {
     "IHCL": "Indian_Hotels",
@@ -227,8 +238,9 @@ def upload_financials(company_id: str, folder: str):
     
     return rows_to_insert
 
-def ensure_companies_exist():
+def ensure_companies_exist(supabase=None):
     """Make sure all companies (including Juniper) exist in the companies table."""
+    supabase = supabase or get_supabase()
     companies = [
         ("IHCL", "Indian Hotels Company Ltd", "INDHOTEL", "premium_luxury", "hybrid",
          ["Taj", "Vivanta", "SeleQtions", "Ginger"], ["Mumbai", "Delhi", "Bengaluru", "Goa"]),
@@ -255,12 +267,13 @@ def ensure_companies_exist():
     print(f"✓ Ensured {len(companies)} companies exist in DB")
 
 def main():
+    supabase = get_supabase()
     print("═" * 60)
     print("EquityLens AI — Uploading Screener.in data to Supabase")
     print("═" * 60)
     
     # Step 1: Ensure companies exist
-    ensure_companies_exist()
+    ensure_companies_exist(supabase)
     
     # Step 2: Clear old data (respect FK constraints)
     print("\n🗑  Clearing old data...")

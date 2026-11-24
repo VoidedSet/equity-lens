@@ -144,7 +144,9 @@ print(f"  Split into {len(chunks)} Groq calls")
 
 # ── Step 3: Call Groq for each chunk ─────────────────────
 print(f"\nCalling Groq (Llama 3.3 70B) — {len(chunks)} calls...")
-GROQ_KEY = os.getenv("GROQ_API_KEY") or "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"
+GROQ_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_KEY:
+    raise RuntimeError("GROQ_API_KEY environment variable is required")
 client = OpenAI(
     api_key=GROQ_KEY,
     base_url="https://api.groq.com/openai/v1",

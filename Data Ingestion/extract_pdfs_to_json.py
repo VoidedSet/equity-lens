@@ -42,11 +42,15 @@ from pathlib import Path
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════
 
-# Base path to raw data (adjust if needed)
-RAW_DATA_BASE = Path(r"c:\Users\91845\Desktop\DataHack4.0\the-big-leagues\Raw Data Extraction")
+# Base path to raw data (adjust via RAW_DATA_BASE env var if needed)
+RAW_DATA_BASE = Path(
+    os.getenv("RAW_DATA_BASE", str(Path(__file__).resolve().parent.parent / "Raw Data Extraction"))
+)
 
 # Output directory
-OUTPUT_DIR = Path(r"c:\Users\91845\Desktop\DataHack4.0\the-big-leagues\Data Ingestion\extracted_json")
+OUTPUT_DIR = Path(
+    os.getenv("EXTRACTED_JSON_DIR", str(Path(__file__).resolve().parent / "extracted_json"))
+)
 
 # Company folder → company_id mapping
 COMPANY_MAP = {
@@ -54,7 +58,7 @@ COMPANY_MAP = {
     "Chalet_Hotels": "CHALET",
     "Lemon_Tree_Hotels": "LEMONTREE",
     "EIH_Limited": "EIH",
-    "Juniper_Hotels": "ITCHOTELS",  # adjust if different
+    "Juniper_Hotels": "JUNIPER",
 }
 
 # Folder → document_type mapping

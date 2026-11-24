@@ -1,28 +1,41 @@
 import os
 import json
 import time
+from pathlib import Path
 import pandas as pd
 from PyPDF2 import PdfReader
+from dotenv import load_dotenv
 from openai import OpenAI  # <-- NEW: Import OpenAI
 from supabase import create_client, Client
+
+load_dotenv()
 
 # ==========================================
 # CONFIGURATION & CREDENTIALS
 # ==========================================
-FEATHERLESS_API_KEY = "rc_6bfc881d20932f68c74f2a1b50a8f1f309ea2bbcef7fb7d90c5cd203f91de560" # <-- Add your Featherless Key
-SUPABASE_URL = "https://nzofdwwcouzfpacapvmz.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56b2Zkd3djb3V6ZnBhY2Fwdm16Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg5NDE5OCwiZXhwIjoyMDkxNDcwMTk4fQ.YB0xsa4EOKjK0O3Vtgi23ffVdU3yAeEzPeW503Tqi4I"
+FEATHERLESS_API_KEY = os.getenv("FEATHERLESS_API_KEY", "")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
 
-TARGET_COMPANY_ID = "EIH"  
-ROOT_FOLDER = "D:\Projects\datahack-the big leagues\Raw Data Extraction\EIH_Limited" 
+TARGET_COMPANY_ID = "EIH"
+ROOT_FOLDER = os.getenv(
+    "RAW_DATA_ROOT",
+    str(Path(__file__).resolve().parents[2] / "Raw Data Extraction" / "EIH_Limited"),
+)
 
 # Initialize Clients
 # <-- NEW: Initialize Featherless client using OpenAI library
-llm_client = OpenAI(
-    base_url="https://api.featherless.ai/v1",
-    api_key=FEATHERLESS_API_KEY
+llm_client = (
+    OpenAI(
+        base_url=os.getenv("LLM_BASE_URL", "https://api.featherless.ai/v1"),
+        api_key=FEATHERLESS_API_KEY,
+    )
+    if FEATHERLESS_API_KEY
+    else None
 )
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client | None = (
+    create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
+)
 
 # ==========================================
 # 1. FILE PARSING & CHUNKING
