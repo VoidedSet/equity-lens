@@ -15,6 +15,9 @@ export async function GET(
   const FILES_DIR = path.resolve(process.cwd(), "../data/files");
   // Legacy folder (old nested structure)
   const RAW_DIR = path.resolve(process.cwd(), "../Raw Data Extraction");
+  // Governance reports and pre-extracted JSON folders
+  const GOVERNANCE_DIR = path.resolve(process.cwd(), "../governance");
+  const EXTRACTED_JSON_DIR = path.resolve(process.cwd(), "../Data Ingestion/extracted_json");
 
   let resolved: string;
 
@@ -23,6 +26,18 @@ export async function GET(
     const filename = relativePath.slice("files/".length);
     resolved = path.resolve(FILES_DIR, filename);
     if (!resolved.startsWith(FILES_DIR)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+  } else if (relativePath.startsWith("governance/")) {
+    const subPath = relativePath.slice("governance/".length);
+    resolved = path.resolve(GOVERNANCE_DIR, subPath);
+    if (!resolved.startsWith(GOVERNANCE_DIR)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+  } else if (relativePath.startsWith("extracted_json/")) {
+    const subPath = relativePath.slice("extracted_json/".length);
+    resolved = path.resolve(EXTRACTED_JSON_DIR, subPath);
+    if (!resolved.startsWith(EXTRACTED_JSON_DIR)) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
   } else {

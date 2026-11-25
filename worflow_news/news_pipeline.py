@@ -1019,6 +1019,22 @@ def write_outputs(digest: dict, output_dir: Path, as_of_date: str) -> Tuple[Path
     with md_path.open("w", encoding="utf-8") as f:
         f.write(render_markdown(digest))
 
+    archive_flag = os.getenv("NEWS_ARCHIVE_TO_LAKE", "").strip().lower() in ("1", "true", "yes")
+    storage_backend = os.getenv("STORAGE_BACKEND", "local").strip().lower()
+    if archive_flag or storage_backend == "s3":
+        try:
+            import sys
+            repo_root = Path(__file__).resolve().parent.parent
+            if str(repo_root) not in sys.path:
+                sys.path.insert(0, str(repo_root))
+            from cloud.common.storage import get_storage
+
+            lake_key = f"raw/source=news/date={as_of_date}/daily_digest_{as_of_date}.json"
+            get_storage().write_json(lake_key, digest)
+            print(f"[info] archived news digest to lakehouse: {lake_key}")
+        except Exception as exc:
+            print(f"[warn] optional lakehouse archive skipped: {exc}")
+
     return json_path, md_path
 
 

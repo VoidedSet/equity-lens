@@ -38,6 +38,10 @@ class StorageBackend(ABC):
     @abstractmethod
     def uri_for(self, key: str) -> str: ...
 
+    def presign_url(self, key: str, expires_in: int = 900) -> str:
+        """Return a readable URI or presigned HTTP URL for the object."""
+        return self.uri_for(key)
+
     def read_text(self, key: str, encoding: str = "utf-8") -> str:
         return self.read_bytes(key).decode(encoding)
 
@@ -174,6 +178,14 @@ class S3Storage(StorageBackend):
     def uri_for(self, key: str) -> str:
         clean = _normalize_key(key)
         return f"s3://{self.bucket}/{clean}"
+
+    def presign_url(self, key: str, expires_in: int = 900) -> str:
+        clean = _normalize_key(key)
+        return self._get_client().generate_presigned_url(
+            "get_object",
+            Params={"Bucket": self.bucket, "Key": clean},
+            ExpiresIn=expires_in,
+        )
 
 
 def get_storage(config: Optional[CloudConfig] = None) -> StorageBackend:

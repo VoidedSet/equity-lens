@@ -35,6 +35,7 @@ def execute_tool(tool_name: str, args: dict) -> dict:
         "ratio_deep_dive": run_ratio_deep_dive,
         "sector_benchmark": run_sector_benchmark,
         "custom_analysis": run_custom_analysis,
+        "athena_sql": run_athena_sql,
     }
 
     handler = tool_map.get(tool_name)
@@ -218,9 +219,9 @@ except Exception as e:
     print(json.dumps({{"output": f"Custom analysis error: {{e}}", "error": True}}))
 '''
 
-    # Write to a temp file and execute
-    temp_path = os.path.join(OUTPUT_DIR, "_custom_analysis.py")
-    with open(temp_path, "w") as f:
+    # Write to a unique temp file and execute safely under concurrency
+    fd, temp_path = tempfile.mkstemp(prefix="_custom_", suffix=".py", dir=OUTPUT_DIR)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write(script_code)
 
     try:
@@ -277,3 +278,24 @@ def _indent_plan(plan: str) -> str:
         if cm is not None:
             results[company]["latest_roe"] = str(cm.loc["ROE %"].iloc[-1]) if "ROE %" in cm.index else "N/A"
     """
+
+
+def run_athena_sql(args: dict) -> dict:
+    """Query curated AWS Athena tables or local curated Parquet presets."""
+    from cloud.athena.client import format_rows_as_markdown, query_lakehouse
+
+    preset = args.get("preset")
+    sql = args.get("sql")
+    company = args.get("company")
+    max_rows = int(args.get("max_rows", 100))
+
+    res = query_lakehouse(sql=sql, preset=preset, company=company, max_rows=max_rows)
+    md = format_rows_as_markdown(res["columns"], res["rows"])
+    return {
+        "output": md,
+        "columns": res["columns"],
+        "rows": res["rows"],
+        "row_count": res["row_count"],
+        "engine": res["engine"],
+        "chart_path": None,
+    }

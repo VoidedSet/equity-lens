@@ -524,7 +524,10 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
     const GOVERNANCE_DIR = path.resolve(DATA_DIR, "../../governance");
     for (const pdfp of [path.join(companyPath, ref), path.join(RAW_DIR, ref), path.join(GOVERNANCE_DIR, ref)]) {
       if (fs.existsSync(pdfp)) {
-        return { type: "pdf", filePath: pdfp, relativePath: path.relative(RAW_DIR, pdfp).replace(/\\/g, "/"), page: extractedPage, searchText: null, label: ref.replace(".pdf", "").replace(/-/g, " ") };
+        const rel = pdfp.startsWith(GOVERNANCE_DIR)
+          ? `governance/${path.relative(GOVERNANCE_DIR, pdfp).replace(/\\/g, "/")}`
+          : path.relative(RAW_DIR, pdfp).replace(/\\/g, "/");
+        return { type: "pdf", filePath: pdfp, relativePath: rel, page: extractedPage, searchText: null, label: ref.replace(".pdf", "").replace(/-/g, " ") };
       }
     }
   }
@@ -537,7 +540,7 @@ export function resolveSource(sourceRef: string, companyId?: string): SourceReso
       return {
         type: "csv",
         filePath: dictPath,
-        relativePath: `../Data Ingestion/extracted_json/${cid}/${ref}`,
+        relativePath: `extracted_json/${cid}/${ref}`,
         page: null,
         searchText: null,
         label: `${cid} — ${ref.replace(".json", "").replace(/_/g, " ")}`

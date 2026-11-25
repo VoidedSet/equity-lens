@@ -112,6 +112,15 @@ TOOL_SCHEMAS = [
             "analysis_plan": "A step-by-step plan of what data to load and what calculations to perform"
         }
     },
+    {
+        "name": "athena_sql",
+        "description": "Query the curated AWS Glue/Athena lakehouse tables (or local curated Parquet presets) for guidance hit rates, deviation trends, risk severity summaries, or cross-company SQL analytics.",
+        "parameters": {
+            "preset": "Optional preset name: 'cross_company_financials', 'guidance_hit_rate', 'risk_severity_summary', or 'deviation_trends'.",
+            "sql": "Optional read-only SELECT/WITH SQL query against equity_lens.* tables (requires Athena/S3 mode).",
+            "company": "Optional canonical company code or name filter for local preset mode."
+        }
+    },
 ]
 
 
@@ -164,8 +173,9 @@ IMPORTANT RULES:
 8. If the query is about one company over multiple years → use "trend_analysis"
 9. If the query is about financial health/rating → use "financial_health"
 10. If the query is about ratio analysis/DuPont → use "ratio_deep_dive"
-11. Only use "custom_analysis" if NO other tool can answer the query.
-12. For "all" companies, set companies to "all".
+11. If the query asks about management guidance hit rates, credibility scores, risk flag severity breakdowns, deviation trends, or lakehouse SQL → use "athena_sql".
+12. Only use "custom_analysis" if NO other tool can answer the query.
+13. For "all" companies, set companies to "all".
 """
 
 

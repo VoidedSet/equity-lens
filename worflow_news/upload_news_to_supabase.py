@@ -16,17 +16,17 @@ from dotenv import load_dotenv
 # Load env from parent pipeline dir
 load_dotenv(Path(__file__).parent.parent / "pdf extraction pipeline" / ".env")
 
-from supabase import create_client
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+try:
+    from supabase import create_client
+except ImportError:
+    create_client = None  # type: ignore[assignment]
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 
-# Company ID normalization (pipeline uses JUNIPERHOTELS, DB uses JUNIPER)
+# Company ID normalization (pipeline uses JUNIPERHOTELS, legacy uses ITCHOTELS, DB uses JUNIPER)
 COMPANY_ID_MAP = {
     "JUNIPERHOTELS": "JUNIPER",
+    "ITCHOTELS": "JUNIPER",
     "IHCL": "IHCL",
     "CHALET": "CHALET",
     "LEMONTREE": "LEMONTREE",
@@ -34,8 +34,20 @@ COMPANY_ID_MAP = {
 }
 
 
-def create_news_table():
+def get_supabase():
+    """Lazily create Supabase client from environment variables."""
+    if create_client is None:
+        raise ImportError("supabase package is required for news upload")
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_SERVICE_KEY")
+    if not url or not key:
+        raise RuntimeError("SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables are required")
+    return create_client(url, key)
+
+
+def create_news_table(supabase_client=None):
     """Create news_items table via Supabase SQL."""
+    supabase_client = supabase_client or get_supabase()
     sql = """
     CREATE TABLE IF NOT EXISTS news_items (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -58,7 +70,7 @@ def create_news_table():
     );
     """
     try:
-        supabase.rpc("exec_sql", {"query": sql}).execute()
+        supabase_client.rpc("exec_sql", {"query": sql}).execute()
         print("  Created news_items table via RPC")
     except Exception as e:
         # RPC might not exist - try direct insert to test if table exists
@@ -80,22 +92,47 @@ def load_latest_digest():
 
 
 def normalize_company_tags(tags):
-    """Map JUNIPERHOTELS → JUNIPER etc."""
+    """Map JUNIPERHOTELS / ITCHOTELS → JUNIPER etc."""
     return [COMPANY_ID_MAP.get(t, t) for t in (tags or [])]
 
 
-def upload_digest(digest, digest_date):
-    """Upload all items from a digest to Supabase."""
-    all_items = digest.get("all_items", [])
-    if not all_items:
-        # Try to gather from sections
-        for section in ["company_sections", "sector_items", "global_items"]:
+def extract_digest_items(digest: dict) -> list:
+    """Extract and deduplicate items from both current and legacy digest JSON layouts."""
+    raw_items = list(digest.get("all_items") or [])
+    if not raw_items:
+        for section in (
+            "companies",
+            "sector_news",
+            "global_hospitality_news",
+            "company_sections",
+            "sector_items",
+            "global_items",
+        ):
             items = digest.get(section, [])
             if isinstance(items, dict):
                 for company_items in items.values():
-                    all_items.extend(company_items)
+                    if isinstance(company_items, list):
+                        raw_items.extend(company_items)
             elif isinstance(items, list):
-                all_items.extend(items)
+                raw_items.extend(items)
+
+    deduped = []
+    seen = set()
+    for item in raw_items:
+        if not isinstance(item, dict):
+            continue
+        dedup_key = (str(item.get("url") or "").strip().lower(), str(item.get("title") or "").strip().lower())
+        if dedup_key in seen:
+            continue
+        seen.add(dedup_key)
+        deduped.append(item)
+    return deduped
+
+
+def upload_digest(digest, digest_date, supabase_client=None):
+    """Upload all items from a digest to Supabase."""
+    supabase_client = supabase_client or get_supabase()
+    all_items = extract_digest_items(digest)
 
     if not all_items:
         print("  No items found in digest")
@@ -105,7 +142,7 @@ def upload_digest(digest, digest_date):
 
     # Clear old news for this date
     try:
-        supabase.table("news_items").delete().eq("digest_date", digest_date).execute()
+        supabase_client.table("news_items").delete().eq("digest_date", digest_date).execute()
         print(f"  Cleared old items for {digest_date}")
     except Exception as e:
         print(f"  Note clearing old items: {e}")
@@ -130,7 +167,7 @@ def upload_digest(digest, digest_date):
             "digest_date": digest_date,
         }
         try:
-            supabase.table("news_items").insert(row).execute()
+            supabase_client.table("news_items").insert(row).execute()
             inserted += 1
         except Exception as e:
             print(f"  Error inserting: {e}")
@@ -143,9 +180,11 @@ def main():
     print("EquityLens AI — News Digest → Supabase Upload")
     print("=" * 60)
 
+    client = get_supabase()
+
     # Step 1: Try to create table
     print("\n[1] Ensuring news_items table exists...")
-    create_news_table()
+    create_news_table(client)
 
     # Step 2: Load latest digest
     print("\n[2] Loading latest digest...")
@@ -155,7 +194,7 @@ def main():
 
     # Step 3: Upload
     print(f"\n[3] Uploading to Supabase (date: {digest_date})...")
-    count = upload_digest(digest, digest_date)
+    count = upload_digest(digest, digest_date, supabase_client=client)
     print(f"\n  Done! {count} news items uploaded.")
 
 
